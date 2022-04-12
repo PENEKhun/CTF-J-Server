@@ -1,0 +1,13 @@
+package com.penekhun.ctfjserver;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CtfJServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(CtfJServerApplication.class, args);
+    }
+
+}
