@@ -1,13 +1,15 @@
 package com.penekhun.ctfjserver.User.Entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "Config")
+@Table(name = "Config", schema = "ctf")
 public class Config {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "idx", nullable = false)
+    private Integer id;
+
     @Column(name = "`key`", nullable = false, length = 45)
     private String key;
 

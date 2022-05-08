@@ -4,8 +4,9 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "Notice")
+@Table(name = "Notice", schema = "ctf")
 public class Notice {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "idx", nullable = false)
     private Integer id;

@@ -2,17 +2,15 @@ package com.penekhun.ctfjserver.User.Entity;
 
 import org.springframework.data.jpa.domain.AbstractAuditable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "AuthLog")
-public class AuthLog extends AbstractAuditable {
+@Table(name = "AuthLog", schema = "ctf")
+public class AuthLog {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "idx", nullable = false)
-    private Long id1;
+    private Long idx;
 
     @Column(name = "problem_idx", nullable = false)
     private Integer problemIdx;
@@ -47,11 +45,11 @@ public class AuthLog extends AbstractAuditable {
         this.problemIdx = problemIdx;
     }
 
-    public Long getId1() {
-        return id1;
+    public Long getIdx() {
+        return idx;
     }
 
-    public void setId1(Long id1) {
-        this.id1 = id1;
+    public void setIdx(Long idx) {
+        this.idx = idx;
     }
 }

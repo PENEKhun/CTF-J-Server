@@ -1,10 +1,14 @@
 package com.penekhun.ctfjserver.User.Entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
-@Table(name = "Account")
+@Table(name = "Account", schema = "ctf")
 public class Account {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "idx", nullable = false)
     private Integer id;
@@ -12,7 +16,7 @@ public class Account {
     @Column(name = "username", nullable = false, length = 30)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false, length = 130)
     private String password;
 
     @Column(name = "nickname", nullable = false, length = 20)
@@ -27,6 +31,14 @@ public class Account {
     @Lob
     @Column(name = "user_role", nullable = false)
     private String userRole;
+
+    // ENUM으로 안하고 ,로 해서 구분해서 ROLE을 입력 -> 그걸 파싱!!
+    public List<String> getRoleList(){
+        if(this.userRole.length() > 0){
+            return Arrays.asList(this.userRole.split(","));
+        }
+        return new ArrayList<>();
+    }
 
     public String getUserRole() {
         return userRole;
