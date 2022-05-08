@@ -13,7 +13,7 @@ public class Account {
     @Column(name = "idx", nullable = false)
     private Integer id;
 
-    @Column(name = "username", nullable = false, length = 30)
+    @Column(name = "username", nullable = false, length = 20)
     private String username;
 
     @Column(name = "password", nullable = false, length = 130)
