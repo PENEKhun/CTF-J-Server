@@ -7,7 +7,6 @@ import com.penekhun.ctfjserver.User.Dto.TokenDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.NameAlreadyBoundException;
 import java.util.Optional;
 
 @Service
@@ -75,7 +73,7 @@ public class AccountService {
         account.setEmail(signup.getEmail());
         account.setNickname(signup.getNickname());
         account.setRealName(signup.getRealName());
-        account.setUserRole("ROLE_USER");
+        //account.setDefaultRole();
 
         accountRepository.save(account);
 
