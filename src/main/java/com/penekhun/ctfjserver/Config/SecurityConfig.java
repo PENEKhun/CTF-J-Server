@@ -7,7 +7,6 @@ import com.penekhun.ctfjserver.Config.Jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -47,9 +46,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             //.addFilter(new JwtAuthenticationFilter(authenticationManager()))
             .authorizeRequests()
                 .antMatchers("/api/v1/account/**")
-                    .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/api/v1/admin/**")
                     .access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/api/v1/problem/**")
+                    .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 
                 .antMatchers("/api/vi/login/**").hasAnyRole()
                 .antMatchers("/api/vi/logout/**").hasAnyRole()
