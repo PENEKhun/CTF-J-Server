@@ -40,12 +40,12 @@ public class Account {
         return new ArrayList<>();
     }
 
-    public String getUserRole() {
-        return userRole;
+    public void makeAdmin(){
+        this.userRole = "ROLE_ADMIN";
     }
 
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public String getUserRole() {
+        return userRole;
     }
 
     public String getRealName() {
@@ -90,9 +90,5 @@ public class Account {
 
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 }
