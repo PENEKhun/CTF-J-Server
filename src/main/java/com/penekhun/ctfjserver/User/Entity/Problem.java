@@ -11,6 +11,9 @@ public class Problem {
     @Column(name = "idx", nullable = false)
     private Integer id;
 
+    @Column(name = "author_id", nullable = false)
+    private Integer authorId;
+
     @Column(name = "title", nullable = false, length = 45)
     private String title;
 
