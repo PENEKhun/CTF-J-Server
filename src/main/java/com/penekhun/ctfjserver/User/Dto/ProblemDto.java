@@ -1,29 +1,35 @@
 package com.penekhun.ctfjserver.User.Dto;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
+import lombok.Setter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 
 public class ProblemDto {
 
+    @Data
     public static class Default{
-        @NotEmpty
+//        @NotEmpty
         @Size(max=45)
+        @NotBlank
         private String title;
 
-        @NotEmpty
+//        @NotEmpty
+        @NotBlank
         private String description;
 
-        @NotEmpty
+//        @NotEmpty
         @Size(max=100)
+        @NotBlank
         private String flag;
 
-        @NotEmpty
+//        @NotEmpty
+        @NotBlank
         private String type;
 
         private Boolean isPublic;
@@ -43,10 +49,33 @@ public class ProblemDto {
             String flag;
         }
 
+  /*      @Data
+        @Valid
+        public static class MakeProblem extends DefaultType{
+
+        }*/
+
 
     }
 
+
     public static class Res{
+
+        @Setter
+        @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+        public static class problemWithoutFlag {
+            private String title;
+            private String description;
+            private String type;
+            private Boolean isPublic;
+            private Integer defaultScore;
+            private Instant modifyTime;
+        }
+
+
+
+
+
 
     }
 }
