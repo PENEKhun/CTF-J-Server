@@ -5,13 +5,11 @@ import com.penekhun.ctfjserver.Config.Jwt.JwtAuthenticationEntryPoint;
 import com.penekhun.ctfjserver.Config.Jwt.JwtSecurityConfig;
 import com.penekhun.ctfjserver.Config.Jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
@@ -29,11 +27,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //    public AuthenticationManager authenticationManagerBean() throws Exception {
 //        return super.authenticationManagerBean();
 //    }
-
-    @Bean //해당 메서드의 리턴되는 오브젝트를 IoC로 등록함
-    public BCryptPasswordEncoder encodePwd(){
-        return new BCryptPasswordEncoder();
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -55,7 +48,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/vi/login/**").hasAnyRole()
                 .antMatchers("/api/vi/logout/**").hasAnyRole()
 
-                .anyRequest().permitAll()
+              //  .anyRequest().permitAll()
+
+                .and()
+                .exceptionHandling()// 예외 처리 진입점
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 인증 실패 진입점
+                .accessDeniedHandler(jwtAccessDeniedHandler) // 인가 실패 진입점
 
                 .and()
                 //addFilter메스드가 담긴 Config 클래스 추가
