@@ -22,14 +22,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("called CusomUserDetails.Service -> loadUserByUsername");
-        Optional<Account> findMember = accountRepository.findOneByUsername(username);
-        if (findMember.isEmpty()) throw new UsernameNotFoundException("존재하지 않는 username 입니다.");
-//        Optional<Account> findMember = Optional.ofNullable(accountRepository.findOneByUsername(username));
-//        if (findMember.isEmpty()) throw new UsernameNotFoundException("존재하지 않는 username 입니다.");
+        log.info("called CustomUserDetails.Service -> loadUserByUsername : {} ", username);
+        Optional<Account> findMember = accountRepository.findByUsername(username);
+
+        if (findMember.isEmpty()) throw new UsernameNotFoundException("username not found");
 
         log.info("loadUserByUsername account.username = {}", username);
-
         return new SecurityUser(findMember.get());
     }
 }
