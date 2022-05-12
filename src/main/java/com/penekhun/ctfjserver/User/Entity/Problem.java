@@ -100,4 +100,8 @@ public class Problem {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public void setAuthorId(Account account) {
+        this.authorId = account.getId();
+    }
 }
