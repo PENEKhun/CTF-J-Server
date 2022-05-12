@@ -1,14 +1,15 @@
 package com.penekhun.ctfjserver.User.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Dto.AccountDto;
 import com.penekhun.ctfjserver.forTest.MultiValueMapConverter;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -17,8 +18,7 @@ import javax.transaction.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -53,18 +53,19 @@ class LoginOutControllerTest {
 
 
     @Test
-    void 테스트로그인_실패() throws Exception {
+    void 테스트로그인_실패_찾을수없는멤버() throws Exception {
         //todo: dto 변경
         MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>();
         loginParams.add("username", "sifjicmzxwci21");
         loginParams.add("password", "password111111");
 
-        Assertions.assertThrows(NullPointerException.class, ()-> {
-                    mockMvc.perform(post("/api/v1/login").params(loginParams))
-                            .andExpect(status().is5xxServerError()); });
+        mockMvc.perform(post("/api/v1/login").params(loginParams)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("errorCode").value(ErrorCode.MEMBER_NOT_FOUND.getErrorCode()));
+        //  .andExpect()
+
     }
-                  //  .andExpect(status().is5xxServerError())
-                  //  .andExpect(result -> assertTrue(result.getResolvedException() instanceof java.lang.NullPointerException))
 
     @Test
     void 테스트로그아웃() {
