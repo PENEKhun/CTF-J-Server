@@ -1,5 +1,7 @@
 package com.penekhun.ctfjserver.User.Service;
 
+import com.penekhun.ctfjserver.Config.Exception.CustomException;
+import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.Config.Jwt.JwtFilter;
 import com.penekhun.ctfjserver.Config.Jwt.TokenProvider;
 import com.penekhun.ctfjserver.User.Dto.AccountDto;
@@ -30,10 +32,10 @@ public class AccountService {
 
     public ResponseEntity login(String username, String password){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        Optional<Account> findMember = accountRepository.findOneByUsername(username);
-        findMember.orElseThrow(() -> new NullPointerException("회원정보가 없습니다."));
+        Optional<Account> findMember = accountRepository.findByUsername(username);
+        findMember.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         if (!encoder.matches(password, findMember.get().getPassword()))
-            throw new NullPointerException("회원정보가 없습니다.");
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
@@ -50,19 +52,19 @@ public class AccountService {
     }
 
     public ResponseEntity signup(AccountDto.Req.Signup signup){
-        Optional<Account> findMember = accountRepository.findOneByUsername(signup.getUsername());
+        Optional<Account> findMember = accountRepository.findByUsername(signup.getUsername());
         findMember.ifPresent(then -> {
-            throw new RuntimeException("존재하는 아이디입니다.");
+            throw new CustomException(ErrorCode.USERNAME_DUPLICATION);
         });
 
         findMember = accountRepository.findOneByEmail(signup.getEmail());
         findMember.ifPresent(then -> {
-            throw new RuntimeException("존재하는 이메일입니다.");
+            throw new CustomException(ErrorCode.EMAIL_DUPLICATION);
         });
 
         findMember = accountRepository.findOneByNickname(signup.getNickname());
         findMember.ifPresent(then -> {
-            throw new RuntimeException("존재하는 닉네임입니다.");
+            throw new CustomException(ErrorCode.NICKNAME_DUPLICATION);
         });
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -73,7 +75,6 @@ public class AccountService {
         account.setEmail(signup.getEmail());
         account.setNickname(signup.getNickname());
         account.setRealName(signup.getRealName());
-        //account.setDefaultRole();
 
         accountRepository.save(account);
 
