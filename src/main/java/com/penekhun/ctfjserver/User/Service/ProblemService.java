@@ -33,7 +33,6 @@ public class ProblemService {
     }
 
     public List<Problem> getProblemList(){
-
         List<Problem> problems = problemRepository.findAllProblem(false);
         return problems;
     }
