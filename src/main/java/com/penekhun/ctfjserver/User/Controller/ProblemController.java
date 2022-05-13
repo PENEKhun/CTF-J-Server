@@ -1,6 +1,10 @@
 package com.penekhun.ctfjserver.User.Controller;
 
+import com.penekhun.ctfjserver.Config.CurrentUser;
+import com.penekhun.ctfjserver.Config.Exception.CustomException;
+import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
+import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Entity.Problem;
 import com.penekhun.ctfjserver.User.Service.ProblemService;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +37,11 @@ public class ProblemController {
 
     //@Secured("ROLE_ADMIN")
     @PostMapping("")
-    public ProblemDto.Default addProblemMapping( @Valid ProblemDto.Default problemDto){
-//        @CurrentUser Account account,
-//        if (account == null)
-//            throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
+    public ProblemDto.Default addProblemMapping(@CurrentUser Account account, @Valid ProblemDto.Default problemDto){
+        if (account == null)
+            throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
 
-       // return problemService.addProblem(account, problemDto);
-        return null;
+        return problemService.addProblem(account, problemDto);
     }
 
     @DeleteMapping("{problem}")
