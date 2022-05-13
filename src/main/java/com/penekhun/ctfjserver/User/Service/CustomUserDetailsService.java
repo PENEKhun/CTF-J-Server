@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         log.info("called CustomUserDetails.Service -> loadUserByUsername : {} ", username);
         Optional<Account> findMember = accountRepository.findByUsername(username);
 
-        if (findMember.isEmpty()) throw new UsernameNotFoundException("username not found");
+        if (findMember.isEmpty()) throw new UsernameNotFoundException("username not found : " + username);
 
         log.info("loadUserByUsername account.username = {}", username);
         return new SecurityUser(findMember.get());
