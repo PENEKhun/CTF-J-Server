@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
+import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -23,6 +25,7 @@ public class TokenStorage {
     @Column(name = "REFRESH_TOKEN", nullable = false)
     private String refreshToken;
 
+    @Indexed
     @Column(name = "ACCESS_TOKEN", nullable = false)
     private String accessToken;
 
