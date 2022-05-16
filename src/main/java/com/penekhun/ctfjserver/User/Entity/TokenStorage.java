@@ -10,21 +10,24 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
-@RedisHash("RefreshToken")
+@RedisHash("TokenStorage")
 @Builder
 @Getter
 @ToString
-public class RefreshToken {
+public class TokenStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "REFRESH_TOKEN_ID", nullable = false)
+    @Column(name = "TOKEN_ID", nullable = false)
     private Long refreshTokenId;
 
     @Column(name = "REFRESH_TOKEN", nullable = false)
     private String refreshToken;
 
-    @Column(name = "KEY_USERNAME", nullable = false)
-    private String keyUsername;
+    @Column(name = "ACCESS_TOKEN", nullable = false)
+    private String accessToken;
+
+    @Column(name = "USERNAME", nullable = false)
+    private String username;
 //
 //    @Column(name = "Expired", nullable = false)
 //    private Date expired;
