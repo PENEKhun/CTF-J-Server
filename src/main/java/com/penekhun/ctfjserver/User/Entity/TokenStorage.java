@@ -28,7 +28,16 @@ public class TokenStorage {
 
     @Column(name = "USERNAME", nullable = false)
     private String username;
-//
+
+    @TimeToLive
+    private Long expiration;
+
+    public void setExpiration(Long expiration) {
+        this.expiration = expiration;
+    }
+
+
+    //
 //    @Column(name = "Expired", nullable = false)
 //    private Date expired;
 //
