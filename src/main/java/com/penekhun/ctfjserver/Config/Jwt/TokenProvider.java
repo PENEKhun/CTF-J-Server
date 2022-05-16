@@ -25,17 +25,21 @@ public class TokenProvider implements InitializingBean {
     public final long refreshTokenValidityInMilliseconds;
     private final UserDetailsService userDetailsService;
 
+    private final TokenStorageRepository tokenStorageRepository;
+
     private Key key;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
             @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInMilliseconds,
-            UserDetailsService userDetailsService) {
+            UserDetailsService userDetailsService,
+            TokenStorageRepository tokenStorageRepository) {
         this.secret = secret;
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds * 1000;
         this.userDetailsService = userDetailsService;
+        this.tokenStorageRepository = tokenStorageRepository;
     }
 
     @Override
