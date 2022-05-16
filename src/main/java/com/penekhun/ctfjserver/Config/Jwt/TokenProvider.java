@@ -92,11 +92,14 @@ public class TokenProvider implements InitializingBean {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String accessToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-                                            //.build().parseClaimsJws(token);
-            return true;
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
+            Optional<TokenStorage> token = tokenStorageRepository.findByAccessToken(accessToken);
+            if (token.isEmpty()) log.warn("토큰 보안위협 발견, 시도된 AccessToken {}", accessToken);
+
+            return token.isPresent();
+
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
