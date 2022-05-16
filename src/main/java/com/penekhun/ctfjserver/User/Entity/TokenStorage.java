@@ -39,6 +39,13 @@ public class TokenStorage {
         this.expiration = expiration;
     }
 
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 
     //
 //    @Column(name = "Expired", nullable = false)
