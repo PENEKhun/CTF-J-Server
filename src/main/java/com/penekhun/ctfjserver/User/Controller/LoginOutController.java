@@ -1,22 +1,17 @@
 package com.penekhun.ctfjserver.User.Controller;
 
-import com.penekhun.ctfjserver.Config.Jwt.JwtFilter;
-import com.penekhun.ctfjserver.Config.Jwt.TokenProvider;
+import com.penekhun.ctfjserver.Config.CurrentUser;
 import com.penekhun.ctfjserver.User.Dto.AccountDto;
-import com.penekhun.ctfjserver.User.Dto.TokenDto;
+import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import static com.penekhun.ctfjserver.Config.Jwt.JwtFilter.AUTHORIZATION_HEADER;
+import static com.penekhun.ctfjserver.Config.Jwt.JwtFilter.REFRESH_TOKEN_HEADER;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -32,6 +27,13 @@ public class LoginOutController {
              @RequestParam String password){
 
         return accountService.login(username, password);
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity reissueMap(@CurrentUser Account account,
+                                     @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+                                     @RequestHeader(REFRESH_TOKEN_HEADER) String refreshToken){
+        return accountService.reissue(account, accessToken, refreshToken);
     }
 
     @GetMapping("logout")
