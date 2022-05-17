@@ -7,7 +7,7 @@ public enum ErrorCode {
     METHOD_NOT_ALLOWED(405, "C002", " Invalid Input Value"),
     HANDLE_ACCESS_DENIED(403, "C003", "잘못된 접근입니다."),
     CANNOT_LOAD_USERNAME(500, "C004", "존재하지 않는 username입니다"),
-    EXIST_TOKEN_ERR(501, "C005", "존재하지 않는 토큰"),
+    DOESNT_EXIST_TOKEN(501, "C005", "존재하지 않는 토큰"),
 
     // Member
     EMAIL_DUPLICATION(200, "M001", "존재하는 이메일"),
