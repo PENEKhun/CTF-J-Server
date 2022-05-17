@@ -35,6 +35,14 @@ public class TokenStorage {
     @TimeToLive
     private Long expiration;
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
     public void setExpiration(Long expiration) {
         this.expiration = expiration;
     }
