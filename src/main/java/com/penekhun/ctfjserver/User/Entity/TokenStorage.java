@@ -29,6 +29,7 @@ public class TokenStorage {
     @Column(name = "ACCESS_TOKEN", nullable = false)
     private String accessToken;
 
+    @Indexed
     @Column(name = "USERNAME", nullable = false)
     private String username;
 
