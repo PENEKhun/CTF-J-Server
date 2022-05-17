@@ -1,8 +1,6 @@
 package com.penekhun.ctfjserver.User.Controller;
 
-import com.penekhun.ctfjserver.Config.CurrentUser;
 import com.penekhun.ctfjserver.User.Dto.AccountDto;
-import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,10 +28,9 @@ public class LoginOutController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity reissueMap(@CurrentUser Account account,
-                                     @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+    public ResponseEntity reissueMap(@RequestHeader(AUTHORIZATION_HEADER) String accessToken,
                                      @RequestHeader(REFRESH_TOKEN_HEADER) String refreshToken){
-        return accountService.reissue(account, accessToken, refreshToken);
+        return accountService.reissue(accessToken, refreshToken);
     }
 
     @GetMapping("logout")
