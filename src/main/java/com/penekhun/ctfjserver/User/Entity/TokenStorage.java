@@ -20,7 +20,7 @@ public class TokenStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TOKEN_ID", nullable = false)
-    private Long refreshTokenId;
+    private Long tokenId;
 
     @Column(name = "REFRESH_TOKEN", nullable = false)
     private String refreshToken;
