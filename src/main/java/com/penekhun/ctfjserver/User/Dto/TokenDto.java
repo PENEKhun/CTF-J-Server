@@ -7,5 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class TokenDto {
     private String token;
+    private String tokenExpired;
     private String refresh;
 }
