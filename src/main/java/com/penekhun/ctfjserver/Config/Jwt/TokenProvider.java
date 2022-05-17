@@ -1,5 +1,7 @@
 package com.penekhun.ctfjserver.Config.Jwt;
 
+import com.penekhun.ctfjserver.User.Entity.TokenStorage;
+import com.penekhun.ctfjserver.User.Repository.TokenStorageRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,14 +10,15 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -49,31 +52,29 @@ public class TokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(Authentication authentication) {
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    public Map<String, String> createToken(String username) {
+//        String authorities = authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
-        return Jwts.builder()
-                .claim("username", authentication.getName())
-                .claim("ROLE", authorities)
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("token", Jwts.builder()
+                .claim("username", username)
+              //  .claim("ROLE", authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
-                .compact();
+                .compact());
+        map.put("tokenExpired", String.valueOf(validity));
+        return map;
     }
 
-    public String createRefreshToken(Authentication authentication) {
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
+    public String createRefreshToken() {
         Date now = new Date();
         return Jwts.builder()
                 .setIssuedAt(now)
-                .claim("username", authentication.getName())
                 .setExpiration(new Date(now.getTime() + refreshTokenValidityInMilliseconds))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -93,11 +94,11 @@ public class TokenProvider implements InitializingBean {
     }
 
     public boolean validateToken(String accessToken) {
+        //todo: try catch 미사용 방향으로 리팩터링
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
             Optional<TokenStorage> token = tokenStorageRepository.findByAccessToken(accessToken);
-            if (token.isEmpty()) log.warn("토큰 보안위협 발견, 시도된 AccessToken {}", accessToken);
-
+            if (token.isEmpty()) log.warn("토큰 보안위협 발견, 시도된 AccessToken : {}", accessToken);
             return token.isPresent();
 
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
@@ -111,4 +112,5 @@ public class TokenProvider implements InitializingBean {
         }
         return false;
     }
+
 }
