@@ -16,6 +16,9 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(200, "M004", "존재하지 않은 회원정보"),
     //LOGIN_INPUT_INVALID(400, "M002", "Login input is invalid"),
 
+    // unchcked
+    UNCHECKED_ERROR(500, "U00", "확인 할 수 없는 에러")
+
     ;
     private final String errorCode;
     private final String message;
