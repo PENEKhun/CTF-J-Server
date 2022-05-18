@@ -30,8 +30,4 @@ public class RedisUtil {
         refreshTokenRepository.save(refreshTokenEntity);
     }
 
-    public boolean TokenExist(String accessToken, String refreshToken){
-        return true;
-    }
-
 }
