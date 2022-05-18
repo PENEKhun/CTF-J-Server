@@ -3,9 +3,6 @@ package com.penekhun.ctfjserver.User.Entity;
 import com.penekhun.ctfjserver.Config.SecurityRole;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Entity
 @Table(name = "Account", schema = "ctf")
@@ -33,14 +30,6 @@ public class Account {
     @Lob
     @Column(name = "user_role", nullable = false)
     private String userRole = SecurityRole.USER.toString();
-
-    // ENUM으로 안하고 ,로 해서 구분해서 ROLE을 입력 -> 그걸 파싱!!
-    public List<String> getRoleList(){
-        if(this.userRole.length() > 0){
-            return Arrays.asList(this.userRole.split(","));
-        }
-        return new ArrayList<>();
-    }
 
     public void makeAdmin(){
         this.userRole = "ROLE_ADMIN";
