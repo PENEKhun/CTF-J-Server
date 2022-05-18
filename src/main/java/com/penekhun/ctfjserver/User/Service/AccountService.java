@@ -87,6 +87,13 @@ public class AccountService {
         if (username == null)
             throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
 
+        log.info(findAccessToken.get().getRefreshToken());
+
+        //refresh 토큰 비교
+        if (!findAccessToken.get().getRefreshToken().equals(oldRefreshToken))
+            throw new CustomException(ErrorCode.UNCHECKED_ERROR);
+
+
         Map<String, String> jwt = tokenProvider.createToken(username);
         String newAccessToken = jwt.get("token");
         String tokenExpired = jwt.get("tokenExpired");
