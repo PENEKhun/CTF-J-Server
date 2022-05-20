@@ -21,7 +21,7 @@ public class Problem {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "flag", nullable = false, length = 100)
+    @Column(name = "flag", nullable = false, length = 150)
     private String flag;
 
     @Lob
