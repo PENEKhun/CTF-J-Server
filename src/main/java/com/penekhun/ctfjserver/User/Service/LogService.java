@@ -2,9 +2,14 @@ package com.penekhun.ctfjserver.User.Service;
 
 import com.penekhun.ctfjserver.Config.CurrentUser;
 import com.penekhun.ctfjserver.User.Entity.AuthLog;
+import com.penekhun.ctfjserver.User.Entity.LogStore;
+import com.penekhun.ctfjserver.User.Entity.ProblemFile;
 import com.penekhun.ctfjserver.User.Repository.AuthLogRepository;
+import com.penekhun.ctfjserver.User.Repository.LogStoreRepository;
+import com.penekhun.ctfjserver.User.Repository.ProblemFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 
