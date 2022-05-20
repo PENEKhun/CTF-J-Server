@@ -31,6 +31,10 @@ public class Account {
     @Column(name = "user_role", nullable = false)
     private String userRole = SecurityRole.USER.toString();
 
+    public boolean isAdmin(){
+        return (this.userRole.equals("ROLE_ADMIN"));
+    }
+
     public void makeAdmin(){
         this.userRole = "ROLE_ADMIN";
     }
