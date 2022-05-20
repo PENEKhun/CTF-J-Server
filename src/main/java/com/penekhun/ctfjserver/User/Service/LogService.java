@@ -14,6 +14,8 @@ import javax.transaction.Transactional;
 public class LogService {
 
     private final AuthLogRepository authLogRepository;
+    private final LogStoreRepository logStoreRepository;
+    private final ProblemFileRepository problemFileRepository;
     private final CurrentUser currentUser;
 
     public void problemServiceLog(){
@@ -24,8 +26,15 @@ public class LogService {
 
     }
 
-    public void uploadFileLog(){
+    public void uploadFileLog(MultipartFile file, String fileName){
+        logging("uploadProblemFile", String.format("fileName %s", fileName));
+        ProblemFile problemFile = ProblemFile.builder().
+                fileName(fileName).
+                originalFileName(file.getOriginalFilename()).
+                uploaderIdx(currentUser.getUID())
+                .build();
 
+        problemFileRepository.save(problemFile);
     }
 
     @Transactional
