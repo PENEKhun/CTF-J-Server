@@ -22,6 +22,7 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
     private final ModelMapper modelMapper;
+    private final LogService logService;
 
     @Transactional
     public ProblemDto.Default addProblem(Account account, ProblemDto.Default problemDto){
@@ -29,6 +30,7 @@ public class ProblemService {
         Problem problem =  modelMapper.map(problemDto, Problem.class);
         problem.setAuthorId(account);
         problemRepository.save(problem);
+        logService.uploadProblemLog(problem);
         return null;
     }
 
