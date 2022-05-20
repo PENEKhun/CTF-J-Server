@@ -37,6 +37,10 @@ public class Problem {
     @Column(name = "modify_time", nullable = false)
     private Instant modifyTime;
 
+    public boolean isCorrect(String flag){
+        return (this.flag.equals(flag));
+    }
+
     public Instant getModifyTime() {
         return modifyTime;
     }
