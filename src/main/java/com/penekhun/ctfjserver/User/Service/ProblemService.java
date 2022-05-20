@@ -7,7 +7,6 @@ import com.penekhun.ctfjserver.User.Repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -37,9 +36,23 @@ public class ProblemService {
         return problems;
     }
 
-    public ResponseEntity<?> authProblem(ProblemDto.Req.Auth auth){
+    public boolean authProblem(Integer problemId, ProblemDto.Req.Auth auth){
 
-        return null;
+        /* todo: user만 풀수있게 */
+
+        Problem problem = problemRepository.findById(problemId);
+        if (problem == null)
+            return false;
+        if (!problem.getIsPublic())
+            return false;
+        if (!problem.isCorrect(auth.getFlag()))
+            return false;
+
+        /*
+        todo: 정답 로직
+         */
+
+        return true;
     }
 
 
