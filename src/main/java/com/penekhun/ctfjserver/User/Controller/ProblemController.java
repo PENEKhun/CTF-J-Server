@@ -11,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,9 +52,12 @@ public class ProblemController {
     }
 
 
-    @PostMapping("{problem}")
-    public ResponseEntity<?> authProblemMapping(@Valid ProblemDto.Req.Auth auth){
-        return problemService.authProblem(auth);
+    @PostMapping("{problemId}")
+    public ResponseEntity<String> authProblemMapping(@PathVariable @Validated @NotNull Integer problemId, @Valid ProblemDto.Req.Auth auth){
+        boolean isCorrect = problemService.authProblem(problemId, auth);
+        if (isCorrect)
+            return ResponseEntity.ok().body("true");
+        else return ResponseEntity.ok().body("false");
     }
 
 }
