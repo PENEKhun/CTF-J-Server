@@ -28,6 +28,13 @@ public class LogService {
 
     }
 
+    @Transactional
+    public void logging(String action, String detail){
+        Integer uid = currentUser.getUID();
+        LogStore log = LogStore.builder().memberIdx(uid).action(action).detail(detail).build();
+        logStoreRepository.save(log);
+    }
+
 
     @Transactional
     public void authProblemLog(Integer problemId, String authFlag, boolean isSuccess){
