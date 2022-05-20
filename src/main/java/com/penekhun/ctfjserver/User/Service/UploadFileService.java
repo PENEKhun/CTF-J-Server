@@ -18,6 +18,7 @@ import java.util.UUID;
 public class UploadFileService {
 
     private final UploadFactory s3Service;
+    private final LogService logService;
 
     public String uploadFile(@NotNull MultipartFile file) {
         String fileName = createFileName(file.getOriginalFilename());
@@ -30,6 +31,7 @@ public class UploadFileService {
         } catch (IOException e) {
             throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생하였습니다 (%s)", file.getOriginalFilename()));
         }
+        logService.uploadFileLog(file, fileName);
         return s3Service.getFileUrl(fileName);
     }
 
