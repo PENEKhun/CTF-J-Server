@@ -11,6 +11,14 @@ import java.sql.Timestamp;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "ProblemFile", schema = "ctf")
 public class ProblemFile {
+
+    @Builder
+    public ProblemFile(Integer uploaderIdx, String fileName, String originalFileName) {
+        this.uploaderIdx = uploaderIdx;
+        this.fileName = fileName;
+        this.originalFileName = originalFileName;
+    }
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "idx", nullable = false)
