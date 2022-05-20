@@ -27,7 +27,6 @@ public class ProblemService {
     public ProblemDto.Default addProblem(Account account, ProblemDto.Default problemDto){
         log.info(problemDto.getTitle());
         Problem problem =  modelMapper.map(problemDto, Problem.class);
-        log.info("writer is ... {}", account.getEmail());
         problem.setAuthorId(account);
         problemRepository.save(problem);
         return null;
