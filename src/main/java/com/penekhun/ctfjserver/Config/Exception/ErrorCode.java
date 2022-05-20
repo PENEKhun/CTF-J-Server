@@ -8,6 +8,7 @@ public enum ErrorCode {
     HANDLE_ACCESS_DENIED(403, "C003", "잘못된 접근입니다."),
     CANNOT_LOAD_USERNAME(500, "C004", "존재하지 않는 username입니다"),
     DOESNT_EXIST_TOKEN(501, "C005", "존재하지 않는 토큰"),
+    ONLY_ACCESS_USER(501, "C006", "유저만 사용 할 수 있는 기능입니다."),
 
     // Member
     EMAIL_DUPLICATION(200, "M001", "존재하는 이메일"),
