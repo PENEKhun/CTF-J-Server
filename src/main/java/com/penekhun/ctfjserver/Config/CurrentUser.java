@@ -1,14 +1,21 @@
 package com.penekhun.ctfjserver.Config;
 
+import com.penekhun.ctfjserver.Config.Exception.CustomException;
+import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CurrentUser {
     private final AccountRepository accountRepository;
 
@@ -19,9 +26,13 @@ public class CurrentUser {
     }
 
     public String getUsername(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails)principal;
-        return ((UserDetails) principal).getUsername();
+        try {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails) principal;
+            return ((UserDetails) principal).getUsername();
+        } catch (ClassCastException e){
+            throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
+        }
     }
 
     public boolean isAdmin(){
