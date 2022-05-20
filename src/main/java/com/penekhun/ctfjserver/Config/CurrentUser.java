@@ -1,15 +1,27 @@
 package com.penekhun.ctfjserver.Config;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.penekhun.ctfjserver.User.Entity.Account;
+import com.penekhun.ctfjserver.User.Repository.AccountRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+@Service
+@RequiredArgsConstructor
+public class CurrentUser {
+    private final AccountRepository accountRepository;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-@AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : account")
-public @interface CurrentUser {
+    public Integer getUID(){
+        String username = getUsername();
+        Account account = accountRepository.findByUsername(username).orElseThrow(NullPointerException::new);
+        return account.getId();
+    }
+
+    public String getUsername(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        return ((UserDetails) principal).getUsername();
+    }
 
 }
