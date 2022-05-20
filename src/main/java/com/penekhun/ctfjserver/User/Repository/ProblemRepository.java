@@ -22,7 +22,13 @@ public class ProblemRepository {
             return (em.createQuery("select m from Problem m", Problem.class).getResultList());
         else
             return (em.createQuery("select m from Problem m where m.isPublic = :isPublic", Problem.class)
-                .setParameter("isPublic", true).getResultList());
+                    .setParameter("isPublic", true).getResultList());
+    }
+
+    public Problem findById(Integer id){
+        if (id != null)
+            return em.find(Problem.class, id);
+        else return null;
     }
 
 }
