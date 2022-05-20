@@ -52,7 +52,7 @@ public class ProblemService {
             return false;
 
         /*
-        todo: 정답 로직
+            Logging은 Controller에서 수행합니다.
          */
 
         return true;
