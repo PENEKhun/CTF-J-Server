@@ -24,4 +24,20 @@ public class CurrentUser {
         return ((UserDetails) principal).getUsername();
     }
 
+    public boolean isAdmin(){
+        try {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Collection<? extends GrantedAuthority> authorities = ((UserDetails) principal).getAuthorities();
+            for (GrantedAuthority auth : authorities) {
+                if (auth.getAuthority().equals("ROLE_ADMIN"))
+                    return true;
+            }
+        } catch (ClassCastException e){ //유저가 없을때 ClassCastException 일어남
+            return false;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
 }
