@@ -1,6 +1,6 @@
 package com.penekhun.ctfjserver.User.Entity;
 
-import org.springframework.data.jpa.domain.AbstractAuditable;
+import lombok.Builder;
 
 import javax.persistence.*;
 
@@ -15,7 +15,10 @@ public class AuthLog {
     @Column(name = "problem_idx", nullable = false)
     private Integer problemIdx;
 
-    @Column(name = "auth_flag", nullable = false, length = 100)
+    @Column(name = "account_idx", nullable = false)
+    private Integer accountIdx;
+
+    @Column(name = "auth_flag", nullable = false, length = 150)
     private String authFlag;
 
     @Column(name = "is_success", nullable = false)
@@ -35,6 +38,14 @@ public class AuthLog {
 
     public void setAuthFlag(String authFlag) {
         this.authFlag = authFlag;
+    }
+
+    @Builder
+    public AuthLog(Integer accountIdx, Integer problemIdx, String authFlag, Boolean isSuccess) {
+        this.accountIdx = accountIdx;
+        this.problemIdx = problemIdx;
+        this.authFlag = authFlag;
+        this.isSuccess = isSuccess;
     }
 
     public Integer getProblemIdx() {
