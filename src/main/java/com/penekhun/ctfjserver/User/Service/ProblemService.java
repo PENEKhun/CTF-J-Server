@@ -1,5 +1,7 @@
 package com.penekhun.ctfjserver.User.Service;
 
+import com.penekhun.ctfjserver.Config.Exception.CustomException;
+import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Entity.Problem;
@@ -36,9 +38,10 @@ public class ProblemService {
         return problems;
     }
 
-    public boolean authProblem(Integer problemId, ProblemDto.Req.Auth auth){
+    public boolean authProblem(Account account, Integer problemId, ProblemDto.Req.Auth auth){
 
-        /* todo: user만 풀수있게 */
+        if (account.isAdmin())
+            throw new CustomException(ErrorCode.ONLY_ACCESS_USER);
 
         Problem problem = problemRepository.findById(problemId);
         if (problem == null)

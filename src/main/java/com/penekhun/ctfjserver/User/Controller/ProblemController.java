@@ -55,8 +55,8 @@ public class ProblemController {
 
 
     @PostMapping("{problemId}")
-    public ResponseEntity<String> authProblemMapping(@PathVariable @Validated @NotNull Integer problemId, @Valid ProblemDto.Req.Auth auth){
-        boolean isCorrect = problemService.authProblem(problemId, auth);
+    public ResponseEntity<String> authProblemMapping(@CurrentUserParameter Account account, @PathVariable @Validated @NotNull Integer problemId, @Valid ProblemDto.Req.Auth auth){
+        boolean isCorrect = problemService.authProblem(account, problemId, auth);
         logService.authProblemLog(problemId, auth.getFlag(), isCorrect);
         if (isCorrect)
             return ResponseEntity.ok().body("true");
