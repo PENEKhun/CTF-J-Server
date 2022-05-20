@@ -1,18 +1,20 @@
 package com.penekhun.ctfjserver.User.Entity;
 
+import lombok.Builder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "ProblemFile", schema = "ctf")
 public class ProblemFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "idx", nullable = false)
     private Integer id;
-
-    @Column(name = "problem_idx")
-    private Integer problemIdx;
 
     @Column(name = "uploader_idx", nullable = false)
     private Integer uploaderIdx;
@@ -23,54 +25,7 @@ public class ProblemFile {
     @Column(name = "original_file_name", nullable = false, length = 45)
     private String originalFileName;
 
-    @Column(name = "upload_time", nullable = false)
-    private Instant uploadTime;
-
-    public Instant getUploadTime() {
-        return uploadTime;
-    }
-
-    public void setUploadTime(Instant uploadTime) {
-        this.uploadTime = uploadTime;
-    }
-
-    public String getOriginalFileName() {
-        return originalFileName;
-    }
-
-    public void setOriginalFileName(String originalFileName) {
-        this.originalFileName = originalFileName;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public Integer getUploaderIdx() {
-        return uploaderIdx;
-    }
-
-    public void setUploaderIdx(Integer uploaderIdx) {
-        this.uploaderIdx = uploaderIdx;
-    }
-
-    public Integer getProblemIdx() {
-        return problemIdx;
-    }
-
-    public void setProblemIdx(Integer problemIdx) {
-        this.problemIdx = problemIdx;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @CreatedDate
+    @Column(name = "upload_time", nullable = false, updatable = false)
+    private Timestamp uploadTime;
 }
