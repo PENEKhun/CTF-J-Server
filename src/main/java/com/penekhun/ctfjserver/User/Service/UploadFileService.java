@@ -1,7 +1,9 @@
 package com.penekhun.ctfjserver.User.Service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.penekhun.ctfjserver.FileUpload.UploadFactory;
+import com.penekhun.ctfjserver.Config.Exception.CustomException;
+import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
+import com.penekhun.ctfjserver.FileUpload.FileManagement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
