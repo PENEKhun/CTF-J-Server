@@ -44,7 +44,9 @@ public class AmazonS3Upload implements UploadFactory{
 
     @Override
     public String getFileUrl(String fileName) {
-        return amazonS3.getUrl(bucket, fileName).toString();
+        //todo: Server/api/v1/file/{fileName}으로 리턴되게 변경
+        //return amazonS3.getUrl(bucket, fileName).toString();
+        return fileName;
     }
 
 }
