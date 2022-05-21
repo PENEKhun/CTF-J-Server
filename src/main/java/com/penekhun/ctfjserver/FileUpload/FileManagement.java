@@ -9,4 +9,5 @@ import java.io.InputStream;
 public interface FileManagement {
     void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName);
     String getFileUrl(String fileName);
+    ResponseEntity<byte[]> downloadFile(String storedFileName) throws IOException;
 }
