@@ -17,7 +17,7 @@ import java.net.URLEncoder;
 
 @RequiredArgsConstructor
 @Service
-public class AmazonS3Upload implements UploadFactory{
+public class AmazonS3File implements FileManagement {
 
     private final AmazonS3 amazonS3;
     @Value("${cloud.aws.s3.bucket}") String bucket;

@@ -17,7 +17,7 @@ import java.util.UUID;
 @Service
 public class UploadFileService {
 
-    private final UploadFactory s3Service;
+    private final FileManagement s3Service;
     private final LogService logService;
 
     public String uploadFile(@NotNull MultipartFile file) {
