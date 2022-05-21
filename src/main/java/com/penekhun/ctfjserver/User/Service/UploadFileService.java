@@ -37,6 +37,15 @@ public class UploadFileService {
         return s3Service.getFileUrl(fileName);
     }
 
+    public ResponseEntity<byte[]> downloadFile(@NotEmpty String fileName){
+        try {
+            return s3Service.downloadFile(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.UNCHECKED_ERROR);
+        }
+    }
+
     // 기존 확장자명을 유지한 채, 유니크한 파일의 이름을 생성하는 로직
     private String createFileName(String originalFileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(originalFileName));
