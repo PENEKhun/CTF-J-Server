@@ -7,9 +7,11 @@ import com.penekhun.ctfjserver.FileUpload.FileManagement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
