@@ -5,6 +5,7 @@ import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Entity.AuthLog;
 import com.penekhun.ctfjserver.User.Entity.LogStore;
+import com.penekhun.ctfjserver.User.Entity.Problem;
 import com.penekhun.ctfjserver.User.Entity.ProblemFile;
 import com.penekhun.ctfjserver.User.Repository.AuthLogRepository;
 import com.penekhun.ctfjserver.User.Repository.LogStoreRepository;
@@ -25,12 +26,8 @@ public class LogService {
     private final ProblemFileRepository problemFileRepository;
     private final CurrentUser currentUser;
 
-    public void problemServiceLog(){
-
-    }
-
-    public void uploadProblemLog(){
-
+    public void uploadProblemLog(Problem problem){
+        logging("uploadProblem", String.format("problem name : %s", problem.getTitle()));
     }
 
     public void uploadFileLog(MultipartFile file, String fileName){
