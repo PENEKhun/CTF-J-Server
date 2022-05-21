@@ -1,6 +1,8 @@
 package com.penekhun.ctfjserver.User.Service;
 
 import com.penekhun.ctfjserver.Config.CurrentUser;
+import com.penekhun.ctfjserver.Config.Exception.CustomException;
+import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Entity.AuthLog;
 import com.penekhun.ctfjserver.User.Entity.LogStore;
 import com.penekhun.ctfjserver.User.Entity.ProblemFile;
@@ -45,6 +47,9 @@ public class LogService {
     @Transactional
     public void logging(String action, String detail){
         Integer uid = currentUser.getUID();
+        if (uid == null)
+            throw new CustomException(ErrorCode.UNCHECKED_ERROR);
+
         LogStore log = LogStore.builder().memberIdx(uid).action(action).detail(detail).build();
         logStoreRepository.save(log);
     }
