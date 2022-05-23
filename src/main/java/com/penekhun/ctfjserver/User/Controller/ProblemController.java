@@ -48,6 +48,7 @@ public class ProblemController {
         return problemService.addProblem(account, problemDto);
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("{problem}")
     public ResponseEntity<?> deleteProblemMapping(){
         return null;
