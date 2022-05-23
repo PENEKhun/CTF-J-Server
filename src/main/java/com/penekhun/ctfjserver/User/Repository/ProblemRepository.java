@@ -35,6 +35,11 @@ public class ProblemRepository {
                     .setParameter("isPublic", true).getResultList());
     }
 
+    public List<Problem> findByCategory(String category){
+            return (em.createQuery("select m from Problem m where m.type = :category", Problem.class)
+                    .setParameter("category", category).getResultList());
+    }
+
     public Problem findById(Integer id){
         if (id != null)
             return em.find(Problem.class, id);
