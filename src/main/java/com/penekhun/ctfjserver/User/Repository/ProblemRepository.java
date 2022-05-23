@@ -19,9 +19,10 @@ public class ProblemRepository {
     }
 
     public boolean amICorrectBefore(Integer accountId, Integer problemId){
+        Problem problem = findById(problemId);
         List<AuthLog> authLog =
-                em.createQuery("select a from AuthLog a where a.accountIdx = :accountId and a.problemIdx = :problemId and a.isSuccess = true", AuthLog.class)
-                .setParameter("problemId", problemId)
+                em.createQuery("select a from AuthLog a where a.accountIdx = :accountId and a.problem = :problem and a.isSuccess = true", AuthLog.class)
+                .setParameter("problem", problem)
                 .setParameter("accountId", accountId)
                 .setMaxResults(1).getResultList();
         return authLog != null && !authLog.isEmpty();
