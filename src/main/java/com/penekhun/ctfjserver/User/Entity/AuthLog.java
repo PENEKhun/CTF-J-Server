@@ -1,10 +1,12 @@
 package com.penekhun.ctfjserver.User.Entity;
 
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "AuthLog", schema = "ctf")
 public class AuthLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
