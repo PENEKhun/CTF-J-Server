@@ -10,6 +10,7 @@ import com.penekhun.ctfjserver.User.Entity.ProblemFile;
 import com.penekhun.ctfjserver.User.Repository.AuthLogRepository;
 import com.penekhun.ctfjserver.User.Repository.LogStoreRepository;
 import com.penekhun.ctfjserver.User.Repository.ProblemFileRepository;
+import com.penekhun.ctfjserver.User.Repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ public class LogService {
     private final AuthLogRepository authLogRepository;
     private final LogStoreRepository logStoreRepository;
     private final ProblemFileRepository problemFileRepository;
+    private final ProblemRepository problemRepository;
     private final CurrentUser currentUser;
 
     public void uploadProblemLog(Problem problem){
@@ -54,8 +56,9 @@ public class LogService {
 
     @Transactional
     public void authProblemLog(Integer problemId, String authFlag, boolean isSuccess){
+        Problem problem = problemRepository.findById(problemId);
         AuthLog authLog = AuthLog.builder().
-                problemIdx(problemId).
+                problem(problem).
                 authFlag(authFlag).
                 isSuccess(isSuccess).
                 accountIdx(currentUser.getUID())
