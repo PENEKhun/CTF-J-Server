@@ -14,8 +14,9 @@ public class AuthLog {
     @Column(name = "idx", nullable = false)
     private Long idx;
 
-    @Column(name = "problem_idx", nullable = false)
-    private Integer problemIdx;
+    @ManyToOne @JoinColumn(name = "PROBLEM_IDX")
+    //@Column(name = "problem_idx", nullable = false)
+    private Problem problem;
 
     @Column(name = "account_idx", nullable = false)
     private Integer accountIdx;
@@ -43,26 +44,11 @@ public class AuthLog {
     }
 
     @Builder
-    public AuthLog(Integer accountIdx, Integer problemIdx, String authFlag, Boolean isSuccess) {
+    public AuthLog(Problem problem, Integer accountIdx, String authFlag, Boolean isSuccess) {
+        this.problem = problem;
         this.accountIdx = accountIdx;
-        this.problemIdx = problemIdx;
         this.authFlag = authFlag;
         this.isSuccess = isSuccess;
     }
 
-    public Integer getProblemIdx() {
-        return problemIdx;
-    }
-
-    public void setProblemIdx(Integer problemIdx) {
-        this.problemIdx = problemIdx;
-    }
-
-    public Long getIdx() {
-        return idx;
-    }
-
-    public void setIdx(Long idx) {
-        this.idx = idx;
-    }
 }
