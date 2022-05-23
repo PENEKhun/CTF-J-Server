@@ -39,6 +39,11 @@ public class ProblemService {
         return problems;
     }
 
+    public List<Problem> getProblemListFromCategory(String category){
+        List<Problem> problems = problemRepository.findByCategory(category);
+        return problems;
+    }
+
     public boolean authProblem(Account account, Integer problemId, ProblemDto.Req.Auth auth){
 
         if (account.isAdmin())
