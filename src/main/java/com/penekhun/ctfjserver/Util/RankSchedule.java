@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -17,20 +18,19 @@ public class RankSchedule {
 
     private final RankRepository rankRepository;
 
-    private List<ProbListForDynamicScore> problemList = new ArrayList<>();
+    private List<ProbListForDynamicScore> probSolveCntList = new ArrayList<>();
+ //   private List<ProbListForDynamicScore> memberSolveList = new ArrayList<>();
 
     @Scheduled(fixedDelay = 2000, initialDelay = 2000)
     public void scheduleFixedRateWithInitialDelayTask() {
         long bef = System.currentTimeMillis();
-        problemList = rankRepository.findAllProbSolver();
+        probSolveCntList = rankRepository.findProbSolver();
 
-        for (ProbListForDynamicScore problem : problemList) {
+        for (ProbListForDynamicScore problem : probSolveCntList) {
             problem.setCalculatedScore(dynamicScore(problem));
         }
 
-        for (ProbListForDynamicScore solver : problemList) {
-            log.info("문제 : {}, 솔버 : {}, 점수 : {}", solver.getId(), solver.getSolverCount(), solver.getCalculatedScore());
-        }
+        probSolveCntList.sort(Comparator.comparingInt(ProbListForDynamicScore::getId));
 
 
         log.info("스케쥴링 실행시간 {}",
@@ -44,14 +44,12 @@ public class RankSchedule {
         Long solveCount = problem.getSolverCount();
 
         double value = (((min - max) / Math.pow(threshold, 2)) * Math.pow(solveCount, 2)) + max;
-        int calculatedScore = (int) Math.ceil(value);
 
-        return calculatedScore;
-
+        return (int) Math.ceil(value);
     }
 
     public List<ProbListForDynamicScore> getProblemListForDynamicScore() {
-        return problemList;
+        return probSolveCntList;
     }
 }
 
