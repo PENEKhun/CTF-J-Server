@@ -55,7 +55,7 @@ public class ProblemService {
         Problem problem = problemRepository.findById(problemId);
         if (problem == null)
             return false;
-        if (!problem.getIsPublic())
+        if (!problem.isPublic())
             return false;
         if (!problem.isCorrect(auth.getFlag()))
             return false;
