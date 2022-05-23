@@ -1,7 +1,10 @@
 package com.penekhun.ctfjserver.User.Entity;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "Problem", schema = "ctf")
@@ -31,38 +34,29 @@ public class Problem {
     @Column(name = "is_public")
     private Boolean isPublic;
 
-    @Column(name = "default_score", nullable = false)
-    private Integer defaultScore;
+    @Column(name = "max_score", nullable = false)
+    private Integer maxScore;
 
-    @Column(name = "modify_time", nullable = false)
-    private Instant modifyTime;
+    @Column(name = "min_score", nullable = false)
+    private Integer minScore;
+
+    @Column(name = "solve_threshold", nullable = false)
+    private Integer solveThreshold;
+
+    @CreatedDate
+    @Column(name = "create_time", nullable = false, updatable = false)
+    private Timestamp createTime;
+
+    @LastModifiedBy
+    @Column(name = "modify_time", nullable = false, updatable = false)
+    private Timestamp modifyTime;
 
     public boolean isCorrect(String flag){
         return (this.flag.equals(flag));
     }
 
-    public Instant getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(Instant modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
-    public Integer getDefaultScore() {
-        return defaultScore;
-    }
-
-    public void setDefaultScore(Integer defaultScore) {
-        this.defaultScore = defaultScore;
-    }
-
-    public Boolean getIsPublic() {
+    public Boolean isPublic() {
         return isPublic;
-    }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
     }
 
     public String getType() {
@@ -71,22 +65,6 @@ public class Problem {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getFlag() {
-        return flag;
-    }
-
-    public void setFlag(String flag) {
-        this.flag = flag;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getTitle() {
