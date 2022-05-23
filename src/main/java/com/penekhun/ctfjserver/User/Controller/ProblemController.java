@@ -63,4 +63,14 @@ public class ProblemController {
         else return ResponseEntity.ok().body("false");
     }
 
+    @GetMapping("{category}")
+    public List<ProblemDto.Res.problemWithoutFlag> getProblemFromCategoryMapping(@PathVariable @Validated @NotNull String category){
+        List<Problem> problems = problemService.getProblemListFromCategory(category);
+        List<ProblemDto.Res.problemWithoutFlag> problemsNoFlag = new ArrayList<>();
+        problems.forEach(problem -> problemsNoFlag.add(modelMapper.map(problem, ProblemDto.Res.problemWithoutFlag.class)));
+
+        return problemsNoFlag;
+
+    }
+
 }
