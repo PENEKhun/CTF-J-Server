@@ -1,6 +1,7 @@
 package com.penekhun.ctfjserver.User.Entity;
 
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "ProblemFile", schema = "ctf")
+@NoArgsConstructor
 public class ProblemFile {
 
     @Builder
