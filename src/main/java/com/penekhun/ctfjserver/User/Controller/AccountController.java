@@ -4,7 +4,6 @@ import com.penekhun.ctfjserver.User.Dto.AccountDto;
 import com.penekhun.ctfjserver.User.Service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,14 +19,10 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("")
-    public ResponseEntity postMapping(@RequestBody @Validated AccountDto.Req.Signup signup){
+    public AccountDto.Res.Signup postMapping(@RequestBody @Validated AccountDto.Req.Signup signup){
         //post Account == Signup
         log.info("post account");
-        accountService.signup(signup);
-
-
-
-        return ResponseEntity.ok("post Account");
+        return accountService.signup(signup);
     }
 
 
