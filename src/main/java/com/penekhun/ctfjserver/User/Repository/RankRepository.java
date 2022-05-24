@@ -74,14 +74,15 @@ public class RankRepository{
 
         List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
 //        List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, function('GROUP_CONCAT', a.problem) as problem FROM AuthLog a where a.isSuccess=true GROUP By a.accountIdx").getResultList();
-        List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, group_concat(a.problem.id ) AS problem FROM AuthLog a where a.isSuccess=true GROUP By a.accountIdx").getResultList();
+        List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, acc.nickname, group_concat(a.problem.id ) AS problem FROM AuthLog a, Account acc where a.isSuccess=true and acc.id = a.idx GROUP By a.accountIdx").getResultList();
         //SELECT account_idx, GROUP_CONCAT(problem_idx) AS problem FROM AuthLog WHERE is_success = true GROUP By account_idx
 
         for (Object[] row : resultList) {
-            List<String> tempProbIdList = List.of(row[1].toString().split(","));
+            List<String> tempProbIdList = List.of(row[2].toString().split(","));
             List<Integer> probIdList = convertStringListToIntList(tempProbIdList, Integer::parseInt);
 
             RankDto.AccountSolveProbList item = RankDto.AccountSolveProbList.builder().accountId( (Integer) row[0])
+                    .nickname((String) row[1])
                     .probIdList(probIdList).build();
             accountSolveProbLists.add(item);
         }

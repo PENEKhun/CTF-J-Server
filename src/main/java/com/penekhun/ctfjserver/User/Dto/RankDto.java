@@ -30,6 +30,7 @@ public class RankDto {
     @AllArgsConstructor
     public static class AccountSolveProbList {
         private Integer accountId;
+        private String nickname;
         private List<Integer> probIdList;
         private int score = 0;
 
