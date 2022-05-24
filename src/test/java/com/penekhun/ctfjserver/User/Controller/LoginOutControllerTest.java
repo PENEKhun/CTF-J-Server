@@ -1,6 +1,7 @@
 package com.penekhun.ctfjserver.User.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Dto.AccountDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
@@ -22,7 +23,6 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,16 +57,30 @@ class LoginOutControllerTest {
     @Test
     void 테스트로그인_성공() throws Exception {
         //todo: dto 변경
+        테스트임시_회원가입_컨트롤러_성공();
+
         MultiValueMap<String, String> multiValueSignup = MultiValueMapConverter.convert(new ObjectMapper(), signup);
 
         mockMvc.perform(
-                post("/api/v1/login").params(multiValueSignup))
+                        post("/api/v1/login").params(multiValueSignup))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString("token")))
                 .andExpect(content().string(containsString("tokenExpired")))
-                .andExpect(content().string(containsString("refresh")))
-                .andDo(print());
+                .andExpect(content().string(containsString("refresh")));
+//                .andDo(print());
+    }
+
+    @Test
+    void 테스트로그인_실패_틀린비밀번호() throws Exception {
+        //todo: dto 변경
+        MultiValueMap<String, String> loginParams = new LinkedMultiValueMap<>();
+        loginParams.add("username", signup.getUsername());
+        loginParams.add("password", signup.getPassword() + "Wrong");
+
+        mockMvc.perform(post("/api/v1/login").params(loginParams)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(containsString(ErrorCode.MEMBER_NOT_FOUND.getErrorCode())));
     }
 
     @Test
@@ -80,7 +94,6 @@ class LoginOutControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString(ErrorCode.MEMBER_NOT_FOUND.getErrorCode())));
         //  .andExpect()
-
     }
 
     @Test
@@ -91,7 +104,8 @@ class LoginOutControllerTest {
     @Test
     @BeforeAll
     @AfterAll
-    void 계정_삭제() throws Exception {
+    void 계정_삭제() {
+        System.out.println("계정삭제()");
         Optional<Account> account = accountRepository.findByUsername(signup.getUsername());
         if (account.isPresent())
             accountRepository.delete(account.get());
@@ -102,15 +116,82 @@ class LoginOutControllerTest {
     }
 
     @Test
+//    @AfterAll
+    void 계정_삭제2() throws Exception {
+        AccountDto.Req.Signup signup2 = signup;
+        signup2.setEmail(signup2.getEmail() + "qq");
+        signup2.setNickname(signup2.getNickname() + "qq");
+        signup2.setUsername(signup2.getUsername() + "qq");
+
+        Optional<Account> account = accountRepository.findByUsername(signup2.getUsername());
+        if (account.isPresent())
+            accountRepository.delete(account.get());
+        else Assertions.assertTrue(account.isEmpty());
+
+
+        account = accountRepository.findOneByEmail(signup2.getEmail());
+        if (account.isPresent())
+            accountRepository.delete(account.get());
+        else Assertions.assertTrue(account.isEmpty());
+
+        account = accountRepository.findOneByNickname(signup2.getNickname());
+        if (account.isPresent())
+            accountRepository.delete(account.get());
+        else Assertions.assertTrue(account.isEmpty());
+
+        account = accountRepository.findByUsername(signup.getUsername());
+        Assertions.assertTrue(account.isEmpty());
+    }
+
+    @Test
     @BeforeAll
-    public void 테스트임시_회원가입_컨트롤러() throws Exception {
+    void 테스트임시_회원가입_컨트롤러_성공() throws Exception {
         MultiValueMap<String, String> multiValueSignup = MultiValueMapConverter.convert(new ObjectMapper(), signup);
 
         mockMvc.perform(
-                post("/api/v1/tempSignup").params(multiValueSignup))
-                .andExpect(status().isOk())
-                .andDo(print());
+                        post("/api/v1/tempSignup").params(multiValueSignup))
+                .andExpect(status().isOk());
+           //     .andDo(print());
     }
 
+    @Test
+    @Transactional(rollbackOn = {CustomException.class, Exception.class})
+    void 테스트임시_회원가입_컨트롤러_실패_중복된이메일() throws Exception {
+
+        테스트임시_회원가입_컨트롤러_성공();
+
+        AccountDto.Req.Signup signup2 = signup;
+        //signup2.setEmail(signup2.getEmail() + "qq");
+        signup2.setNickname(signup2.getNickname() + "qq");
+        signup2.setUsername(signup2.getUsername() + "qq");
+
+        MultiValueMap<String, String> multiValueSignup = MultiValueMapConverter.convert(new ObjectMapper(), signup2);
+
+        mockMvc.perform(
+                        post("/api/v1/tempSignup").params(multiValueSignup))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(ErrorCode.EMAIL_DUPLICATION.getErrorCode())));
+               // .andDo(print());
+    }
+
+    @Test
+    @Transactional(rollbackOn = {CustomException.class, Exception.class})
+    void 테스트임시_회원가입_컨트롤러_실패_중복된닉네임() throws Exception {
+
+        테스트임시_회원가입_컨트롤러_성공();
+
+        AccountDto.Req.Signup signup2 = signup;
+        signup2.setEmail(signup2.getEmail() + "qq");
+        //signup2.setNickname(signup2.getNickname() + "qq");
+        signup2.setUsername(signup2.getUsername() + "qq");
+
+        MultiValueMap<String, String> multiValueSignup = MultiValueMapConverter.convert(new ObjectMapper(), signup2);
+
+        mockMvc.perform(
+                        post("/api/v1/tempSignup").params(multiValueSignup))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(ErrorCode.NICKNAME_DUPLICATION.getErrorCode())));
+              //  .andDo(print());
+    }
 
 }
