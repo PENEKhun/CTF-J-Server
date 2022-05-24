@@ -10,6 +10,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Repository
 public class RankRepository{
@@ -84,6 +86,14 @@ public class RankRepository{
             accountSolveProbLists.add(item);
         }
         return accountSolveProbLists;
+    }
+
+    public static <T, U> List<U>
+        convertStringListToIntList(List<T> listOfString,
+                               Function<T, U> function) {
+        return listOfString.stream()
+                .map(function)
+                .collect(Collectors.toList());
     }
 
 }
