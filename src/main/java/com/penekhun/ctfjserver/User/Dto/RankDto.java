@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 public class RankDto {
 
     @Builder
@@ -26,9 +28,14 @@ public class RankDto {
     @Builder
     @Getter
     @AllArgsConstructor
-    public static class AccountListSolveProb{
+    public static class accountSolveProbList {
         private Integer accountId;
+        private List<Integer> probIdList;
+        private int score = 0;
 
+        public void addScore(Integer score) {
+            this.score += score;
+        }
     }
 
 
