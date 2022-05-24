@@ -68,13 +68,22 @@ public class RankRepository{
         return outputList;
     }
 
-    public List<RankDto> findWhoSolveProb(){
-        List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, a.problem.id FROM AuthLog a where a.isSuccess=true").getResultList();
-        for (Object[] objects : resultList) {
+    public List<RankDto.accountSolveProbList> findWhoSolveProb(){
 
+        List<RankDto.accountSolveProbList> accountSolveProbLists = new ArrayList<>();
+//        List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, function('GROUP_CONCAT', a.problem) as problem FROM AuthLog a where a.isSuccess=true GROUP By a.accountIdx").getResultList();
+        List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, group_concat(a.problem.id ) AS problem FROM AuthLog a where a.isSuccess=true GROUP By a.accountIdx").getResultList();
+        //SELECT account_idx, GROUP_CONCAT(problem_idx) AS problem FROM AuthLog WHERE is_success = true GROUP By account_idx
+
+        for (Object[] row : resultList) {
+            List<String> tempProbIdList = List.of(row[1].toString().split(","));
+            List<Integer> probIdList = convertStringListToIntList(tempProbIdList, Integer::parseInt);
+
+            RankDto.accountSolveProbList item = RankDto.accountSolveProbList.builder().accountId( (Integer) row[0])
+                    .probIdList(probIdList).build();
+            accountSolveProbLists.add(item);
         }
-        return null;
-
+        return accountSolveProbLists;
     }
 
 }
