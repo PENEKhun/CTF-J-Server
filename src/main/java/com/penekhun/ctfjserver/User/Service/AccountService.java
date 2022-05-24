@@ -13,6 +13,8 @@ import com.penekhun.ctfjserver.User.Repository.TokenStorageRepository;
 import com.penekhun.ctfjserver.Util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Map;
 import java.util.Optional;
 
@@ -38,7 +41,10 @@ public class AccountService {
 
     private final TokenStorageRepository tokenStorageRepository;
 
-    public ResponseEntity login(String username, String password){
+    @Autowired
+    private final ModelMapper modelMapper;
+
+    public TokenDto login(String username, String password){
         //회원 검증
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Optional<Account> findMember = accountRepository.findByUsername(username);
@@ -69,7 +75,7 @@ public class AccountService {
                         .build();
 
         redisUtil.insertTokenToStorage(username, tokenStorageEntity);
-        return new ResponseEntity<>(new TokenDto(accessToken, tokenExpired, refreshToken), httpHeaders, HttpStatus.OK);
+        return new TokenDto(accessToken, tokenExpired, refreshToken);
     }
 
     public ResponseEntity reissue(String oldAccessToken, String oldRefreshToken){
@@ -112,7 +118,8 @@ public class AccountService {
         return new ResponseEntity<>(new TokenDto(newAccessToken, tokenExpired, newRefreshToken), httpHeaders, HttpStatus.OK);
     }
 
-    public ResponseEntity signup(AccountDto.Req.Signup signup){
+    @Transactional
+    public AccountDto.Res.Signup signup(AccountDto.Req.Signup signup){
         Optional<Account> findMember = accountRepository.findByUsername(signup.getUsername());
         findMember.ifPresent(then -> {
             throw new CustomException(ErrorCode.USERNAME_DUPLICATION);
@@ -129,20 +136,14 @@ public class AccountService {
         });
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        Account account = new Account();
-        account.setUsername(signup.getUsername());
-        account.setPassword(
-                bCryptPasswordEncoder.encode(signup.getPassword()));
-        account.setEmail(signup.getEmail());
-        account.setNickname(signup.getNickname());
-        account.setRealName(signup.getRealName());
+        Account account = Account.builder()
+                .username(signup.getUsername())
+                .password(bCryptPasswordEncoder.encode(signup.getPassword()))
+                .email(signup.getEmail())
+                .nickname(signup.getNickname())
+                .realName(signup.getRealName()).build();
+        Account resultAccount = accountRepository.save(account);
 
-        accountRepository.save(account);
-
-
-
-
-
-        return null;
+        return modelMapper.map(resultAccount, AccountDto.Res.Signup.class);
     }
 }

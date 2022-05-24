@@ -1,6 +1,7 @@
 package com.penekhun.ctfjserver.User.Controller;
 
 import com.penekhun.ctfjserver.User.Dto.AccountDto;
+import com.penekhun.ctfjserver.User.Dto.TokenDto;
 import com.penekhun.ctfjserver.User.Service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class LoginOutController {
     private final AccountService accountService;
 
     @PostMapping("login")
-    public ResponseEntity loginMap
+    public TokenDto loginMap
             (@RequestParam String username,
              @RequestParam String password){
 
@@ -39,12 +40,11 @@ public class LoginOutController {
     }
 
     @PostMapping("tempSignup")
-    public ResponseEntity<String> postMapping(@Validated AccountDto.Req.Signup signup){
+    public AccountDto.Res.Signup postMapping(@Validated AccountDto.Req.Signup signup){
         //post Account == Signup
         log.info("post account");
-        accountService.signup(signup);
 
-        return ResponseEntity.ok().body("asd");
+        return accountService.signup(signup);
     }
 
 }
