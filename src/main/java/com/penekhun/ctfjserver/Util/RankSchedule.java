@@ -31,6 +31,19 @@ public class RankSchedule {
 
         probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbListForDynamicScore::getProblemId));
 
+        List<RankDto.accountSolveProbList> accountSolveProbLists = rankRepository.findWhoSolveProb();
+
+        for (RankDto.accountSolveProbList accountSolveProbList : accountSolveProbLists) {
+            //Integer id = accountSolveProbList.getAccountId();
+            List<Integer> solveList = accountSolveProbList.getProbIdList();
+
+            for (Integer probId : solveList) {
+                Integer score = probSolveCntList.get(probId-1).getCalculatedScore();
+                accountSolveProbList.addScore(score);
+            }
+
+        }
+
         log.info("스케쥴링 실행시간 {}",
                 (System.currentTimeMillis() - bef));
     }
