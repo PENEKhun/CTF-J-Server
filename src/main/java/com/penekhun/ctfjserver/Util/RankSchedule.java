@@ -18,7 +18,7 @@ public class RankSchedule {
 
     private final RankRepository rankRepository;
 
-    private List<RankDto.accountSolveProbList> accountSolveProbLists = new ArrayList<>();
+    private List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
 
     @Scheduled(fixedDelay = 2000, initialDelay = 2000)
     public void scheduleFixedRateWithInitialDelayTask() {
@@ -31,9 +31,9 @@ public class RankSchedule {
 
         probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbListForDynamicScore::getProblemId));
 
-        List<RankDto.accountSolveProbList> accountSolveProbLists = rankRepository.findWhoSolveProb();
+        List<RankDto.AccountSolveProbList> accountSolveProbLists = rankRepository.findWhoSolveProb();
 
-        for (RankDto.accountSolveProbList accountSolveProbList : accountSolveProbLists) {
+        for (RankDto.AccountSolveProbList accountSolveProbList : accountSolveProbLists) {
             //Integer id = accountSolveProbList.getAccountId();
             List<Integer> solveList = accountSolveProbList.getProbIdList();
 
@@ -59,7 +59,7 @@ public class RankSchedule {
         return (int) Math.ceil(value);
     }
 
-    public List<RankDto.accountSolveProbList> getAccountSolveProbLists() {
+    public List<RankDto.AccountSolveProbList> getAccountSolveProbLists() {
         return accountSolveProbLists;
     }
 }

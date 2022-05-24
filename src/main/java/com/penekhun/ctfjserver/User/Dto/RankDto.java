@@ -28,7 +28,7 @@ public class RankDto {
     @Builder
     @Getter
     @AllArgsConstructor
-    public static class accountSolveProbList {
+    public static class AccountSolveProbList {
         private Integer accountId;
         private List<Integer> probIdList;
         private int score = 0;
