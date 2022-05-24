@@ -18,8 +18,7 @@ public class RankSchedule {
 
     private final RankRepository rankRepository;
 
-    private List<RankDto.ProbListForDynamicScore> probSolveCntList = new ArrayList<>();
- //   private List<ProbListForDynamicScore> memberSolveList = new ArrayList<>();
+    private List<RankDto.accountSolveProbList> accountSolveProbLists = new ArrayList<>();
 
     @Scheduled(fixedDelay = 2000, initialDelay = 2000)
     public void scheduleFixedRateWithInitialDelayTask() {
@@ -47,8 +46,8 @@ public class RankSchedule {
         return (int) Math.ceil(value);
     }
 
-    public List<RankDto.ProbListForDynamicScore> getProblemListForDynamicScore() {
-        return probSolveCntList;
+    public List<RankDto.accountSolveProbList> getAccountSolveProbLists() {
+        return accountSolveProbLists;
     }
 }
 
