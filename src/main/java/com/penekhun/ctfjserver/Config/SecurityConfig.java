@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/v1/reissue/**").hasAnyRole()
                 .antMatchers("/api/vi/login/**").hasAnyRole()
                 .antMatchers("/api/vi/logout/**").hasAnyRole()
+                .antMatchers("/api/vi/rank/**").hasAnyRole()
 
               //  .anyRequest().permitAll()
 
