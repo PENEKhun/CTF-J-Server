@@ -44,6 +44,8 @@ public class RankSchedule {
 
         }
 
+        accountSolveProbLists.sort(Comparator.comparing(RankDto.AccountSolveProbList::getScore, Comparator.reverseOrder()));
+
         log.info("스케쥴링 실행시간 {}",
                 (System.currentTimeMillis() - bef));
     }
