@@ -60,9 +60,5 @@ public class RankSchedule {
 
         return (int) Math.ceil(value);
     }
-
-    public List<RankDto.AccountSolveProbList> getAccountSolveProbLists() {
-        return accountSolveProbLists;
-    }
 }
 
