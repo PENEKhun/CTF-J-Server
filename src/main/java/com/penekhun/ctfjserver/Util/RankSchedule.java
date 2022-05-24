@@ -1,6 +1,6 @@
 package com.penekhun.ctfjserver.Util;
 
-import com.penekhun.ctfjserver.User.Dto.ProbListForDynamicScore;
+import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Repository.RankRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ public class RankSchedule {
 
     private final RankRepository rankRepository;
 
-    private List<ProbListForDynamicScore> probSolveCntList = new ArrayList<>();
+    private List<RankDto.ProbListForDynamicScore> probSolveCntList = new ArrayList<>();
  //   private List<ProbListForDynamicScore> memberSolveList = new ArrayList<>();
 
     @Scheduled(fixedDelay = 2000, initialDelay = 2000)
@@ -26,18 +26,17 @@ public class RankSchedule {
         long bef = System.currentTimeMillis();
         probSolveCntList = rankRepository.findProbSolver();
 
-        for (ProbListForDynamicScore problem : probSolveCntList) {
+        for (RankDto.ProbListForDynamicScore problem : probSolveCntList) {
             problem.setCalculatedScore(dynamicScore(problem));
         }
 
-        probSolveCntList.sort(Comparator.comparingInt(ProbListForDynamicScore::getId));
-
+        probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbListForDynamicScore::getId));
 
         log.info("스케쥴링 실행시간 {}",
                 (System.currentTimeMillis() - bef));
     }
 
-    public Integer dynamicScore(ProbListForDynamicScore problem){
+    public Integer dynamicScore(RankDto.ProbListForDynamicScore problem){
         Integer max = problem.getMaxScore();
         Integer min = problem.getMinScore();
         Integer threshold = problem.getSolveThreshold();
@@ -48,7 +47,7 @@ public class RankSchedule {
         return (int) Math.ceil(value);
     }
 
-    public List<ProbListForDynamicScore> getProblemListForDynamicScore() {
+    public List<RankDto.ProbListForDynamicScore> getProblemListForDynamicScore() {
         return probSolveCntList;
     }
 }
