@@ -18,7 +18,7 @@ public class RankSchedule {
 
     private final RankRepository rankRepository;
 
-    private List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
+    public List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
 
     @Scheduled(fixedDelay = 5000, initialDelay = 2000)
     public void scheduleFixedRateWithInitialDelayTask() {
