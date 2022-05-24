@@ -31,7 +31,7 @@ public class RankSchedule {
 
         probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbListForDynamicScore::getProblemId));
 
-        List<RankDto.AccountSolveProbList> accountSolveProbLists = rankRepository.findWhoSolveProb();
+        accountSolveProbLists = rankRepository.findWhoSolveProb();
 
         for (RankDto.AccountSolveProbList accountSolveProbList : accountSolveProbLists) {
             //Integer id = accountSolveProbList.getAccountId();
