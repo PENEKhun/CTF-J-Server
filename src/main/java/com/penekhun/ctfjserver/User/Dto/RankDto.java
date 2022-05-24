@@ -10,7 +10,7 @@ public class RankDto {
     @Getter
     @AllArgsConstructor
     public static class ProbListForDynamicScore {
-        private Integer id;
+        private Integer problemId;
         private Integer maxScore;
         private Integer minScore;
         private Integer solveThreshold;
@@ -21,6 +21,14 @@ public class RankDto {
         public void setCalculatedScore(Integer calculatedScore) {
             this.calculatedScore = calculatedScore;
         }
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class AccountListSolveProb{
+        private Integer accountId;
+
     }
 
 

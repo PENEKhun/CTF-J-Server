@@ -44,7 +44,7 @@ public class RankRepository{
         if (resultList != null)
             for(Object[] row : resultList){
                 RankDto.ProbListForDynamicScore item = RankDto.ProbListForDynamicScore.builder()
-                        .id((Integer) row[0])
+                        .problemId((Integer) row[0])
                         .maxScore((Integer) row[1])
                         .minScore((Integer) row[2])
                         .solveThreshold((Integer) row[3])
@@ -55,7 +55,7 @@ public class RankRepository{
         if (resultList2 != null)
             for (Object[] row : resultList2) {
                 RankDto.ProbListForDynamicScore item = RankDto.ProbListForDynamicScore.builder()
-                        .id((Integer) row[0])
+                        .problemId((Integer) row[0])
                         .maxScore((Integer) row[1])
                         .minScore((Integer) row[2])
                         .solveThreshold((Integer) row[3])
@@ -70,9 +70,9 @@ public class RankRepository{
 
     public List<RankDto> findWhoSolveProb(){
         List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, a.problem.id FROM AuthLog a where a.isSuccess=true").getResultList();
-//        for (Object[] objects : resultList) {
-//
-//        }
+        for (Object[] objects : resultList) {
+
+        }
         return null;
 
     }
