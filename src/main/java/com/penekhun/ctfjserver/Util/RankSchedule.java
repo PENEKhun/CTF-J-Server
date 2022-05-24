@@ -30,7 +30,7 @@ public class RankSchedule {
             problem.setCalculatedScore(dynamicScore(problem));
         }
 
-        probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbListForDynamicScore::getId));
+        probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbListForDynamicScore::getProblemId));
 
         log.info("스케쥴링 실행시간 {}",
                 (System.currentTimeMillis() - bef));
