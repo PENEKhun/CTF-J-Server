@@ -20,7 +20,7 @@ public class RankSchedule {
 
     private List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
 
-    @Scheduled(fixedDelay = 2000, initialDelay = 2000)
+    @Scheduled(fixedDelay = 5000, initialDelay = 2000)
     public void scheduleFixedRateWithInitialDelayTask() {
         long bef = System.currentTimeMillis();
         List<RankDto.ProbListForDynamicScore> probSolveCntList = rankRepository.findProbSolver();
