@@ -1,6 +1,8 @@
 package com.penekhun.ctfjserver.User.Dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.Valid;
@@ -41,7 +43,17 @@ public class AccountDto {
 
     }
 
-    public class Res {
+    public static class Res {
+
+        @Data
+        public static class Signup{
+            private String username;
+            private String nickname;
+            private String email;
+            private String realName;
+
+        }
+
 
     }
 
