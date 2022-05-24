@@ -23,7 +23,7 @@ public class RankSchedule {
     @Scheduled(fixedDelay = 2000, initialDelay = 2000)
     public void scheduleFixedRateWithInitialDelayTask() {
         long bef = System.currentTimeMillis();
-        probSolveCntList = rankRepository.findProbSolver();
+        List<RankDto.ProbListForDynamicScore> probSolveCntList = rankRepository.findProbSolver();
 
         for (RankDto.ProbListForDynamicScore problem : probSolveCntList) {
             problem.setCalculatedScore(dynamicScore(problem));
