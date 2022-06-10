@@ -26,14 +26,14 @@ public enum ErrorCode {
     UNCHECKED_ERROR(500, "U00", "확인 할 수 없는 에러")
 
     ;
-    private final String errorCode;
+    private final String errorCodeStr;
     private final String message;
-    private int status;
+    private final int status;
 
-    ErrorCode(final int status, final String errorCode, final String message) {
+    ErrorCode(final int status, final String errorCodeStr, final String message) {
         this.status = status;
         this.message = message;
-        this.errorCode = errorCode;
+        this.errorCodeStr = errorCodeStr;
     }
 
     public int getStatus() {
@@ -45,6 +45,6 @@ public enum ErrorCode {
     }
 
     public String getErrorCode() {
-        return errorCode;
+        return errorCodeStr;
     }
 }
