@@ -34,7 +34,7 @@ public class OpenTimerAOP {
 
     // User/controller 이하 패키지의 모든 클래스 이하 모든 메서드에 적용
     @Pointcut("execution(* com.penekhun.ctfjserver.User.Controller..*(..))")
-    private void accessController(){}
+    private void accessController(){ /* Empty Method.... just use this for Before() working */ }
 
     @Before("accessController()")
     public void checkSiteIsOpen(JoinPoint joinPoint) {
