@@ -1,10 +1,13 @@
 package com.penekhun.ctfjserver.User.Entity;
 
 import com.penekhun.ctfjserver.Config.SecurityRole;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "Account", schema = "ctf")
 public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +29,15 @@ public class Account {
 
     @Column(name = "real_name", nullable = false, length = 10)
     private String realName;
+
+    @Builder
+    public Account(String username, String password, String nickname, String email, String realName) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.email = email;
+        this.realName = realName;
+    }
 
     @Lob
     @Column(name = "user_role", nullable = false)
