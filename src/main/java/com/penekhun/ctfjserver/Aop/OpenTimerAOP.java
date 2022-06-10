@@ -57,7 +57,6 @@ public class OpenTimerAOP {
 
                 if (!method.getName().startsWith("login") && !currentUser.isAdmin()
                     && !(openTimeDate.before(sdf.parse(nowTimeDate)))) {
-                    log.info("server not open");
                     throw new CustomException(ErrorCode.SERVER_NOT_OPEN);
                 }
 
