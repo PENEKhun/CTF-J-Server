@@ -33,7 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //세션을 사용하지 않고, STATELESS모드로 사용
         .and()
-            .addFilter(corsFilter) //cors 필터 적용 -> 필터에 의해 요청을 받음
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
+           // .addFilter(corsFilter) //cors 필터 적용 -> 필터에 의해 요청을 받음
             .formLogin().disable() //JWT form로그인 사용안함
             .httpBasic().disable() //기존적인 http로그인 방식을 사용안함
             //.addFilter(new JwtAuthenticationFilter(authenticationManager()))
@@ -64,6 +66,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //addFilter메스드가 담긴 Config 클래스 추가
                 .apply(new JwtSecurityConfig(tokenProvider));
 
+    }
+
+    // CORS 허용 적용
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
     }
 
 }
