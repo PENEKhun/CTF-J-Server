@@ -2,7 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'org.springframework.experimental.aot' version '0.11.4'
+//      아래 설정이 서버에 배포후 빌드 및 실행시 오류를 야기하여 주석처리 하였음.
+//    id 'org.springframework.experimental.aot' version '0.11.4'
     id 'org.hibernate.orm'
 }
 
