@@ -194,4 +194,20 @@ class LoginOutControllerTest {
               //  .andDo(print());
     }
 
+
+    @Test
+    void 토큰_재발행() throws Exception {
+        MultiValueMap<String, String> multiValueSignup = MultiValueMapConverter.convert(new ObjectMapper(), signup);
+
+        mockMvc.perform(
+                        post("/api/v1/login").params(multiValueSignup))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(containsString("token")))
+                .andExpect(content().string(containsString("tokenExpired")))
+                .andExpect(content().string(containsString("refresh")));
+
+        //todo: 토큰 가져와서 객ㅇ신
+    }
+
 }
