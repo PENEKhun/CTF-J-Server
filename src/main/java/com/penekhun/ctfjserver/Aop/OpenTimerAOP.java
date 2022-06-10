@@ -55,11 +55,10 @@ public class OpenTimerAOP {
                 Date openTimeDate = sdf.parse(openTime);
                 String nowTimeDate = sdf.format(new Date());
 
-                if (!method.getName().startsWith("login") && !currentUser.isAdmin()) {
-                    if (!(openTimeDate.before(sdf.parse(nowTimeDate)))) {
-                        log.info("server not open");
-                        throw new CustomException(ErrorCode.SERVER_NOT_OPEN);
-                    }
+                if (!method.getName().startsWith("login") && !currentUser.isAdmin()
+                    && !(openTimeDate.before(sdf.parse(nowTimeDate)))) {
+                    log.info("server not open");
+                    throw new CustomException(ErrorCode.SERVER_NOT_OPEN);
                 }
 
             } catch (ParseException e){
