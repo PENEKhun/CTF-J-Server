@@ -42,10 +42,10 @@ public class OpenTimerAOP {
 
         Method method = getMethod(joinPoint);
 
-        if (enableTimer){
-            SimpleDateFormat sdf = new SimpleDateFormat(openTimeFormat);
+        try {
 
-            try {
+            if (enableTimer){
+                SimpleDateFormat sdf = new SimpleDateFormat(openTimeFormat);
                 sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
             } catch (NullPointerException e){
                 throw new CustomException(ErrorCode.TIME_ZONE_ERROR);
@@ -55,14 +55,14 @@ public class OpenTimerAOP {
                 Date openTimeDate = sdf.parse(openTime);
                 String nowTimeDate = sdf.format(new Date());
 
-                if (!method.getName().startsWith("login") && !currentUser.isAdmin()
-                    && !(openTimeDate.before(sdf.parse(nowTimeDate)))) {
+                if (Boolean.TRUE.equals(isAccessLogin(method))&& !(openTimeDate.before(sdf.parse(nowTimeDate)))) {
                     throw new CustomException(ErrorCode.SERVER_NOT_OPEN);
                 }
-
-            } catch (ParseException e){
-                throw new CustomException(ErrorCode.OPEN_TIME_ERROR);
             }
+        } catch (NullPointerException e){
+            throw new CustomException(ErrorCode.TIME_ZONE_ERROR);
+        } catch (ParseException e){
+            throw new CustomException(ErrorCode.OPEN_TIME_ERROR);
         }
     }
 
