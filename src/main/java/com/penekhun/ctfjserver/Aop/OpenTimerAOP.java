@@ -27,7 +27,7 @@ public class OpenTimerAOP {
 
 
     @Value("${server.enable-open-timer}") boolean enableTimer;
-    @Value("${server.open-time}") String openTime;
+    @Value("${server.open-time}") String openTimeString;
     @Value("${server.open-time-format}") String openTimeFormat;
     @Value("${server.time-zone}") String timeZone;
     private final CurrentUser currentUser;
