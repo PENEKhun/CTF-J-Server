@@ -51,6 +51,7 @@ public class ProblemController {
     }
 
     @Secured("ROLE_ADMIN")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{problem}")
     //todo : 문제 삭제 구현
     public ResponseEntity<?> deleteProblemMapping(){
