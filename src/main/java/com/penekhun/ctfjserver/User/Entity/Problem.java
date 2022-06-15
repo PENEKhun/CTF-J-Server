@@ -1,5 +1,6 @@
 package com.penekhun.ctfjserver.User.Entity;
 
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 
@@ -7,6 +8,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
+@Getter //for model mapper
 @Table(name = "Problem", schema = "ctf")
 public class Problem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,24 +61,12 @@ public class Problem {
         return isPublic;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public void setType(String type) {
         this.type = type;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public void setId(Integer id) {
