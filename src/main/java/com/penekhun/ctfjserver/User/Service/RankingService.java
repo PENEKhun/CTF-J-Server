@@ -15,7 +15,7 @@ public class RankingService {
     private final RankSchedule rankSchedule;
 
     public List<RankDto.AccountSolveProbList> getRank(int top){
-        List<RankDto.AccountSolveProbList> accountSolveProbLists = rankSchedule.accountSolveProbLists;
+        List<RankDto.AccountSolveProbList> accountSolveProbLists = rankSchedule.getAccountSolveProbLists();
         return accountSolveProbLists.stream().limit(top).collect(Collectors.toList());
     }
 }

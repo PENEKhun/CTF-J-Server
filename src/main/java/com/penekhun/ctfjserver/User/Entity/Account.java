@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
@@ -30,13 +31,17 @@ public class Account {
     @Column(name = "real_name", nullable = false, length = 10)
     private String realName;
 
+    @Column(name = "last_auth_time")
+    private Timestamp lastAuthTime;
+
     @Builder
-    public Account(String username, String password, String nickname, String email, String realName) {
+    public Account(String username, String password, String nickname, String email, String realName, Timestamp lastAuthTime) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
         this.realName = realName;
+        this.lastAuthTime = lastAuthTime;
     }
 
     @Lob
@@ -51,44 +56,32 @@ public class Account {
         this.userRole = "ROLE_ADMIN";
     }
 
+    public void updateLastAuthTime(){
+        this.lastAuthTime = new Timestamp(System.currentTimeMillis());
+    }
+
     public String getUserRole() {
         return userRole;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getUsername() {
         return username;
+    }
+
+    public String getNickname() {
+        return nickname; //for modelMapper at signup
+    }
+
+    public String getEmail() {
+        return email; //for modelMapper at signup
+    }
+
+    public String getRealName() {
+        return realName; //for modelMapper at signup
     }
 
     public void setUsername(String username) {

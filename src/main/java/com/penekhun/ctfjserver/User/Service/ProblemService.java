@@ -5,6 +5,7 @@ import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Entity.Problem;
+import com.penekhun.ctfjserver.User.Repository.AccountRepository;
 import com.penekhun.ctfjserver.User.Repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProblemService {
 
-
     private final ProblemRepository problemRepository;
+    private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
     private final LogService logService;
 
@@ -44,6 +45,7 @@ public class ProblemService {
         return problems;
     }
 
+    @Transactional
     public boolean authProblem(Account account, Integer problemId, ProblemDto.Req.Auth auth){
 
         if (account.isAdmin())
@@ -55,7 +57,7 @@ public class ProblemService {
         Problem problem = problemRepository.findById(problemId);
         if (problem == null)
             return false;
-        if (!problem.isPublic())
+        if (Boolean.FALSE.equals(problem.isPublic()))
             return false;
         if (!problem.isCorrect(auth.getFlag()))
             return false;
@@ -63,6 +65,10 @@ public class ProblemService {
         /*
             Logging은 Controller에서 수행합니다.
          */
+
+        account.updateLastAuthTime();
+        accountRepository.save(account);
+
 
         return true;
     }

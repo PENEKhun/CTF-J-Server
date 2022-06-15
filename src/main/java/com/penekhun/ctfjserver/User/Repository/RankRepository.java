@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -40,7 +41,6 @@ public class RankRepository{
         //SELECT problem_idx, count(problem_idx) FROM ctf.AuthLog where is_success=true group By problem_idx
         List<Object[]> resultList2 = em.createQuery("select p.id, p.maxScore, p.minScore, p.solveThreshold from Problem p where p.id NOT IN (select a.problem from AuthLog a where a.isSuccess = true)").getResultList();
         //SELECT idx, max_score, min_score, solve_threshold FROM ctf.Problem where idx NOT IN (SELECT problem_idx FROM ctf.AuthLog WHERE is_success != true)
-
         List<RankDto.ProbListForDynamicScore> outputList = new ArrayList<>();
 
         if (resultList != null)
@@ -65,17 +65,17 @@ public class RankRepository{
                         .calculatedScore((Integer) row[1]).build();
                 outputList.add(item);
             }
-
-
+        //문제마다 solveThreshold과 같은 칼럼을 가져오고 solverCount을 계산해줌. -> 아직 calculatedScore는 계산 안됨
         return outputList;
     }
 
     public List<RankDto.AccountSolveProbList> findWhoSolveProb(){
 
         List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
-//        List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, function('GROUP_CONCAT', a.problem) as problem FROM AuthLog a where a.isSuccess=true GROUP By a.accountIdx").getResultList();
-        List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, acc.nickname, group_concat(a.problem.id ) AS problem FROM AuthLog a, Account acc where a.isSuccess=true and acc.id = a.idx GROUP By a.accountIdx").getResultList();
-        //SELECT account_idx, GROUP_CONCAT(problem_idx) AS problem FROM AuthLog WHERE is_success = true GROUP By account_idx
+        List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, a.solver.nickname, group_concat(a.problem.id ), a.solver.lastAuthTime FROM AuthLog a LEFT JOIN a.solver where a.isSuccess=true  GROUP By a.accountIdx").getResultList();
+//        SELECT account_idx, GROUP_CONCAT(problem_idx) AS problem, Account.last_auth_time FROM AuthLog
+//        LEFT JOIN Account ON Account.idx = account_idx
+//        WHERE is_success = true GROUP By account_idx
 
         for (Object[] row : resultList) {
             List<String> tempProbIdList = List.of(row[2].toString().split(","));
@@ -83,6 +83,7 @@ public class RankRepository{
 
             RankDto.AccountSolveProbList item = RankDto.AccountSolveProbList.builder().accountId( (Integer) row[0])
                     .nickname((String) row[1])
+                    .lastAuthTime((Timestamp) row[3])
                     .probIdList(probIdList).build();
             accountSolveProbLists.add(item);
         }
