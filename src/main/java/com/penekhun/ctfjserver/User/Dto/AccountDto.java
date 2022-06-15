@@ -52,6 +52,14 @@ public class AccountDto {
             }
         }
 
+        @Data
+        public static class Login {
+            @ApiModelProperty(value = "아이디")
+            private String username;
+            @ApiModelProperty(value = "비밀번호")
+            private String password;
+        }
+
     }
 
     public static class Res {

@@ -28,11 +28,8 @@ public class LoginOutController {
     @Operation(tags= {"accounts"}, summary = "로그인 API", description = "login API")
     @ApiResponse(responseCode = "200", description = "OK !!")
     @PostMapping("login")
-    public TokenDto loginMap
-            (@Parameter(description = "아이디", required = true) @RequestParam String username,
-             @Parameter(description = "비밀번호", required = true) @RequestParam String password){
-
-        return accountService.login(username, password);
+    public TokenDto loginMap(AccountDto.Req.Login login){
+        return accountService.login(login);
     }
 
     @Operation(tags= {"accounts"}, summary = "토큰 재발급 API", description = "token reissue API")
