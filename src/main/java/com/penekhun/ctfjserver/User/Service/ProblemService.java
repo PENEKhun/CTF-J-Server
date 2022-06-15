@@ -42,7 +42,7 @@ public class ProblemService {
     public List<RankDto.ProbWithDynamicScore> getProblemList(){
         List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getProbSolveCntList();
         return probSolveCntList.stream()
-                .filter(prob -> prob.isPublic())
+                .filter(RankDto.ProbWithDynamicScore::isPublic)
                 .collect(Collectors.toList());
     }
 
@@ -78,10 +78,6 @@ public class ProblemService {
         account.updateLastAuthTime();
         accountRepository.save(account);
 
-
         return true;
     }
-
-
-
 }
