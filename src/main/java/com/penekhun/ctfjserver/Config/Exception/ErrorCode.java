@@ -14,11 +14,12 @@ public enum ErrorCode {
     TIME_ZONE_ERROR(501, "C009", "time-zone 에러"),
 
     // Member
-    EMAIL_DUPLICATION(200, "M001", "존재하는 이메일"),
-    NICKNAME_DUPLICATION(200, "M002", "존재하는 닉네임"),
-    USERNAME_DUPLICATION(200, "M003", "존재하는 아이디"),
-    MEMBER_NOT_FOUND(200, "M004", "존재하지 않은 회원정보"),
-    ALREADY_CORRECT(200, "M005", "이미 맞춘 문제입니다."),
+    EMAIL_DUPLICATION(409, "M001", "존재하는 이메일"),
+    NICKNAME_DUPLICATION(409, "M002", "존재하는 닉네임"),
+    USERNAME_DUPLICATION(409, "M003", "존재하는 아이디"),
+    MEMBER_NOT_FOUND(403, "M004", "존재하지 않은 회원정보"),
+    ALREADY_CORRECT(403, "M005", "이미 맞춘 문제입니다."),
+    INCORRECT_FLAG(403, "M006", "잘못된 플래그 값입니다."),
 
     //LOGIN_INPUT_INVALID(400, "M002", "Login input is invalid"),
 
