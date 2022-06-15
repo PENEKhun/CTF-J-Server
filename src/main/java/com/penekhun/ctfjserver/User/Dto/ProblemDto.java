@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.Timestamp;
 import java.time.Instant;
 
 public class ProblemDto {
@@ -64,13 +63,11 @@ public class ProblemDto {
 
         @Setter
         @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-        public static class problemWithoutFlag {
+        public static class correctProblemList {
+            private Long problemIdx;
             private String title;
             private String description;
             private String type;
-            private Boolean isPublic;
-            private Integer defaultScore;
-            private Instant modifyTime;
         }
 
 
