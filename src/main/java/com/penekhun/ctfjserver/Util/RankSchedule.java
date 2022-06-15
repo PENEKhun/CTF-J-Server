@@ -20,17 +20,20 @@ public class RankSchedule {
 
     private List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
 
-    @Scheduled(fixedDelay = 5000, initialDelay = 2000)
-    public void scheduleFixedRateWithInitialDelayTask() {
-        long bef = System.currentTimeMillis();
-        List<RankDto.ProbListForDynamicScore> probSolveCntList = rankRepository.findProbSolver();
+    private List<RankDto.ProbWithDynamicScore> probSolveCntList = new ArrayList<>();
 
-        for (RankDto.ProbListForDynamicScore problem : probSolveCntList) {
+
+    @Scheduled(fixedDelay = 5000, initialDelay = 2000)
+    public void problemAndSolverPollingTask() {
+        long bef = System.currentTimeMillis();
+        probSolveCntList = rankRepository.findProbSolver();
+
+        for (RankDto.ProbWithDynamicScore problem : probSolveCntList) {
             //점수 계산
-            problem.setCalculatedScore(problem);
+            problem.setCalculatedScore();
         }
 
-        probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbListForDynamicScore::getProblemId));
+        probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbWithDynamicScore::getId));
 
         accountSolveProbLists = rankRepository.findWhoSolveProb();
 
@@ -52,6 +55,10 @@ public class RankSchedule {
 
     public List<RankDto.AccountSolveProbList> getAccountSolveProbLists() {
         return accountSolveProbLists;
+    }
+
+    public List<RankDto.ProbWithDynamicScore> getProbSolveCntList() {
+        return probSolveCntList;
     }
 }
 

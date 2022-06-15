@@ -2,6 +2,7 @@ package com.penekhun.ctfjserver.User.Repository;
 
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Dto.RankDto;
+import com.penekhun.ctfjserver.User.Entity.Problem;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,34 +36,28 @@ public class RankRepository{
         return correctProblemLists;
     }
 
-    public List<RankDto.ProbListForDynamicScore> findProbSolver(){
+    public List<RankDto.ProbWithDynamicScore> findProbSolver(){
 
-        List<Object[]> resultList = em.createQuery("select a.problem.id, a.problem.maxScore, a.problem.minScore, a.problem.solveThreshold, count(a.problem) from AuthLog a where a.isSuccess = true group by a.problem").getResultList();
+        List<Object[]> resultList = em.createQuery("select a.problem, count(a.problem)  from AuthLog a where a.isSuccess = true group by a.problem").getResultList();
+//        List<Object[]> resultList = em.createQuery("select a.problem.id, a.problem.maxScore, a.problem.minScore, a.problem.solveThreshold, count(a.problem), a.problem.type, a.problem.isPublic  from AuthLog a where a.isSuccess = true group by a.problem").getResultList();
         //SELECT problem_idx, count(problem_idx) FROM ctf.AuthLog where is_success=true group By problem_idx
-        List<Object[]> resultList2 = em.createQuery("select p.id, p.maxScore, p.minScore, p.solveThreshold from Problem p where p.id NOT IN (select a.problem from AuthLog a where a.isSuccess = true)").getResultList();
+        List<Problem> resultList2 = em.createQuery("select p from Problem p where p.id NOT IN (select a.problem from AuthLog a where a.isSuccess = true)", Problem.class).getResultList();
         //SELECT idx, max_score, min_score, solve_threshold FROM ctf.Problem where idx NOT IN (SELECT problem_idx FROM ctf.AuthLog WHERE is_success != true)
-        List<RankDto.ProbListForDynamicScore> outputList = new ArrayList<>();
+        List<RankDto.ProbWithDynamicScore> outputList = new ArrayList<>();
 
         if (resultList != null)
-            for(Object[] row : resultList){
-                RankDto.ProbListForDynamicScore item = RankDto.ProbListForDynamicScore.builder()
-                        .problemId((Integer) row[0])
-                        .maxScore((Integer) row[1])
-                        .minScore((Integer) row[2])
-                        .solveThreshold((Integer) row[3])
-                        .solverCount((Long) row[4]).build();
+            for (Object[] row : resultList) {
+                Problem problem = (Problem) row[0];
+                Long countSolver = (Long) row[1];
+                RankDto.ProbWithDynamicScore item = modelMapper.map(problem, RankDto.ProbWithDynamicScore.class);
+                item.setSolverCount(countSolver);
                 outputList.add(item);
             }
 
         if (resultList2 != null)
-            for (Object[] row : resultList2) {
-                RankDto.ProbListForDynamicScore item = RankDto.ProbListForDynamicScore.builder()
-                        .problemId((Integer) row[0])
-                        .maxScore((Integer) row[1])
-                        .minScore((Integer) row[2])
-                        .solveThreshold((Integer) row[3])
-                        .solverCount(0L)
-                        .calculatedScore((Integer) row[1]).build();
+            for (Problem problem : resultList2) {
+                RankDto.ProbWithDynamicScore item = modelMapper.map(problem, RankDto.ProbWithDynamicScore.class);
+                item.setSolverCount(0L);
                 outputList.add(item);
             }
         //문제마다 solveThreshold과 같은 칼럼을 가져오고 solverCount을 계산해줌. -> 아직 calculatedScore는 계산 안됨
