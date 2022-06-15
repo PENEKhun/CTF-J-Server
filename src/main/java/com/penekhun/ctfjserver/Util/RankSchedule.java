@@ -15,13 +15,9 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class RankSchedule {
-
     private final RankRepository rankRepository;
-
     private List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
-
     private List<RankDto.ProbWithDynamicScore> probSolveCntList = new ArrayList<>();
-
 
     @Scheduled(fixedDelay = 5000, initialDelay = 2000)
     public void problemAndSolverPollingTask() {
@@ -34,7 +30,6 @@ public class RankSchedule {
         }
 
         probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbWithDynamicScore::getId));
-
         accountSolveProbLists = rankRepository.findWhoSolveProb();
 
         for (RankDto.AccountSolveProbList accountSolveProbList : accountSolveProbLists) {
@@ -45,10 +40,8 @@ public class RankSchedule {
                 accountSolveProbList.addScore(score);
             }
         }
-
         accountSolveProbLists.sort(Comparator.comparing(RankDto.AccountSolveProbList::getScore, Comparator.reverseOrder())
                 .thenComparing(RankDto.AccountSolveProbList::getLastAuthTime, Comparator.naturalOrder()));
-
         log.info("스케쥴링 실행시간 {}",
                 (System.currentTimeMillis() - bef));
     }
