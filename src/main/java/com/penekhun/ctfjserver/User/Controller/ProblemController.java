@@ -36,12 +36,8 @@ public class ProblemController {
 
     @GetMapping("")
     @Operation(tags= {"problem"}, summary = "공개된 문제 전체를 가져오는 API", description = "get ALL public Problem API")
-    public List<ProblemDto.Res.problemWithoutFlag> getProblemListMapping(){
-        List<Problem> problems = problemService.getProblemList();
-        List<ProblemDto.Res.problemWithoutFlag> problemsNoFlag = new ArrayList<>();
-        problems.forEach(problem -> problemsNoFlag.add(modelMapper.map(problem, ProblemDto.Res.problemWithoutFlag.class)));
-
-        return problemsNoFlag;
+    public ResponseEntity<List<RankDto.ProbWithDynamicScore>> getProblemListMapping(){
+        return new ResponseEntity<>(problemService.getProblemList(), HttpStatus.OK);
     }
 
     //@Secured("ROLE_ADMIN")
@@ -63,23 +59,20 @@ public class ProblemController {
 
 
     @PostMapping("{problemId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(tags= {"problem"}, summary = "문제 플래그 인증 API", description = "auth FLAG API")
     public ResponseEntity<String> authProblemMapping(@CurrentUserParameter Account account, @PathVariable @Validated @NotNull Integer problemId, @Valid ProblemDto.Req.Auth auth){
         boolean isCorrect = problemService.authProblem(account, problemId, auth);
         logService.authProblemLog(problemId, auth.getFlag(), isCorrect);
         if (isCorrect)
-            return ResponseEntity.ok().body("true");
-        else return ResponseEntity.ok().body("false");
+            return null;
+        else throw new CustomException(ErrorCode.INCORRECT_FLAG);
     }
 
     @GetMapping("{category}")
     @Operation(tags= {"problem"}, summary = "카테고리를 통해 문제 리스트를 가져오는 API", description = "get problem from category API")
-    public List<ProblemDto.Res.problemWithoutFlag> getProblemFromCategoryMapping(@PathVariable @Validated @NotNull String category){
-        List<Problem> problems = problemService.getProblemListFromCategory(category);
-        List<ProblemDto.Res.problemWithoutFlag> problemsNoFlag = new ArrayList<>();
-        problems.forEach(problem -> problemsNoFlag.add(modelMapper.map(problem, ProblemDto.Res.problemWithoutFlag.class)));
-
-        return problemsNoFlag;
+    public List<RankDto.ProbWithDynamicScore> getProblemFromCategoryMapping(@PathVariable @Validated @NotNull String category){
+        return problemService.getProblemListFromCategory(category);
 
     }
 
