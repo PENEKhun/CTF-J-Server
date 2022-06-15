@@ -28,7 +28,6 @@ public class CurrentUser {
     public String getUsername(){
         try {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails) principal;
             return ((UserDetails) principal).getUsername();
         } catch (ClassCastException e){
             throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
