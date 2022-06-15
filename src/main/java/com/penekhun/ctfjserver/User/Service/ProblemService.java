@@ -3,10 +3,12 @@ package com.penekhun.ctfjserver.User.Service;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
+import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Entity.Problem;
 import com.penekhun.ctfjserver.User.Repository.AccountRepository;
 import com.penekhun.ctfjserver.User.Repository.ProblemRepository;
+import com.penekhun.ctfjserver.Util.RankSchedule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,6 +27,7 @@ public class ProblemService {
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
     private final LogService logService;
+    private final RankSchedule rankSchedule;
 
     @Transactional
     public ProblemDto.Default addProblem(Account account, ProblemDto.Default problemDto){
@@ -35,14 +39,19 @@ public class ProblemService {
         return null;
     }
 
-    public List<Problem> getProblemList(){
-        List<Problem> problems = problemRepository.findAllProblem(false);
-        return problems;
+    public List<RankDto.ProbWithDynamicScore> getProblemList(){
+        List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getProbSolveCntList();
+        return probSolveCntList.stream()
+                .filter(prob -> prob.isPublic())
+                .collect(Collectors.toList());
     }
 
-    public List<Problem> getProblemListFromCategory(String category){
-        List<Problem> problems = problemRepository.findByCategory(category);
-        return problems;
+    public List<RankDto.ProbWithDynamicScore> getProblemListFromCategory(String category){
+        List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getProbSolveCntList();
+
+        return probSolveCntList.stream()
+                .filter(prob -> prob.getType().equals(category) && prob.isPublic())
+                .collect(Collectors.toList());
     }
 
     @Transactional
