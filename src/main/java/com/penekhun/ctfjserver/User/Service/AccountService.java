@@ -44,7 +44,13 @@ public class AccountService {
     @Autowired
     private final ModelMapper modelMapper;
 
-    public TokenDto login(String username, String password){
+    public TokenDto login(AccountDto.Req.Login loginReq){
+        String username = loginReq.getUsername();
+        String password = loginReq.getPassword();
+
+        if (username == null || password == null || username.isBlank() || password.isBlank())
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+
         //회원 검증
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Optional<Account> findMember = accountRepository.findByUsername(username);
