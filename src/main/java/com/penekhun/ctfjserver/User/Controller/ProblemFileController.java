@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @RequestMapping("/api/v1/file")
@@ -25,7 +26,12 @@ public class ProblemFileController {
     @PostMapping("")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<String> upload(@Valid @NotNull MultipartFile file){
-        return ResponseEntity.ok().body(uploadFileService.uploadFile(file));
+        String fileUrl = uploadFileService.uploadFile(file);
+        if (fileUrl != null || file.isEmpty()) {
+            return ResponseEntity.ok().body(fileUrl);
+        } else {
+            return ResponseEntity.internalServerError().body("fail");
+        }
     }
 
     @GetMapping("{fileName}")
