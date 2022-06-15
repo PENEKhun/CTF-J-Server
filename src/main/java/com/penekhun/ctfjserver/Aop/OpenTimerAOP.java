@@ -36,11 +36,12 @@ public class OpenTimerAOP {
     @Pointcut("execution(* com.penekhun.ctfjserver.User.Controller..*(..))")
     private void accessController(){ /* Empty Method.... just use this for Before() working */ }
 
-    @Before("accessController()")
-    public void checkSiteIsOpen(JoinPoint joinPoint) {
-
-
-        Method method = getMethod(joinPoint);
+    // AccountService 클래스에 login 메서드에 적용
+    @AfterReturning(
+            pointcut = "execution(* com.penekhun.ctfjserver.User.Service.AccountService.login(..))",
+            returning = "results"
+    )
+    public void checkSiteIsOpen(TokenDto results) {
 
         try {
 
