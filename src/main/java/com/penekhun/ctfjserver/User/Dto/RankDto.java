@@ -1,8 +1,6 @@
 package com.penekhun.ctfjserver.User.Dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -10,25 +8,28 @@ import java.util.List;
 public class RankDto {
 
     @Builder
-    @Getter
+    @Setter @Getter
     @AllArgsConstructor
-    public static class ProbListForDynamicScore {
-        private Integer problemId;
+    @NoArgsConstructor
+    public static class ProbWithDynamicScore {
+        private Integer id;
+        private String title;
+        private String description;
+        private String writer;
+
         private Integer maxScore;
         private Integer minScore;
         private Integer solveThreshold;
         private Long solverCount;
+        private String type;
+        private List<String> solverList;
+        private boolean isPublic;
 
         private Integer calculatedScore;
 
-        public void setCalculatedScore(ProbListForDynamicScore problem) {
-            Integer max = problem.getMaxScore();
-            Integer min = problem.getMinScore();
-            Integer threshold = problem.getSolveThreshold();
-            Long solveCount = problem.getSolverCount();
-
-            double value = (((min - max) / Math.pow(threshold, 2)) * Math.pow(solveCount, 2)) + max;
-            this.calculatedScore = (int) Math.ceil(value);
+        public void setCalculatedScore() {
+            double value = (((minScore - maxScore) / Math.pow(solveThreshold, 2)) * Math.pow(solverCount, 2)) + maxScore;
+            calculatedScore = (int) Math.ceil(value);
         }
     }
 
