@@ -4,6 +4,7 @@ import com.penekhun.ctfjserver.Config.CurrentUserParameter;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
+import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Service.LogService;
 import com.penekhun.ctfjserver.User.Service.ProblemService;
