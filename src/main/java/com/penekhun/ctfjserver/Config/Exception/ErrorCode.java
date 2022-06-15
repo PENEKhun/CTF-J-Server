@@ -10,7 +10,7 @@ public enum ErrorCode {
     DOESNT_EXIST_TOKEN(501, "C005", "존재하지 않는 토큰"),
     ONLY_ACCESS_USER(501, "C006", "유저만 사용 할 수 있는 기능입니다."),
     SERVER_NOT_OPEN(501, "C007", "서버가 오픈되어있지 않습니다."),
-    OPEN_TIME_ERROR(501, "C008", "open-time format 에러"),
+    OPEN_TIME_ERROR(501, "C008", "enable time format 에러"),
     TIME_ZONE_ERROR(501, "C009", "time-zone 에러"),
 
     // Member
