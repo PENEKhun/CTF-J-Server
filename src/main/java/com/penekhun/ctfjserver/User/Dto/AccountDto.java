@@ -66,9 +66,13 @@ public class AccountDto {
 
         @Data
         public static class Signup{
+            @ApiModelProperty(value = "아이디", required = true)
             private String username;
+            @ApiModelProperty(value = "닉네임", required = true)
             private String nickname;
+            @ApiModelProperty(value = "이메일", required = true)
             private String email;
+            @ApiModelProperty(value = "실명", required = true)
             private String realName;
 
         }
