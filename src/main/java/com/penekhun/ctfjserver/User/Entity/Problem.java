@@ -3,6 +3,7 @@ package com.penekhun.ctfjserver.User.Entity;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter //for model mapper
 @Table(name = "Problem", schema = "ctf")
+@EntityListeners(AuditingEntityListener.class)
 public class Problem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
