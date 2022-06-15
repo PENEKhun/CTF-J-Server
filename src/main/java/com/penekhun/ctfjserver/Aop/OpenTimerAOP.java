@@ -3,17 +3,16 @@ package com.penekhun.ctfjserver.Aop;
 import com.penekhun.ctfjserver.Config.CurrentUser;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
+import com.penekhun.ctfjserver.User.Controller.LoginOutController;
+import com.penekhun.ctfjserver.User.Dto.TokenDto;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,18 +22,18 @@ import java.util.TimeZone;
 @Aspect
 @Component
 @RequiredArgsConstructor
+@Getter
 public class OpenTimerAOP {
 
 
     @Value("${server.enable-open-timer}") boolean enableTimer;
     @Value("${server.open-time}") String openTimeString;
     @Value("${server.open-time-format}") String openTimeFormat;
+    @Value("${server.end-time}") String endTimeString;
+    @Value("${server.end-time-format}") String endTimeFormat;
     @Value("${server.time-zone}") String timeZone;
     private final CurrentUser currentUser;
-
-    // User/controller 이하 패키지의 모든 클래스 이하 모든 메서드에 적용
-    @Pointcut("execution(* com.penekhun.ctfjserver.User.Controller..*(..))")
-    private void accessController(){ /* Empty Method.... just use this for Before() working */ }
+    private final LoginOutController loginOutController;
 
     // AccountService 클래스에 login 메서드에 적용
     @AfterReturning(
@@ -48,28 +47,25 @@ public class OpenTimerAOP {
             if (enableTimer){
                 SimpleDateFormat sdf = new SimpleDateFormat(openTimeFormat);
                 sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
-            } catch (NullPointerException e){
-                throw new CustomException(ErrorCode.TIME_ZONE_ERROR);
-            }
-
-            try {
-                Date openTimeDate = sdf.parse(openTime);
+                Date openTimeDate = sdf.parse(openTimeString);
+                Date endTimeDate = sdf.parse(endTimeString);
                 String nowTimeDate = sdf.format(new Date());
 
-                if (Boolean.TRUE.equals(isAccessLogin(method))&& !(openTimeDate.before(sdf.parse(nowTimeDate)))) {
+                if (currentUser.isAdmin())
+                    return;
+
+                if (!(openTimeDate.before(sdf.parse(nowTimeDate)))) {
+//                    open
                     throw new CustomException(ErrorCode.SERVER_NOT_OPEN);
-                }
+                } else if ((endTimeDate.before(sdf.parse(nowTimeDate))))
+//                    close
+                    throw new CustomException(ErrorCode.SERVER_NOT_OPEN);
             }
         } catch (NullPointerException e){
             throw new CustomException(ErrorCode.TIME_ZONE_ERROR);
         } catch (ParseException e){
             throw new CustomException(ErrorCode.OPEN_TIME_ERROR);
         }
-    }
-
-    private Method getMethod(JoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        return signature.getMethod();
     }
 
 }
