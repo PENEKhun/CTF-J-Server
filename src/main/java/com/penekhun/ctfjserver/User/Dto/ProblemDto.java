@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 public class ProblemDto {
 
@@ -41,10 +41,18 @@ public class ProblemDto {
         private Boolean isPublic;
 
         @NotNull
-        @ApiModelProperty(value = "문제 기본 점수", required = true)
-        private Integer defaultScore;
+        @ApiModelProperty(value = "문제 최고 점수", required = true)
+        private Integer maxScore;
 
-        private Instant modifyTime;
+        @NotNull
+        @ApiModelProperty(value = "문제 최저 점수", required = true)
+        private Integer minScore;
+
+        @NotNull
+        @ApiModelProperty(value = "solve 한계치", required = true)
+        private Integer solveThreshold;
+
+        private Timestamp modifyTime;
     }
 
     public static class Req{
