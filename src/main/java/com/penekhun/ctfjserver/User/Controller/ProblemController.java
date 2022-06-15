@@ -47,11 +47,11 @@ public class ProblemController {
     //@Secured("ROLE_ADMIN")
     @PostMapping("")
     @Operation(tags= {"problem"}, summary = "문제 등록하는 API", description = "make Problem API")
-    public ProblemDto.Default addProblemMapping(@CurrentUserParameter Account account, @Valid ProblemDto.Default problemDto){
+    public ResponseEntity<ProblemDto.Default> addProblemMapping(@CurrentUserParameter Account account, ProblemDto.Default problemDto){
         if (account == null)
             throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
 
-        return problemService.addProblem(account, problemDto);
+        return new ResponseEntity<>(problemService.addProblem(account, problemDto), HttpStatus.CREATED);
     }
 
     @Secured("ROLE_ADMIN")

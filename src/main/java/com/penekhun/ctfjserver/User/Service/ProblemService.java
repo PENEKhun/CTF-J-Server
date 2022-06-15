@@ -31,12 +31,11 @@ public class ProblemService {
 
     @Transactional
     public ProblemDto.Default addProblem(Account account, ProblemDto.Default problemDto){
-        log.info(problemDto.getTitle());
         Problem problem =  modelMapper.map(problemDto, Problem.class);
         problem.setAuthorId(account);
         problemRepository.save(problem);
         logService.uploadProblemLog(problem);
-        return null;
+        return problemDto;
     }
 
     public List<RankDto.ProbWithDynamicScore> getProblemList(){
