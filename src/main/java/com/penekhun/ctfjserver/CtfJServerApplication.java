@@ -32,6 +32,10 @@ public class CtfJServerApplication {
     @Bean
     public ModelMapper modelMapper() {
         modelMapper.getConfiguration()
+                .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
+                .setFieldMatchingEnabled(true)
+                //setter없이 modelMapper 사용
+
                 .setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper;
     }
