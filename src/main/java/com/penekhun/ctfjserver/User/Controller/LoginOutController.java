@@ -54,7 +54,4 @@ public class LoginOutController {
         return accountService.signup(signup);
     }
 
-    public Object loginMap() {
-        return this.loginMap().getClass();
-    }
 }
