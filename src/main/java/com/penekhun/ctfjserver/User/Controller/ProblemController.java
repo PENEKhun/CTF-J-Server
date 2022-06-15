@@ -5,7 +5,6 @@ import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
-import com.penekhun.ctfjserver.User.Entity.Problem;
 import com.penekhun.ctfjserver.User.Service.LogService;
 import com.penekhun.ctfjserver.User.Service.ProblemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
