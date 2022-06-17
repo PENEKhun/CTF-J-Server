@@ -19,12 +19,12 @@ public enum ErrorCode {
     USERNAME_DUPLICATION(409, "M003", "존재하는 아이디"),
     MEMBER_NOT_FOUND(403, "M004", "존재하지 않은 회원정보"),
     ALREADY_CORRECT(403, "M005", "이미 맞춘 문제입니다."),
-    INCORRECT_FLAG(403, "M006", "잘못된 플래그 값입니다."),
+    INCORRECT_FLAG(404, "M006", "잘못된 플래그 값입니다."),
 
-    //LOGIN_INPUT_INVALID(400, "M002", "Login input is invalid"),
 
     // unchcked
-    UNCHECKED_ERROR(500, "U00", "확인 할 수 없는 에러")
+    UNCHECKED_ERROR(500, "U001", "확인 할 수 없는 에러"),
+    FILE_UPLOAD_FAIL(500, "U002", "파일업로드 실패"),
 
     ;
     private final String errorCodeStr;
