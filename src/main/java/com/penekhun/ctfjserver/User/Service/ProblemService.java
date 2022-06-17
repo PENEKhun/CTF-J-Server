@@ -49,7 +49,7 @@ public class ProblemService {
         List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getProbSolveCntList();
 
         return probSolveCntList.stream()
-                .filter(prob -> prob.getType().equals(category) && prob.isPublic())
+                .filter(prob -> prob.getType().equalsIgnoreCase(category) && prob.isPublic())
                 .collect(Collectors.toList());
     }
 
