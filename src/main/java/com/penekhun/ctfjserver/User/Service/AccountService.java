@@ -5,11 +5,14 @@ import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.Config.Jwt.JwtFilter;
 import com.penekhun.ctfjserver.Config.Jwt.TokenProvider;
 import com.penekhun.ctfjserver.User.Dto.AccountDto;
+import com.penekhun.ctfjserver.User.Dto.ProblemDto;
+import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Dto.TokenDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Entity.TokenStorage;
 import com.penekhun.ctfjserver.User.Repository.AccountRepository;
 import com.penekhun.ctfjserver.User.Repository.TokenStorageRepository;
+import com.penekhun.ctfjserver.Util.RankSchedule;
 import com.penekhun.ctfjserver.Util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,6 +45,7 @@ public class AccountService {
     private final RedisUtil redisUtil;
 
     private final TokenStorageRepository tokenStorageRepository;
+    private final RankSchedule rankSchedule;
 
     @Autowired
     private final ModelMapper modelMapper;
@@ -82,6 +88,11 @@ public class AccountService {
 
         redisUtil.insertTokenToStorage(username, tokenStorageEntity);
         return new TokenDto(accessToken, tokenExpired, refreshToken);
+    }
+
+    public ResponseEntity logout(){
+        //todo Logout 구현
+        return ResponseEntity.noContent().build();
     }
 
     public ResponseEntity reissue(String oldAccessToken, String oldRefreshToken){
@@ -151,5 +162,43 @@ public class AccountService {
         Account resultAccount = accountRepository.save(account);
 
         return modelMapper.map(resultAccount, AccountDto.Res.Signup.class);
+    }
+
+
+    @Transactional
+    public AccountDto.Res.Signup editMyAccountPartly(AccountDto.Req.Signup signup){
+        return null;
+    }
+
+    @Transactional
+    public AccountDto.Res.MyPage getMyAccount(Account account){
+        AccountDto.Res.MyPage myInfo = modelMapper.map(account, AccountDto.Res.MyPage.class);
+        RankDto.AccountSolveProbList accountSolveProbList = rankSchedule.getAccountSolveProbLists().stream()
+                .filter(a -> a.getAccountId().equals(myInfo.getId()))
+                .findFirst().orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        myInfo.setScore(accountSolveProbList.getScore());
+
+        //가져온 푼 문제 Id값으로 List<제목, 타입>를 생성
+        List<ProblemDto.Res.CorrectProblem> solvedList = new ArrayList<>();
+        List<RankDto.ProbWithDynamicScore> probList = rankSchedule.getProbSolveCntList();
+        accountSolveProbList.getProbIdList().forEach(probId-> {
+                        RankDto.ProbWithDynamicScore problem = probList.stream()
+                            .filter(prob -> prob.getId().equals(probId)).findFirst()
+                            .orElseThrow(() -> new CustomException((ErrorCode.UNCHECKED_ERROR)));
+
+                        solvedList.add(ProblemDto.Res.CorrectProblem.builder()
+                                .id(problem.getId())
+                                .title(problem.getTitle())
+                                .type(problem.getType())
+                                .build());
+                }
+        );
+        myInfo.setSolved(solvedList);
+        return myInfo;
+    }
+
+    @Transactional
+    public AccountDto.Res.Signup getAccount(AccountDto.Req.Signup signup){
+        return null;
     }
 }
