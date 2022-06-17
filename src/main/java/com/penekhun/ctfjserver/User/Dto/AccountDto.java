@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class AccountDto {
@@ -74,6 +75,24 @@ public class AccountDto {
             private String email;
             @ApiModelProperty(value = "실명", required = true)
             private String realName;
+
+        }
+
+        @Data
+        public static class MyPage{
+            @ApiModelProperty(value = "index")
+            private Integer id;
+            @ApiModelProperty(value = "아이디")
+            private String username;
+            @ApiModelProperty(value = "닉네임")
+            private String nickname;
+            @ApiModelProperty(value = "이메일")
+            private String email;
+            @ApiModelProperty(value = "점수")
+            private Integer score;
+            @ApiModelProperty(value = "푼 문제 리스트")
+            private List<ProblemDto.Res.CorrectProblem> solved;
+
 
         }
 
