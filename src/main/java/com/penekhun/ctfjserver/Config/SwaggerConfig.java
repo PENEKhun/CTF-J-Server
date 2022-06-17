@@ -9,6 +9,8 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.sql.Timestamp;
+
 @Configuration
 public class SwaggerConfig {
 
@@ -20,6 +22,7 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
+                .directModelSubstitute(Timestamp.class, Long.class)
                 .apiInfo(apiInfo());
     }
 
