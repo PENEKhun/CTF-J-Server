@@ -1,36 +1,27 @@
 package com.penekhun.ctfjserver.Config;
 
+import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
+import com.penekhun.ctfjserver.Config.Exception.ErrorResponse;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-
-import java.sql.Timestamp;
 
 @Configuration
 public class SwaggerConfig {
 
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.OAS_30)
-                .useDefaultResponseMessages(false)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build()
-                .directModelSubstitute(Timestamp.class, Long.class)
-                .apiInfo(apiInfo());
-    }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("CTF Backend API docs")
-                .description("this is API description ~")
-                .version("1.0")
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("CTF-Backend-Public")
+                .displayName("Public API")
+                .pathsToMatch("/api/v1/**")
                 .build();
     }
 
