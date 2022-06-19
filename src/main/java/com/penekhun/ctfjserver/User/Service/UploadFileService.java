@@ -33,7 +33,7 @@ public class UploadFileService {
         try (InputStream inputStream = file.getInputStream()) {
             s3Service.uploadFile(inputStream, objectMetadata, fileName);
         } catch (IOException e) {
-            throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생하였습니다 (%s)", file.getOriginalFilename()));
+            throw new CustomException(ErrorCode.FILE_UPLOAD_FAIL);
         }
         logService.uploadFileLog(file, fileName);
         return s3Service.getFileUrl(fileName);
