@@ -3,12 +3,20 @@ package com.penekhun.ctfjserver.User.Controller;
 import com.penekhun.ctfjserver.Config.CurrentUserParameter;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
+import com.penekhun.ctfjserver.Config.Exception.ErrorResponse;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Service.LogService;
 import com.penekhun.ctfjserver.User.Service.ProblemService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,14 +43,21 @@ public class ProblemController {
     private final ModelMapper modelMapper;
 
     @GetMapping("")
-    @Operation(tags= {"problem"}, summary = "공개된 문제 전체를 가져오는 API", description = "get ALL public Problem API")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key")},
+            tags= {"problem"}, summary = "공개된 문제 전체를 가져오는 API", description = "get ALL public Problem API")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<RankDto.ProbWithDynamicScore>> getProblemListMapping(){
         return new ResponseEntity<>(problemService.getProblemList(), HttpStatus.OK);
     }
 
     //@Secured("ROLE_ADMIN")
     @PostMapping("")
-    @Operation(tags= {"problem"}, summary = "문제 등록하는 API", description = "make Problem API")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key")},
+            tags= {"problem"}, summary = "문제 등록하는 API", description = "make Problem API")
+
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "성공", content = @Content(schema = @Schema(implementation = ProblemDto.Default.class))),
+            @ApiResponse(responseCode = "403", description = "잘못된 접근", ref = "#/components/responses/ErrorCode.HANDLE_ACCESS_DENIED")})
     public ResponseEntity<ProblemDto.Default> addProblemMapping(@CurrentUserParameter Account account, ProblemDto.Default problemDto){
         if (account == null)
             throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
@@ -61,7 +76,13 @@ public class ProblemController {
 
     @PostMapping("{problemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(tags= {"problem"}, summary = "문제 플래그 인증 API", description = "auth FLAG API")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key")},
+            tags= {"problem"}, summary = "문제 플래그 인증 API", description = "auth FLAG API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(examples = @ExampleObject(value=""))),
+            @ApiResponse(responseCode = "501", description = "어드민은 문제를 풀 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "이미 맞춤", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "잘못된 플래그(오답)", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
     public ResponseEntity<String> authProblemMapping(@CurrentUserParameter Account account, @PathVariable @Validated @NotNull Integer problemId, @Valid ProblemDto.Req.Auth auth){
         boolean isCorrect = problemService.authProblem(account, problemId, auth);
         logService.authProblemLog(problemId, auth.getFlag(), isCorrect);
@@ -71,8 +92,12 @@ public class ProblemController {
     }
 
     @GetMapping("{category}")
-    @Operation(tags= {"problem"}, summary = "카테고리를 통해 문제 리스트를 가져오는 API", description = "get problem from category API")
-    public List<RankDto.ProbWithDynamicScore> getProblemFromCategoryMapping(@PathVariable @Validated @NotNull String category){
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(security = { @SecurityRequirement(name = "bearer-key")},
+            tags= {"problem"}, summary = "카테고리를 통해 문제 리스트를 가져오는 API", description = "get problem from category API")
+    public List<RankDto.ProbWithDynamicScore> getProblemFromCategoryMapping(
+            @Parameter(name = "category", description = "문제 종류", schema = @Schema(type = "string", allowableValues = {"pwnable", "web", "reversing", "crypto", "misc"}))
+            @PathVariable @Validated @NotNull String category){
         return problemService.getProblemListFromCategory(category);
 
     }
