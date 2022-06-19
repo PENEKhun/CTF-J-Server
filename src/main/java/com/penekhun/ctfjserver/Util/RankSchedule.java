@@ -28,6 +28,10 @@ public class RankSchedule {
     private final RankRepository rankRepository;
     private List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
     private List<RankDto.ProbWithDynamicScore> probSolveCntList = new ArrayList<>();
+    public static RankDto.EveryHourScore everyHourScoreRank = new RankDto.EveryHourScore();
+
+    public static final String RANK_HISTORY_FILENAME = "rankHistory.json";
+
 
     @Scheduled(fixedDelay = 5000, initialDelay = 2000)
     public void problemAndSolverPollingTask() {
@@ -56,6 +60,36 @@ public class RankSchedule {
         if (mills > 2000){
             log.warn("Slow Query.... takes {} ms", mills);
         }
+    }
+
+    //    @Scheduled(cron = "0 0 0/1 * * *") // 매 시간마다
+//    @Scheduled(cron = "0 * * * * *") // 매 분마다
+//    @Scheduled(fixedDelay = 7000, initialDelay = 2000)
+    @Scheduled( cron="*/30 * * * * *") // 매 30분마다
+    public void everyHourScoreCachingTask() {
+        SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd.HH:mm:00");
+        String nowTime = date.format(new Date());
+        if (accountSolveProbLists != null
+                && everyHourScoreRank.getRankListWithTimestamp().stream().noneMatch(rank -> rank.getTimestamp().equals(nowTime))){
+            // accountSolveProbLists is not null && nowTime과 중복된 데이터 값이 없을때
+            RankDto.AccountSolveProbListWithTimestamp accountSolveProbListWithTimestamp = RankDto.AccountSolveProbListWithTimestamp.builder()
+                    .timestamp(nowTime)
+                    .rank(accountSolveProbLists).build();
+            everyHourScoreRank.addRankList(accountSolveProbListWithTimestamp);
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Path path = Paths.get(RANK_HISTORY_FILENAME);
+        try {
+            Files.write(path,gson.toJson(everyHourScoreRank).getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            log.error("Rank History File save Error!!!!");
+        }
+    }
+
+    public RankDto.EveryHourScore getRank(int top) {
+        everyHourScoreRank.setNowRank(accountSolveProbLists.stream().limit(top).collect(Collectors.toList()));
+        return everyHourScoreRank;
     }
 
 
