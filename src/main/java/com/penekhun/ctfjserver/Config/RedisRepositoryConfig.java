@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
@@ -19,15 +20,17 @@ public class RedisRepositoryConfig {
 
     private final RedisProperties redisProperties;
 
-    // lettuce
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         String host = redisProperties.getHost();
         int port = redisProperties.getPort();
         String password = redisProperties.getPassword();
 
-        log.info("RedisConnectionFactory {}@{}:{}", host,password, port);
-        return new LettuceConnectionFactory(host, port);
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(host);
+        redisStandaloneConfiguration.setPort(port);
+        redisStandaloneConfiguration.setPassword(password);
+        return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
 
     @Bean
