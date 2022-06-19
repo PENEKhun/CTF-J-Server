@@ -1,5 +1,7 @@
 package com.penekhun.ctfjserver.Util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Repository.RankRepository;
 import lombok.RequiredArgsConstructor;
@@ -7,9 +9,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
