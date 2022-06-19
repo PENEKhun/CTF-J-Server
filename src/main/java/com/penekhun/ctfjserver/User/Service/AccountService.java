@@ -173,27 +173,36 @@ public class AccountService {
     @Transactional
     public AccountDto.Res.MyPage getMyAccount(Account account){
         AccountDto.Res.MyPage myInfo = modelMapper.map(account, AccountDto.Res.MyPage.class);
-        RankDto.AccountSolveProbList accountSolveProbList = rankSchedule.getAccountSolveProbLists().stream()
+        Optional<RankDto.AccountSolveProbList> accountSolveProbList = rankSchedule.getAccountSolveProbLists().stream()
                 .filter(a -> a.getAccountId().equals(myInfo.getId()))
-                .findFirst().orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-        myInfo.setScore(accountSolveProbList.getScore());
+                .findFirst();
 
-        //가져온 푼 문제 Id값으로 List<제목, 타입>를 생성
-        List<ProblemDto.Res.CorrectProblem> solvedList = new ArrayList<>();
-        List<RankDto.ProbWithDynamicScore> probList = rankSchedule.getProbSolveCntList();
-        accountSolveProbList.getProbIdList().forEach(probId-> {
-                        RankDto.ProbWithDynamicScore problem = probList.stream()
-                            .filter(prob -> prob.getId().equals(probId)).findFirst()
-                            .orElseThrow(() -> new CustomException((ErrorCode.UNCHECKED_ERROR)));
+        if (accountSolveProbList.isEmpty()){
+            //푼 문제가 없다면 0점에 푼 문제 리스트 null 셋팅
+            myInfo.setScore(0);
+            myInfo.setSolved(null);
+        } else {
 
-                        solvedList.add(ProblemDto.Res.CorrectProblem.builder()
-                                .id(problem.getId())
-                                .title(problem.getTitle())
-                                .type(problem.getType())
-                                .build());
-                }
-        );
-        myInfo.setSolved(solvedList);
+            // 푼 문제가 있다면
+            // 가져온 푼 문제 Id값으로 List<제목, 타입>를 생성
+            List<ProblemDto.Res.CorrectProblem> solvedList = new ArrayList<>();
+            List<RankDto.ProbWithDynamicScore> probList = rankSchedule.getProbSolveCntList();
+
+            for (Integer probId : accountSolveProbList.get()
+                    .getProbIdList()) {
+                RankDto.ProbWithDynamicScore problem = probList.stream()
+                        .filter(prob -> prob.getId().equals(probId)).findFirst()
+                        .orElseThrow(() -> new CustomException((ErrorCode.UNCHECKED_ERROR)));
+
+                solvedList.add(ProblemDto.Res.CorrectProblem.builder()
+                        .id(problem.getId())
+                        .title(problem.getTitle())
+                        .type(problem.getType())
+                        .build());
+            }
+            myInfo.setSolved(solvedList);
+            myInfo.setScore(accountSolveProbList.get().getScore());
+        }
         return myInfo;
     }
 
