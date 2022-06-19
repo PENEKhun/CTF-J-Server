@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RankDto {
@@ -53,6 +54,42 @@ public class RankDto {
             this.score += score;
         }
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class EveryHourScore{
+        @Schema(description = "시간 정보")
+        private List<AccountSolveProbList> nowRank;
+        private List<AccountSolveProbListWithTimestamp> rankListWithTimestamp;
+
+        public EveryHourScore() {
+            this.rankListWithTimestamp = new ArrayList<>();
+        }
+
+        public void addRankList(AccountSolveProbListWithTimestamp rank) {
+            rankListWithTimestamp.add(rank);
+        }
+
+        public void setNowRank(List<AccountSolveProbList> now) {
+            this.nowRank = now;
+        }
+
+        public void removeOldOne(){
+            this.rankListWithTimestamp.remove(0);
+        }
+    }
+
+    @Builder
+    @Getter @Setter
+    @AllArgsConstructor
+    public static class AccountSolveProbListWithTimestamp {
+        private String timestamp;
+        private List<AccountSolveProbList> rank;
+    }
+
+
+
 
 
 }

@@ -85,6 +85,11 @@ public class RankSchedule {
         } catch (IOException e) {
             log.error("Rank History File save Error!!!!");
         }
+
+        if (everyHourScoreRank.getRankListWithTimestamp().size() > 15){
+            // rankHistory가 많이 싸이면 맨 마지막 history를 지워줍니다.
+            everyHourScoreRank.removeOldOne();
+        }
     }
 
     public RankDto.EveryHourScore getRank(int top) {
