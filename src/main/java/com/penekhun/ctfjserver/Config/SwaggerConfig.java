@@ -33,4 +33,26 @@ public class SwaggerConfig {
                 .version("1.0")
                 .build();
     }
+
+    @Bean
+    public OpenAPI api() {
+
+        Components responseComponents = new Components().addSecuritySchemes("bearer-key",
+                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT"));
+        for (ErrorCode errCode : ErrorCode.values()) {
+            Object example = new ErrorResponse(errCode.getErrorCode(), errCode.name(), errCode.getMessage());
+            ApiResponse apiResponse = new ApiResponse().content(
+                    new Content().addMediaType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
+                            new MediaType().example(example)));
+
+            responseComponents.addResponses(String.format("%s.%s", ErrorCode.class.getSimpleName(), errCode), apiResponse);
+        }
+
+        return new OpenAPI()
+                .components(responseComponents)
+                .info(new Info()
+                        .title("CTF-Backend API!")
+                        .version("v1")
+                        .description("hi..."));
+    }
 }
