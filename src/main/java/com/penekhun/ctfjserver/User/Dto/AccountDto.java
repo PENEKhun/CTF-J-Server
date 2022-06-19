@@ -1,6 +1,5 @@
 package com.penekhun.ctfjserver.User.Dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -19,28 +18,24 @@ public class AccountDto {
         @Data
         @Valid
         public static class Signup{
-            @Schema(description = "3~30자사이 아이디")
-            @ApiModelProperty(value = "3~30자사이 아이디", required = true)
+            @Schema(description = "3~30자사이 아이디", required = true)
             @Length(min = 3, max = 30)
             private String username;
 
-            @Schema(description = "8~20사이 패스워드")
-            @ApiModelProperty(value = "8~20사이 패스워드", required = true)
+            @Schema(description = "8~20사이 패스워드", required = true)
             @Length(min = 8, max = 20)
             private String password;
 
-            @Schema(description = "3~20자 사이 닉네임")
-            @ApiModelProperty(value = "3~20자 사이 닉네임", required = true)
+            @Schema(description = "3~20자 사이 닉네임", required = true)
             @Length(min = 3, max = 20)
             private String nickname;
 
             @Email
-            @Schema(description = "이메일")
-            @ApiModelProperty(value = "이메일", required = true)
+            @Schema(description = "이메일", required = true)
             private String email;
 
             @Length(min = 2, max = 10)
-            @ApiModelProperty(value = "2~10자 사이 실명", required = true)
+            @Schema(description = "2~10자 사이 실명", required = true)
             private String realName;
 
             @Builder
@@ -55,9 +50,9 @@ public class AccountDto {
 
         @Data
         public static class Login {
-            @ApiModelProperty(value = "아이디")
+            @Schema(description = "아이디", required = true)
             private String username;
-            @ApiModelProperty(value = "비밀번호")
+            @Schema(description = "비밀번호", required = true)
             private String password;
         }
 
@@ -67,30 +62,30 @@ public class AccountDto {
 
         @Data
         public static class Signup{
-            @ApiModelProperty(value = "아이디", required = true)
+            @Schema(description = "아이디", required = true)
             private String username;
-            @ApiModelProperty(value = "닉네임", required = true)
+            @Schema(description = "닉네임", required = true)
             private String nickname;
-            @ApiModelProperty(value = "이메일", required = true)
+            @Schema(description = "이메일", required = true)
             private String email;
-            @ApiModelProperty(value = "실명", required = true)
+            @Schema(description = "실명", required = true)
             private String realName;
 
         }
 
         @Data
         public static class MyPage{
-            @ApiModelProperty(value = "index")
+            @Schema(description = "index")
             private Integer id;
-            @ApiModelProperty(value = "아이디")
+            @Schema(description = "아이디")
             private String username;
-            @ApiModelProperty(value = "닉네임")
+            @Schema(description = "닉네임")
             private String nickname;
-            @ApiModelProperty(value = "이메일")
+            @Schema(description = "이메일")
             private String email;
-            @ApiModelProperty(value = "점수")
+            @Schema(description = "점수")
             private Integer score;
-            @ApiModelProperty(value = "푼 문제 리스트")
+            @Schema(description = "푼 문제 리스트")
             private List<ProblemDto.Res.CorrectProblem> solved;
 
 
