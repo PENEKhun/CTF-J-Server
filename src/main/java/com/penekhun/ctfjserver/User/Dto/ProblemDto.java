@@ -78,6 +78,11 @@ public class ProblemDto {
             private String type;
         }
 
+        @Data
+        public static class File{
+            private String url;
+        }
+
 
 
 
