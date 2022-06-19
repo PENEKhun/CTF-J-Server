@@ -1,16 +1,16 @@
 package com.penekhun.ctfjserver.User.Dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class TokenDto {
-    @ApiModelProperty(value = "access token")
+    @Schema(description = "access token")
     private String token;
-    @ApiModelProperty(value = "token expired")
+    @Schema(description = "token expired")
     private String tokenExpired;
-    @ApiModelProperty(value = "refresh token")
+    @Schema(description = "refresh token")
     private String refresh;
 }
