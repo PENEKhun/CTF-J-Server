@@ -3,7 +3,6 @@ package com.penekhun.ctfjserver.User.Controller;
 import com.penekhun.ctfjserver.Config.CurrentUserParameter;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
-import com.penekhun.ctfjserver.Config.Exception.ErrorResponse;
 import com.penekhun.ctfjserver.User.Dto.AccountDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Service.AccountService;
@@ -11,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,9 @@ public class AccountController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(tags= {"accounts"}, summary = "회원가입 API", description = "signup API")
-    @ApiResponse(responseCode = "409", description = "입력한 정보와 중복되는 계정이 존재함", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = AccountDto.Res.MyPage.class))),
+            @ApiResponse(responseCode = "409", description = "입력한 정보와 중복되는 계정이 존재함", ref = "#/components/responses/USERNAME_DUPLICATION")})
     public AccountDto.Res.Signup signupMapping(@Validated AccountDto.Req.Signup signup) {
         return accountService.signup(signup);
     }
@@ -39,7 +41,10 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
             tags= {"accounts"}, summary = "나의 회원정보 가져오는 API", description = "lookup my account")
-    @ApiResponse(responseCode = "403", description = "잘못된 접근", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = AccountDto.Res.MyPage.class))),
+            @ApiResponse(responseCode = "403", description = "잘못된 접근", ref = "#/components/responses/ErrorCode.HANDLE_ACCESS_DENIED"),
+            @ApiResponse(responseCode = "500", description = "알수없는 오류", ref= "#/components/responses/ErrorCode.UNCHECKED_ERROR")})
     public AccountDto.Res.MyPage lookupMyAccountMapping(@CurrentUserParameter Account account){
         if (account == null)
             throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);

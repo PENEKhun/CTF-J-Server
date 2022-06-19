@@ -3,7 +3,6 @@ package com.penekhun.ctfjserver.User.Controller;
 import com.penekhun.ctfjserver.Config.CurrentUserParameter;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
-import com.penekhun.ctfjserver.Config.Exception.ErrorResponse;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
@@ -80,9 +79,9 @@ public class ProblemController {
             tags= {"problem"}, summary = "문제 플래그 인증 API", description = "auth FLAG API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(examples = @ExampleObject(value=""))),
-            @ApiResponse(responseCode = "501", description = "어드민은 문제를 풀 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "이미 맞춤", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "잘못된 플래그(오답)", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
+            @ApiResponse(responseCode = "501", description = "어드민은 문제를 풀 수 없음", ref = "#/components/responses/ErrorCode.ONLY_ACCESS_USER"),
+            @ApiResponse(responseCode = "403", description = "이미 맞춤", ref = "#/components/responses/ErrorCode.ALREADY_CORRECT"),
+            @ApiResponse(responseCode = "404", description = "잘못된 플래그(오답)", ref = "#/components/responses/ErrorCode.INCORRECT_FLAG")})
     public ResponseEntity<String> authProblemMapping(@CurrentUserParameter Account account, @PathVariable @Validated @NotNull Integer problemId, @Valid ProblemDto.Req.Auth auth){
         boolean isCorrect = problemService.authProblem(account, problemId, auth);
         logService.authProblemLog(problemId, auth.getFlag(), isCorrect);
