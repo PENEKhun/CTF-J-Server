@@ -52,9 +52,13 @@ public class RankSchedule {
         }
         accountSolveProbLists.sort(Comparator.comparing(RankDto.AccountSolveProbList::getScore, Comparator.reverseOrder())
                 .thenComparing(RankDto.AccountSolveProbList::getLastAuthTime, Comparator.naturalOrder()));
-        log.info("스케쥴링 실행시간 {}",
-                (System.currentTimeMillis() - bef));
+        long mills = System.currentTimeMillis() - bef;
+        if (mills > 2000){
+            log.warn("Slow Query.... takes {} ms", mills);
+        }
     }
+
+
 
     public List<RankDto.AccountSolveProbList> getAccountSolveProbLists() {
         return accountSolveProbLists;
