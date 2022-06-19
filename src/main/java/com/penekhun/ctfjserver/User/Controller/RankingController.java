@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class RankingController {
     @GetMapping("{howMany}")
     @Operation(tags= {"rank"}, summary = "랭킹을 가져오는 API", description = "인자로 넘겨준 숫자 만큼 랭크를 가져옵니다.")
     @Parameter(name = "howMany", description = "가져올 상위 n등", example = "5", required = true)
-    public List<RankDto.AccountSolveProbList> getRank(
+    public RankDto.EveryHourScore getRank(
              @PathVariable @Valid @NotNull Integer howMany){
         return rankingService.getRank(howMany);
     }
