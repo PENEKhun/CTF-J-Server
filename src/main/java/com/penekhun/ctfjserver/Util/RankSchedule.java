@@ -62,10 +62,7 @@ public class RankSchedule {
         }
     }
 
-    //    @Scheduled(cron = "0 0 0/1 * * *") // 매 시간마다
-//    @Scheduled(cron = "0 * * * * *") // 매 분마다
-//    @Scheduled(fixedDelay = 7000, initialDelay = 2000)
-    @Scheduled( cron="*/30 * * * * *") // 매 30분마다
+    @Scheduled(cron = "0 0 0/1 * * *") // 매 시간마다
     public void everyHourScoreCachingTask() {
         SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd.HH:mm:00");
         String nowTime = date.format(new Date());
