@@ -173,7 +173,7 @@ public class AccountService {
     @Transactional
     public AccountDto.Res.MyPage getMyAccount(Account account){
         AccountDto.Res.MyPage myInfo = modelMapper.map(account, AccountDto.Res.MyPage.class);
-        Optional<RankDto.AccountSolveProbList> accountSolveProbList = rankSchedule.getAccountSolveProbLists().stream()
+        Optional<RankDto.AccountSolveProbList> accountSolveProbList = rankSchedule.getAccSolveList().stream()
                 .filter(a -> a.getAccountId().equals(myInfo.getId()))
                 .findFirst();
 
@@ -186,7 +186,7 @@ public class AccountService {
             // 푼 문제가 있다면
             // 가져온 푼 문제 Id값으로 List<제목, 타입>를 생성
             List<ProblemDto.Res.CorrectProblem> solvedList = new ArrayList<>();
-            List<RankDto.ProbWithDynamicScore> probList = rankSchedule.getProbSolveCntList();
+            List<RankDto.ProbWithDynamicScore> probList = rankSchedule.getPrbSolveList();
 
             for (Integer probId : accountSolveProbList.get()
                     .getSolved()) {
