@@ -39,14 +39,14 @@ public class ProblemService {
     }
 
     public List<RankDto.ProbWithDynamicScore> getProblemList(){
-        List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getProbSolveCntList();
+        List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getPrbSolveList();
         return probSolveCntList.stream()
                 .filter(RankDto.ProbWithDynamicScore::isPublic)
                 .collect(Collectors.toList());
     }
 
     public List<RankDto.ProbWithDynamicScore> getProblemListFromCategory(String category){
-        List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getProbSolveCntList();
+        List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getPrbSolveList();
 
         return probSolveCntList.stream()
                 .filter(prob -> prob.getType().equalsIgnoreCase(category) && prob.isPublic())
