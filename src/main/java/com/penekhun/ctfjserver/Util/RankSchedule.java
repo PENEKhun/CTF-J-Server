@@ -66,9 +66,9 @@ public class RankSchedule {
         }
     }
 
-//    @Scheduled(cron = "0 0 0/1 * * *") // 매 시간마다
     //@Scheduled(fixedDelay = 6000, initialDelay = 100000)
-    @Scheduled(cron = "0 */5 * * * *") //임시로 5분
+//    @Scheduled(cron = "0 */5 * * * *") //임시로 5분
+    @Scheduled(cron = "0 0 0/1 * * *") // 매 시간마다
     public void everyHourScoreCachingTask() {
         /*
         매 시간 마다 랭크를 기록해 두는 스케쥴러
