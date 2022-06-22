@@ -52,6 +52,12 @@ public class RankDto {
         public void addScore(Integer score) {
             this.score += score;
         }
+
+        public boolean existInRank(List<RankDto.AccountSolveProbList> rank){
+            return rank.stream().anyMatch(account -> (account.getAccountId().equals(this.accountId)));
+        }
+
+
     }
 
     @Builder
@@ -60,13 +66,13 @@ public class RankDto {
     public static class EveryHourScore{
         @Schema(description = "시간 정보")
         private List<AccountSolveProbList> nowRank;
-        private List<AccountSolveProbListWithTimestamp> rankListWithTimestamp;
+        private List<RankWithTimestamp> rankListWithTimestamp;
 
         public EveryHourScore() {
             this.rankListWithTimestamp = new ArrayList<>();
         }
 
-        public void addRankList(AccountSolveProbListWithTimestamp rank) {
+        public void addRankList(RankWithTimestamp rank) {
             rankListWithTimestamp.add(rank);
         }
 
@@ -82,9 +88,14 @@ public class RankDto {
     @Builder
     @Getter @Setter
     @AllArgsConstructor
-    public static class AccountSolveProbListWithTimestamp {
+    public static class RankWithTimestamp {
         private String timestamp;
         private List<AccountSolveProbList> rank;
+
+        public void addRank(AccountSolveProbList rank) {
+            this.rank.add(rank);
+        }
+
     }
 
 
