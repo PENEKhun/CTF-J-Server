@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -20,6 +21,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZoneId;
+import java.util.TimeZone;
 
 import static com.penekhun.ctfjserver.Util.RankSchedule.RANK_HISTORY_FILENAME;
 import static com.penekhun.ctfjserver.Util.RankSchedule.everyHourScoreRank;
@@ -32,6 +35,7 @@ import static com.penekhun.ctfjserver.Util.RankSchedule.everyHourScoreRank;
 public class CtfJServerApplication {
 
     private final ModelMapper modelMapper = new ModelMapper();
+    @Value("${server.time-zone}") String timeZone;
 
     public static void main(String[] args) {
         SpringApplication.run(CtfJServerApplication.class, args);
@@ -45,6 +49,11 @@ public class CtfJServerApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
+
+
+        TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.of(timeZone)));
+        log.info("Set Default Timezon as {}", ZoneId.of(timeZone));
+
         log.info("loading rank history.... in local file");
         Gson gson = new Gson();
         try {
