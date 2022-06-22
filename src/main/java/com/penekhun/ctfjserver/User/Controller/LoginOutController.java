@@ -28,7 +28,7 @@ public class LoginOutController {
     private final AccountService accountService;
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
-            tags= {"accounts"}, summary = "로그인 API", description = "login API")
+            tags= {"accounts", "admin.accounts"}, summary = "로그인 API", description = "login API")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "로그인 성공"),
         @ApiResponse(responseCode = "400", description = "유효성 검증 오류", ref = "#/components/responses/ErrorCode.INVALID_INPUT_VALUE"),
@@ -39,7 +39,7 @@ public class LoginOutController {
         return accountService.login(login);
     }
 
-    @Operation(tags= {"accounts"}, summary = "토큰 재발급 API", description = "token reissue API")
+    @Operation(tags= {"accounts", "admin.accounts"}, summary = "토큰 재발급 API", description = "token reissue API")
     @PostMapping("/reissue")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses({
@@ -52,7 +52,7 @@ public class LoginOutController {
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
-            tags= {"accounts"}, summary = "로그아웃 API", description = "logout API")
+            tags= {"accounts", "admin.accounts"}, summary = "로그아웃 API", description = "logout API")
     @GetMapping("logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity logoutMap(){
