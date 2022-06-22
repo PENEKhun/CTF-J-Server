@@ -24,41 +24,57 @@ public class RankRepository{
     @Autowired
     ModelMapper modelMapper;
 
-    public List<ProblemDto.Res.correctProblemList> findCorrectProblemList(){
+    public List<RankDto.ProbWithDynamicScore> findPrbSolve(){
 
-        String sql = "select a " +
-                "from Account m, AuthLog a " +
-                "where a.accountIdx = m.id and a.isSuccess = true";
-        List correctList = em.createQuery(sql).getResultList();
+        Query nativeQuery = em.createNativeQuery(
+                "SELECT "
+                +    "    *,"
+                +    "    IFNULL(solve_tmp, 0) AS solverCount"
+                +    "      FROM"
+                +    "    Problem"
+                +    "        LEFT OUTER JOIN"
+                +    "    (SELECT "
+                +    "         problem_idx, COUNT(DISTINCT account_idx) AS solve_tmp"
+                +    "    FROM"
+                +    "        AuthLog"
+                +    "    WHERE"
+                +    "        is_success = TRUE"
+                +    "    GROUP BY problem_idx) Auth ON Problem.idx = problem_idx"
+                +    "  WHERE"
+                +    "    is_public = TRUE"
+                +    "  "
+                +    "  UNION ALL"
+                +    "  "
+                +    "      SELECT"
+                +    "        *,"
+                +    "        null, null, 0 AS solveCount"
+                +    "      FROM"
+                +    "          Problem"
+                +    "      WHERE"
+                +    "          idx NOT IN (SELECT "
+                +    "                problem_idx"
+                +    "          FROM"
+                +    "                AuthLog a"
+                +    "          WHERE"
+                +    "                a.is_success = TRUE);"
+        );
 
-        List<ProblemDto.Res.correctProblemList> correctProblemLists = new ArrayList<>();
-        correctList.forEach(s -> correctProblemLists.add(modelMapper.map(s, ProblemDto.Res.correctProblemList.class)));
-        return correctProblemLists;
-    }
+        List<Object[]> resultList = nativeQuery.getResultList();
 
-    public List<RankDto.ProbWithDynamicScore> findProbSolver(){
-
-        List<Object[]> resultList = em.createQuery("select a.problem, count(a.problem)  from AuthLog a where a.isSuccess = true group by a.problem").getResultList();
-//        List<Object[]> resultList = em.createQuery("select a.problem.id, a.problem.maxScore, a.problem.minScore, a.problem.solveThreshold, count(a.problem), a.problem.type, a.problem.isPublic  from AuthLog a where a.isSuccess = true group by a.problem").getResultList();
-        //SELECT problem_idx, count(problem_idx) FROM ctf.AuthLog where is_success=true group By problem_idx
-        List<Problem> resultList2 = em.createQuery("select p from Problem p where p.id NOT IN (select a.problem from AuthLog a where a.isSuccess = true)", Problem.class).getResultList();
-        //SELECT idx, max_score, min_score, solve_threshold FROM ctf.Problem where idx NOT IN (SELECT problem_idx FROM ctf.AuthLog WHERE is_success != true)
         List<RankDto.ProbWithDynamicScore> outputList = new ArrayList<>();
-
         if (resultList != null)
             for (Object[] row : resultList) {
-                Problem problem = (Problem) row[0];
-                Long countSolver = (Long) row[1];
-                RankDto.ProbWithDynamicScore item = modelMapper.map(problem, RankDto.ProbWithDynamicScore.class);
-                item.setSolverCount(countSolver);
-                outputList.add(item);
-            }
-
-        if (resultList2 != null)
-            for (Problem problem : resultList2) {
-                RankDto.ProbWithDynamicScore item = modelMapper.map(problem, RankDto.ProbWithDynamicScore.class);
-                item.setSolverCount(0L);
-                outputList.add(item);
+                RankDto.ProbWithDynamicScore outputItem = RankDto.ProbWithDynamicScore.builder()
+                        .id((Integer) row[0])
+                        .title((String) row[2])
+                        .description((String) row[3])
+                        .type((String) row[5])
+                        .isPublic(((Byte) row[6]) != 0 )
+                        .maxScore((Integer) row[7])
+                        .minScore((Integer) row[8])
+                        .solveThreshold((Integer) row[9])
+                        .solve(((BigInteger) row[14]).longValue()).build();
+                outputList.add(outputItem);
             }
         //문제마다 solveThreshold과 같은 칼럼을 가져오고 solverCount을 계산해줌. -> 아직 calculatedScore는 계산 안됨
         return outputList;

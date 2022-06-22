@@ -189,7 +189,7 @@ public class AccountService {
             List<RankDto.ProbWithDynamicScore> probList = rankSchedule.getProbSolveCntList();
 
             for (Integer probId : accountSolveProbList.get()
-                    .getProbIdList()) {
+                    .getSolved()) {
                 RankDto.ProbWithDynamicScore problem = probList.stream()
                         .filter(prob -> prob.getId().equals(probId)).findFirst()
                         .orElseThrow(() -> new CustomException((ErrorCode.UNCHECKED_ERROR)));

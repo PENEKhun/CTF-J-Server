@@ -34,9 +34,9 @@ public class RankSchedule {
 
 
     @Scheduled(fixedDelay = 5000, initialDelay = 2000)
-    public void problemAndSolverPollingTask() {
+    public void dynamicScorePollingTask() {
         long bef = System.currentTimeMillis();
-        probSolveCntList = rankRepository.findProbSolver();
+        probSolveCntList = rankRepository.findPrbSolve();
 
         for (RankDto.ProbWithDynamicScore problem : probSolveCntList) {
             //점수 계산
@@ -47,7 +47,7 @@ public class RankSchedule {
         accountSolveProbLists = rankRepository.findWhoSolveProb();
 
         for (RankDto.AccountSolveProbList accountSolveProbList : accountSolveProbLists) {
-            List<Integer> solveList = accountSolveProbList.getProbIdList();
+            List<Integer> solveList = accountSolveProbList.getSolved();
 
             for (Integer probId : solveList) {
                 Integer score = probSolveCntList.get(probId-1).getCalculatedScore();

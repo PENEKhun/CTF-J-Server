@@ -17,20 +17,19 @@ public class RankDto {
         private Integer id;
         private String title;
         private String description;
-        private String writer;
+        private String type;
+        private boolean isPublic;
 
         private Integer maxScore;
         private Integer minScore;
         private Integer solveThreshold;
-        private Long solverCount;
-        private String type;
-        private List<String> solverList;
-        private boolean isPublic;
+        private Long solve;
+        private List<String> solveList;
 
         private Integer calculatedScore;
 
         public void setCalculatedScore() {
-            double value = (((minScore - maxScore) / Math.pow(solveThreshold, 2)) * Math.pow(solverCount, 2)) + maxScore;
+            double value = (((minScore - maxScore) / Math.pow(solveThreshold, 2)) * Math.pow(solve, 2)) + maxScore;
             calculatedScore = (int) Math.ceil(value);
         }
     }
@@ -44,7 +43,7 @@ public class RankDto {
         @Schema(description = "유저 닉네임")
         private String nickname;
         @Schema(description = "푼 문제 리스트", example = "{int, int, int, }")
-        private List<Integer> probIdList;
+        private List<Integer> solved;
         @Schema(description = "마지막으로 문제를 맞춘 시간", example = "timestamp")
         private Timestamp lastAuthTime;
         @Schema(description = "점수", example = "timestamp")
