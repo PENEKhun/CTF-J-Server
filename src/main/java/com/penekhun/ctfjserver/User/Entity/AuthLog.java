@@ -18,7 +18,7 @@ public class AuthLog {
     //@Column(name = "problem_idx", nullable = false)
     private Problem problem;
 
-    @ManyToOne @JoinColumn(name = "ACCOUNT_IDX")
+    @ManyToOne @JoinColumn(name = "ACCOUNT_IDX", insertable = false, updatable = false)
     private Account solver;
 
     @Column(name = "account_idx", nullable = false)
