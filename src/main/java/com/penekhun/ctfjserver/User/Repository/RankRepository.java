@@ -43,7 +43,7 @@ public class RankRepository{
                 +    "  WHERE"
                 +    "    is_public = TRUE"
                 +    "  "
-                +    "  UNION ALL"
+                +    "  UNION"
                 +    "  "
                 +    "      SELECT"
                 +    "        *,"
@@ -55,8 +55,7 @@ public class RankRepository{
                 +    "                problem_idx"
                 +    "          FROM"
                 +    "                AuthLog a"
-                +    "          WHERE"
-                +    "                a.is_success = TRUE);"
+                +    "          );"
         );
 
         List<Object[]> resultList = nativeQuery.getResultList();
