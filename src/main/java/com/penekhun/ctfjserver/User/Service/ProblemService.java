@@ -38,17 +38,19 @@ public class ProblemService {
         return problemDto;
     }
 
-    public List<RankDto.ProbWithDynamicScore> getProblemList(){
+    public List<RankDto.ProbWithDynamicScore> getProblemList(boolean includePrivate){
         List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getPrbSolveList();
-        return probSolveCntList.stream()
+        return includePrivate ? probSolveCntList : probSolveCntList.stream()
                 .filter(RankDto.ProbWithDynamicScore::isPublic)
                 .collect(Collectors.toList());
     }
 
-    public List<RankDto.ProbWithDynamicScore> getProblemListFromCategory(String category){
+    public List<RankDto.ProbWithDynamicScore> getProblemListFromCategory(String category, boolean includePrivate){
         List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getPrbSolveList();
 
-        return probSolveCntList.stream()
+        return includePrivate ? probSolveCntList.stream()
+                .filter(prob -> prob.getType().equalsIgnoreCase(category))
+                .collect(Collectors.toList()) : probSolveCntList.stream()
                 .filter(prob -> prob.getType().equalsIgnoreCase(category) && prob.isPublic())
                 .collect(Collectors.toList());
     }

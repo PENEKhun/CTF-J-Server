@@ -45,7 +45,7 @@ public class AdminProblemController {
             tags= {"admin.problem"}, summary = "문제 전체(비공개 문제 포함)를 가져오는 API", description = "get ALL Problem API")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<RankDto.ProbWithDynamicScore>> getProblemListMapping(){
-        return new ResponseEntity<>(problemService.getProblemList(), HttpStatus.OK);
+        return new ResponseEntity<>(problemService.getProblemList(true), HttpStatus.OK);
     }
 
     @PostMapping("")
