@@ -40,8 +40,6 @@ public class RankRepository{
                 +    "    WHERE"
                 +    "        is_success = TRUE"
                 +    "    GROUP BY problem_idx) Auth ON Problem.idx = problem_idx"
-                +    "  WHERE"
-                +    "    is_public = TRUE"
                 +    "  "
                 +    "  UNION"
                 +    "  "
