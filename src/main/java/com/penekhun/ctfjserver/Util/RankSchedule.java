@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RankSchedule {
     private final RankRepository rankRepository;
-    private List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
-    private List<RankDto.ProbWithDynamicScore> probSolveCntList = new ArrayList<>();
+    private List<RankDto.AccountSolveProbList> accSolveList = new ArrayList<>();
+    private List<RankDto.ProbWithDynamicScore> prbSolveList = new ArrayList<>();
     public static RankDto.EveryHourScore everyHourScoreRank = new RankDto.EveryHourScore();
 
     public static final String RANK_HISTORY_FILENAME = "rankHistory.json";
@@ -40,25 +40,25 @@ public class RankSchedule {
             동적으로 문제들의 점수를 계산해 주는 스케쥴러
          */
         long bef = System.currentTimeMillis();
-        probSolveCntList = rankRepository.findPrbSolve();
+        prbSolveList = rankRepository.findPrbSolve();
 
-        for (RankDto.ProbWithDynamicScore problem : probSolveCntList) {
+        for (RankDto.ProbWithDynamicScore problem : prbSolveList) {
             //점수 계산
             problem.setCalculatedScore();
         }
 
-        probSolveCntList.sort(Comparator.comparingInt(RankDto.ProbWithDynamicScore::getId));
-        accountSolveProbLists = rankRepository.findWhoSolveProb();
+        prbSolveList.sort(Comparator.comparingInt(RankDto.ProbWithDynamicScore::getId));
+        accSolveList = rankRepository.findWhoSolveProb();
 
-        for (RankDto.AccountSolveProbList accountSolveProbList : accountSolveProbLists) {
+        for (RankDto.AccountSolveProbList accountSolveProbList : accSolveList) {
             List<Integer> solveList = accountSolveProbList.getSolved();
 
             for (Integer probId : solveList) {
-                Integer score = probSolveCntList.get(probId-1).getCalculatedScore();
+                Integer score = prbSolveList.get(probId-1).getCalculatedScore();
                 accountSolveProbList.addScore(score);
             }
         }
-        accountSolveProbLists.sort(Comparator.comparing(RankDto.AccountSolveProbList::getScore, Comparator.reverseOrder())
+        accSolveList.sort(Comparator.comparing(RankDto.AccountSolveProbList::getScore, Comparator.reverseOrder())
                 .thenComparing(RankDto.AccountSolveProbList::getLastAuthTime, Comparator.naturalOrder()));
         long mills = System.currentTimeMillis() - bef;
         if (mills > 2000){
@@ -66,21 +66,24 @@ public class RankSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 0/1 * * *")
+//    @Scheduled(cron = "0 0 0/1 * * *") // 매 시간마다
+    //@Scheduled(fixedDelay = 6000, initialDelay = 100000)
+    @Scheduled(cron = "0 */5 * * * *") //임시로 5분
     public void everyHourScoreCachingTask() {
         /*
         매 시간 마다 랭크를 기록해 두는 스케쥴러
          */
         SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd.HH:mm:00");
         String nowTime = date.format(new Date());
-        if (accountSolveProbLists != null
+        if (accSolveList != null
                 && everyHourScoreRank.getRankListWithTimestamp().stream().noneMatch(rank -> rank.getTimestamp().equals(nowTime))){
             // accountSolveProbLists is not null && nowTime과 중복된 데이터 값이 없을때
-            RankDto.AccountSolveProbListWithTimestamp accountSolveProbListWithTimestamp = RankDto.AccountSolveProbListWithTimestamp.builder()
+            RankDto.RankWithTimestamp accountSolveProbListWithTimestamp = RankDto.RankWithTimestamp.builder()
                     .timestamp(nowTime)
-                    .rank(accountSolveProbLists).build();
+                    .rank(accSolveList).build();
             everyHourScoreRank.addRankList(accountSolveProbListWithTimestamp);
         }
+
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Path path = Paths.get(RANK_HISTORY_FILENAME);
@@ -96,19 +99,18 @@ public class RankSchedule {
         }
     }
 
-    public RankDto.EveryHourScore getRank(int top) {
-        everyHourScoreRank.setNowRank(accountSolveProbLists.stream().limit(top).collect(Collectors.toList()));
-        return everyHourScoreRank;
+    public List<RankDto.AccountSolveProbList> getRank(int top) {
+        return accSolveList.stream().limit(top).collect(Collectors.toList());
     }
 
 
 
-    public List<RankDto.AccountSolveProbList> getAccountSolveProbLists() {
-        return accountSolveProbLists;
+    public List<RankDto.AccountSolveProbList> getAccSolveList() {
+        return accSolveList;
     }
 
-    public List<RankDto.ProbWithDynamicScore> getProbSolveCntList() {
-        return probSolveCntList;
+    public List<RankDto.ProbWithDynamicScore> getPrbSolveList() {
+        return prbSolveList;
     }
 }
 
