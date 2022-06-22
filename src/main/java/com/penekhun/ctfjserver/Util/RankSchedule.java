@@ -35,6 +35,10 @@ public class RankSchedule {
 
     @Scheduled(fixedDelay = 5000, initialDelay = 2000)
     public void dynamicScorePollingTask() {
+        /*
+            설정한 인터벌 마다,
+            동적으로 문제들의 점수를 계산해 주는 스케쥴러
+         */
         long bef = System.currentTimeMillis();
         probSolveCntList = rankRepository.findPrbSolve();
 
@@ -62,8 +66,11 @@ public class RankSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 0/1 * * *") // 매 시간마다
+    @Scheduled(cron = "0 0 0/1 * * *")
     public void everyHourScoreCachingTask() {
+        /*
+        매 시간 마다 랭크를 기록해 두는 스케쥴러
+         */
         SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd.HH:mm:00");
         String nowTime = date.format(new Date());
         if (accountSolveProbLists != null
