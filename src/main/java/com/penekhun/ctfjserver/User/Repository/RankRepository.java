@@ -1,8 +1,6 @@
 package com.penekhun.ctfjserver.User.Repository;
 
-import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Dto.RankDto;
-import com.penekhun.ctfjserver.User.Entity.Problem;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -97,7 +95,7 @@ public class RankRepository{
             RankDto.AccountSolveProbList item = RankDto.AccountSolveProbList.builder().accountId( (Integer) row[0])
                     .nickname((String) row[1])
                     .lastAuthTime((Timestamp) row[3])
-                    .probIdList(probIdList).build();
+                    .solved(probIdList).build();
             accountSolveProbLists.add(item);
         }
         return accountSolveProbLists;
