@@ -5,6 +5,8 @@ import com.penekhun.ctfjserver.Util.RankSchedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -13,14 +15,31 @@ public class RankingService {
 
     private final RankSchedule rankSchedule;
 
-    public RankDto.EveryHourScore getRank(int top){
-        RankDto.EveryHourScore rank = rankSchedule.getRank(top);
-        if (rank != null)
-            for (RankDto.AccountSolveProbListWithTimestamp rankWithTime : rank.getRankListWithTimestamp()) {
-                rankWithTime.setRank(
-                        rankWithTime.getRank().stream().limit(top).collect(Collectors.toList())
-                );
+    public List<RankDto.RankWithTimestamp> getRankHistory(int top){
+        List<RankDto.RankWithTimestamp> rankHistory = RankSchedule.everyHourScoreRank.getRankListWithTimestamp();
+        List<RankDto.RankWithTimestamp> resultList = new ArrayList<>();
+
+        List<RankDto.AccountSolveProbList> nowRank = rankSchedule.getAccSolveList().stream().limit(top).collect(Collectors.toList());
+        for (RankDto.RankWithTimestamp rankWithTimestamp : rankHistory) {
+            RankDto.RankWithTimestamp resultItem = RankDto.RankWithTimestamp.builder()
+                    .timestamp(rankWithTimestamp.getTimestamp())
+                    .rank(new ArrayList<>()).build();
+            List<RankDto.AccountSolveProbList> i = rankWithTimestamp.getRank();
+            for (RankDto.AccountSolveProbList account : i) {
+                if (account.existInRank(nowRank)){
+                    resultItem.addRank(account);
+                }
             }
-        return rank;
+            resultList.add(resultItem);
+
+        }
+
+
+        return resultList;
+    }
+
+
+    public List<RankDto.AccountSolveProbList> getRank(int top){
+        return rankSchedule.getRank(top);
     }
 }
