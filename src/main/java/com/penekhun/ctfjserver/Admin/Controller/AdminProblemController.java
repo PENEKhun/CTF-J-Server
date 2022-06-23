@@ -1,12 +1,12 @@
 package com.penekhun.ctfjserver.Admin.Controller;
 
+import com.penekhun.ctfjserver.Admin.Service.AdminProblemService;
 import com.penekhun.ctfjserver.Config.CurrentUserParameter;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
-import com.penekhun.ctfjserver.User.Service.LogService;
 import com.penekhun.ctfjserver.User.Service.ProblemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -37,8 +36,7 @@ import java.util.List;
 public class AdminProblemController {
 
     private final ProblemService problemService;
-    private final LogService logService;
-    private final ModelMapper modelMapper;
+    private final AdminProblemService adminProblemService;
 
     @GetMapping("")
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
@@ -62,11 +60,13 @@ public class AdminProblemController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("{problem}")
+    @DeleteMapping("{problemIdx}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
             tags= {"admin.problem"}, summary = "문제 삭제하는 API - 미완성", description = "delete Problem API")
-    //todo : 문제 삭제 구현
-    public ResponseEntity<?> deleteProblemMapping(){
+    public ResponseEntity deleteProblemMapping(@PathVariable @Validated @NotNull Integer problemIdx){
+        if (adminProblemService.removeProblem(problemIdx))
+            return ResponseEntity.noContent().build();
+        //todo : 리턴 수정
         return null;
     }
 
