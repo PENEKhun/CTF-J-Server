@@ -29,8 +29,13 @@ public class RankDto {
         private Integer calculatedScore;
 
         public void setCalculatedScore() {
-            double value = (((minScore - maxScore) / Math.pow(solveThreshold, 2)) * Math.pow(solve, 2)) + maxScore;
-            calculatedScore = (int) Math.ceil(value);
+            if (isPublic) {
+                // 공개된 문제일 경우만 점수 계산
+                double value = (((minScore - maxScore) / Math.pow(solveThreshold, 2)) * Math.pow(solve, 2)) + maxScore;
+                calculatedScore = (int) Math.ceil(value);
+            } else {
+                calculatedScore = 0;
+            }
         }
     }
 
