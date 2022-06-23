@@ -99,21 +99,18 @@ public class AccountService {
         log.info("reissue oldAccessToken: {}", oldAccessToken);
         log.info("reissue oldRefreshToken: {}", oldRefreshToken);
 
-        Optional<TokenStorage> findAccessToken = tokenStorageRepository.findByAccessToken(oldAccessToken);
-        if (findAccessToken.isEmpty())
-            throw new CustomException(ErrorCode.DOESNT_EXIST_TOKEN);
+        TokenStorage findAccessToken = tokenStorageRepository.findByAccessToken(oldAccessToken)
+                                        .orElseThrow(() -> new CustomException(ErrorCode.DOESNT_EXIST_TOKEN));
 
-        String username = findAccessToken.get().getUsername();
+        String username = findAccessToken.getUsername();
 
         log.info("reissue username : {}", username);
 
         if (username == null)
             throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
 
-        log.info(findAccessToken.get().getRefreshToken());
-
         //refresh 토큰 비교
-        if (!findAccessToken.get().getRefreshToken().equals(oldRefreshToken))
+        if (!findAccessToken.getRefreshToken().equals(oldRefreshToken))
             throw new CustomException(ErrorCode.UNCHECKED_ERROR);
 
 
