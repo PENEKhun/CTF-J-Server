@@ -28,6 +28,10 @@ public class LogService {
     private final ProblemRepository problemRepository;
     private final CurrentUser currentUser;
 
+    public void logAdminAccess(String method){
+        logging("Admin Access", method);
+    }
+
     public void uploadProblemLog(Problem problem){
         logging("uploadProblem", String.format("problem name : %s", problem.getTitle()));
     }
