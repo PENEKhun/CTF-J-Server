@@ -53,9 +53,6 @@ public class TokenProvider implements InitializingBean {
     }
 
     public Map<String, String> createToken(String username) {
-//        String authorities = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
