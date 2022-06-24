@@ -1,6 +1,8 @@
 package com.penekhun.ctfjserver.User.Entity;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -8,8 +10,10 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "LogStore", schema = "ctf")
+@Getter
 public class LogStore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
