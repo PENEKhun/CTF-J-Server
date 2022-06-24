@@ -2,12 +2,16 @@ package com.penekhun.ctfjserver.User.Entity;
 
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
 @Table(name = "AuthLog", schema = "ctf")
+@EntityListeners(AuditingEntityListener.class)
 public class AuthLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -28,7 +32,11 @@ public class AuthLog {
     private String authFlag;
 
     @Column(name = "is_success", nullable = false)
-    private Boolean isSuccess = false;
+    private boolean isSuccess = false;
+
+    @CreatedDate
+    @Column(name = "auth_time", nullable = false, updatable = false)
+    private Timestamp authAt;
 
     public Long getIdx() {
         return idx;
