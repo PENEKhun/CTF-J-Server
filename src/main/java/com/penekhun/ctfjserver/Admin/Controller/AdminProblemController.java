@@ -62,7 +62,7 @@ public class AdminProblemController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{problemIdx}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
-            tags= {"admin.problem"}, summary = "문제 삭제하는 API - 미완성", description = "delete Problem API")
+            tags= {"admin.problem"}, summary = "문제 삭제하는 API", description = "delete Problem API")
     public ResponseEntity deleteProblemMapping(@PathVariable @Validated @NotNull Integer problemIdx){
         if (adminProblemService.removeProblem(problemIdx))
             return ResponseEntity.noContent().build();
