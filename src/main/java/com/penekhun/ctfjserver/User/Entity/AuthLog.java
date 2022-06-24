@@ -78,7 +78,7 @@ public class AuthLog {
     }
 
     @Builder
-    public AuthLog(Problem problem, Integer accountIdx, String authFlag, Boolean isSuccess) {
+    public AuthLog(Problem problem, Integer accountIdx, String authFlag, boolean isSuccess) {
         this.problem = problem;
         this.accountIdx = accountIdx;
         this.authFlag = authFlag;
