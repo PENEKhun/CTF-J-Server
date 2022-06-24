@@ -30,7 +30,30 @@ public class AuthLog {
     @Column(name = "is_success", nullable = false)
     private Boolean isSuccess = false;
 
-    public Boolean getIsSuccess() {
+    public Long getIdx() {
+        return idx;
+    }
+
+    public String getUsername() {
+        if (solver != null)
+            return solver.getUsername();
+        else return "";
+    }
+
+    public String getNickname(){
+        if (solver != null)
+            return solver.getNickname();
+        else return "";
+    }
+    public Integer getAccountIdx() {
+        return accountIdx;
+    }
+
+    public Timestamp getAuthAt() {
+        return authAt;
+    }
+
+    public boolean isSuccess() {
         return isSuccess;
     }
 
