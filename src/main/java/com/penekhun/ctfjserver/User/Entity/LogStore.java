@@ -36,6 +36,18 @@ public class LogStore {
     @Column(name = "time", nullable = false, updatable = false)
     private Timestamp time;
 
+    public String getUsername() {
+        if (user != null)
+            return user.getUsername();
+        else return "";
+    }
+
+    public String getNickname(){
+        if (user != null)
+            return user.getNickname();
+        else return "";
+    }
+
     @Builder
     public LogStore(Integer memberIdx, String action, String detail) {
         this.accountIdx = memberIdx;
