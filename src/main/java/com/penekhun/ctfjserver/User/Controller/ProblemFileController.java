@@ -2,6 +2,10 @@ package com.penekhun.ctfjserver.User.Controller;
 
 import com.penekhun.ctfjserver.User.Service.UploadFileService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +28,9 @@ public class ProblemFileController {
     @GetMapping("{fileName}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
             tags= {"problem", "admin.problem"}, summary = "파일 다운로드 API", description = "file download API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseEntity.class))),
+            @ApiResponse(responseCode = "500", description = "알수없는 오류", ref= "#/components/responses/ErrorCode.UNCHECKED_ERROR")})
     public ResponseEntity<byte[]> download(@PathVariable @Valid @NotEmpty String fileName){
         return uploadFileService.downloadFile(fileName);
     }
