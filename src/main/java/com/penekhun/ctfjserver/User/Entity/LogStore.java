@@ -16,8 +16,11 @@ public class LogStore {
     @Column(name = "idx", nullable = false)
     private Long id;
 
-    @Column(name = "member_idx", nullable = false)
-    private Integer memberIdx;
+    @ManyToOne @JoinColumn(name = "ACCOUNT_IDX", insertable = false, updatable = false)
+    private Account user;
+
+    @Column(name = "account_idx", nullable = false)
+    private Integer accountIdx;
 
     @Column(name = "action", nullable = false, length = 45)
     private String action;
@@ -31,7 +34,7 @@ public class LogStore {
 
     @Builder
     public LogStore(Integer memberIdx, String action, String detail) {
-        this.memberIdx = memberIdx;
+        this.accountIdx = memberIdx;
         this.action = action;
         this.detail = detail;
     }
