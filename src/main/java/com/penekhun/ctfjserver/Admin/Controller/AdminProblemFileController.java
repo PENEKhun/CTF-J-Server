@@ -16,8 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -46,6 +45,28 @@ public class AdminProblemFileController {
         } else {
             throw new CustomException(ErrorCode.FILE_UPLOAD_FAIL);
         }
+    }
+
+    @DeleteMapping("{fileUUID}")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "성공"),
+            @ApiResponse(responseCode = "500", description = "삭제 실패", ref = "#/components/responses/ErrorCode.FILEqwdqdqwq3wdcasc_UPLOAD_FAIL")})
+    @Operation(security = { @SecurityRequirement(name = "bearer-key")},
+            tags= {"admin.problem"}, summary = "파일 삭제 API", description = "remove file")
+    public ResponseEntity removeFile(@PathVariable String fileUUID){
+        fileService.deleteFile(fileUUID);
+        logService.logging("remove file", String.format("file detail : %s", fileUUID));
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "성공"),
+            @ApiResponse(responseCode = "500", description = "??", ref = "#/components/responses/ErrorCode.FILEqwdqdqwq3wdcasc_UPLOAD_FAIL")})
+    @Operation(security = { @SecurityRequirement(name = "bearer-key")},
+            tags= {"admin.problem"}, summary = "파일 리스트 API - 미구현", description = "listing file")
+    public void getFileList(){
+
     }
 
 }
