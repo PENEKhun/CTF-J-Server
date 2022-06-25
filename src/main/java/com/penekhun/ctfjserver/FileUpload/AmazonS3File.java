@@ -1,9 +1,13 @@
 package com.penekhun.ctfjserver.FileUpload;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
+import com.penekhun.ctfjserver.Config.Exception.CustomException;
+import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +20,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class AmazonS3File implements FileManagement {
 
@@ -25,6 +30,20 @@ public class AmazonS3File implements FileManagement {
     @Override
     public void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName) {
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
+    }
+
+    @Override
+    public void deleteFile(String key) {
+        try {
+            //Delete 객체 생성
+            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(this.bucket, key);
+            //Delete
+            amazonS3.deleteObject(deleteObjectRequest);
+        } catch (SdkClientException e) {
+            log.error("파일 삭제 오류");
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.FILE_REMOVE_ERROR);
+        }
     }
 
     @Override
