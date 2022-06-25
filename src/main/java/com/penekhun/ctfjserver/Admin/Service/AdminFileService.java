@@ -1,9 +1,10 @@
-package com.penekhun.ctfjserver.User.Service;
+package com.penekhun.ctfjserver.Admin.Service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.FileUpload.FileManagement;
+import com.penekhun.ctfjserver.User.Service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UploadFileService {
+public class AdminFileService {
 
     private final FileManagement s3Service;
     private final LogService logService;
@@ -46,6 +47,10 @@ public class UploadFileService {
             e.printStackTrace();
             throw new CustomException(ErrorCode.UNCHECKED_ERROR);
         }
+    }
+
+    public void deleteFile(@NotEmpty String fileName){
+        s3Service.deleteFile(fileName);
     }
 
     // 기존 확장자명을 유지한 채, 유니크한 파일의 이름을 생성하는 로직
