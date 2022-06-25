@@ -12,6 +12,7 @@ public enum ErrorCode {
     SERVER_NOT_OPEN(501, "C007", "서버가 오픈되어있지 않습니다."),
     OPEN_TIME_ERROR(501, "C008", "enable time format 에러"),
     TIME_ZONE_ERROR(501, "C009", "time-zone 에러"),
+    FILE_REMOVE_ERROR(500, "C010", "파일 삭제 오류"),
 
     // Member
     EMAIL_DUPLICATION(409, "M001", "존재하는 이메일"),
