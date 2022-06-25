@@ -1,6 +1,6 @@
 package com.penekhun.ctfjserver.User.Controller;
 
-import com.penekhun.ctfjserver.User.Service.UploadFileService;
+import com.penekhun.ctfjserver.Admin.Service.AdminFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,7 +23,7 @@ import javax.validation.constraints.NotEmpty;
 @Slf4j
 @RequiredArgsConstructor
 public class ProblemFileController {
-    private final UploadFileService uploadFileService;
+    private final AdminFileService uploadFileService;
 
     @GetMapping("{fileName}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
