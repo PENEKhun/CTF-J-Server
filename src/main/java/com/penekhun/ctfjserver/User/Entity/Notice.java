@@ -1,10 +1,15 @@
 package com.penekhun.ctfjserver.User.Entity;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "Notice", schema = "ctf")
+@EntityListeners(AuditingEntityListener.class)
 public class Notice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -18,27 +23,13 @@ public class Notice {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "create_time", nullable = false)
-    private Instant createTime;
+    @CreatedDate
+    @Column(name = "create_time", nullable = false, updatable = false)
+    private Timestamp createTime;
 
-    @Column(name = "update_time")
-    private Instant updateTime;
-
-    public Instant getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Instant updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Instant getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Instant createTime) {
-        this.createTime = createTime;
-    }
+    @LastModifiedDate
+    @Column(name = "update_time", updatable = false)
+    private Timestamp updateTime;
 
     public String getContent() {
         return content;
