@@ -28,7 +28,8 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 @Secured("ROLE_ADMIN")
 public class AdminProblemFileController {
-    private final UploadFileService uploadFileService;
+    private final AdminFileService fileService;
+    private final LogService logService;
 
     @PostMapping("")
     @ApiResponses({
@@ -37,7 +38,7 @@ public class AdminProblemFileController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
             tags= {"admin.problem"}, summary = "파일 업로드 API", description = "upload file and response file url. only for admin")
     public ResponseEntity<ProblemDto.Res.File> upload(@Valid @NotNull MultipartFile file){
-        String fileUrl = uploadFileService.uploadFile(file);
+        String fileUrl = fileService.uploadFile(file);
         if (fileUrl != null || file.isEmpty()) {
             ProblemDto.Res.File responseFile = new ProblemDto.Res.File();
             responseFile.setUrl(fileUrl);
