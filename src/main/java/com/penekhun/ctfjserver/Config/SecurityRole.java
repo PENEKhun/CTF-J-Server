@@ -11,6 +11,7 @@ public enum SecurityRole {
         this.myRole = myRole;
     }
 
+    @Override
     public String toString() {
         return myRole;
     }
