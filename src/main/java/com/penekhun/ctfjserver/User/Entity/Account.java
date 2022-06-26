@@ -49,11 +49,11 @@ public class Account {
     private String userRole = SecurityRole.USER.toString();
 
     public boolean isAdmin(){
-        return (this.userRole.equals("ROLE_ADMIN"));
+        return (this.userRole.equals(SecurityRole.ADMIN.toString()));
     }
 
     public void makeAdmin(){
-        this.userRole = "ROLE_ADMIN";
+        this.userRole = SecurityRole.ADMIN.toString();
     }
 
     public void updateLastAuthTime(){
