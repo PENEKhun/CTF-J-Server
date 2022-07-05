@@ -38,13 +38,17 @@ public class AccountDto {
             @Schema(description = "2~10자 사이 실명", required = true)
             private String realName;
 
+            @Schema(description = "유저 권한", required = false, defaultValue = "USER")
+            private SecurityRole userRole;
+
             @Builder
-            public Signup(String username, String password, String nickname, String email, String realName) {
+            public Signup(String username, String password, String nickname, String email, String realName, SecurityRole role) {
                 this.username = username;
                 this.password = password;
                 this.nickname = nickname;
                 this.email = email;
                 this.realName = realName;
+                this.userRole = role;
             }
         }
 

@@ -13,12 +13,12 @@ public class SecurityUser extends User {
     private Account account;
 
     public SecurityUser(Account account) {
-        super(account.getUsername(), account.getPassword(), AuthorityUtils.createAuthorityList(account.getUserRole()));
+        super(account.getUsername(), account.getPassword(), AuthorityUtils.createAuthorityList(account.getRole().toString()));
 
         log.info("SecurityUser account.uid = {}", account.getId());
         log.info("SecurityUser account.username = {}", account.getUsername());
         log.info("SecurityUser account.password = {}", account.getPassword());
-        log.info("SecurityUser account.role = {}", account.getUserRole());
+        log.info("SecurityUser account.role = {}", account.getRole());
 
         this.account = account;
     }

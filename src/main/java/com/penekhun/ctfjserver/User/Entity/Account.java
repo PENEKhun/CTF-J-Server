@@ -1,6 +1,7 @@
 package com.penekhun.ctfjserver.User.Entity;
 
 import com.penekhun.ctfjserver.Config.SecurityRole;
+import com.penekhun.ctfjserver.Config.SecurityRoleConverter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
@@ -34,8 +35,13 @@ public class Account {
     @Column(name = "last_auth_time")
     private Timestamp lastAuthTime;
 
+    @Lob
+    @Column(name = "user_role", nullable = false)
+    @Convert(converter = SecurityRoleConverter.class)
+    private SecurityRole userRole = SecurityRole.USER;
+
     @Builder
-    public Account(String username, String password, String nickname, String email, String realName, Timestamp lastAuthTime) {
+    public Account(String username, String password, String nickname, String email, String realName, Timestamp lastAuthTime, SecurityRole role) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -49,18 +55,18 @@ public class Account {
     private String userRole = SecurityRole.USER.toString();
 
     public boolean isAdmin(){
-        return (this.userRole.equals(SecurityRole.ADMIN.toString()));
+        return (this.userRole.equals(SecurityRole.ADMIN));
     }
 
     public void makeAdmin(){
-        this.userRole = SecurityRole.ADMIN.toString();
+        this.userRole = SecurityRole.ADMIN;
     }
 
     public void updateLastAuthTime(){
         this.lastAuthTime = new Timestamp(System.currentTimeMillis());
     }
 
-    public String getUserRole() {
+    public SecurityRole getRole() {
         return userRole;
     }
 
