@@ -51,10 +51,6 @@ public class Account {
         this.userRole = role;
     }
 
-    @Lob
-    @Column(name = "user_role", nullable = false)
-    private String userRole = SecurityRole.USER.toString();
-
     public boolean isAdmin(){
         return (this.userRole.equals(SecurityRole.ADMIN));
     }
