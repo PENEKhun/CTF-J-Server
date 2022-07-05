@@ -48,6 +48,7 @@ public class Account {
         this.email = email;
         this.realName = realName;
         this.lastAuthTime = lastAuthTime;
+        this.userRole = role;
     }
 
     @Lob
