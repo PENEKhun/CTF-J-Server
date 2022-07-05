@@ -16,7 +16,7 @@ public class AuthLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "idx", nullable = false)
-    private Long idx;
+    private Long id;
 
     @ManyToOne @JoinColumn(name = "PROBLEM_IDX")
     //@Column(name = "problem_idx", nullable = false)
@@ -39,7 +39,7 @@ public class AuthLog {
     private Timestamp authAt;
 
     public Long getIdx() {
-        return idx;
+        return id;
     }
 
     public String getUsername() {
