@@ -27,34 +27,29 @@ public class RankRepository{
     public List<RankDto.ProbWithDynamicScore> findPrbSolve(){
 
         Query nativeQuery = em.createNativeQuery(
-                "SELECT "
-                +    "    *,"
-                +    "    IFNULL(solve_tmp, 0) AS solverCount"
-                +    "      FROM"
-                +    "    Problem"
-                +    "        LEFT OUTER JOIN"
-                +    "    (SELECT "
-                +    "         problem_idx, COUNT(DISTINCT account_idx) AS solve_tmp"
-                +    "    FROM"
-                +    "        AuthLog"
-                +    "    WHERE"
-                +    "        is_success = TRUE"
-                +    "    GROUP BY problem_idx) Auth ON Problem.idx = problem_idx"
-                +    "  "
-                +    "  UNION"
-                +    "  "
-                +    "      SELECT"
-                +    "        *,"
-                +    "        null, null, 0 AS solveCount"
-                +    "      FROM"
-                +    "          Problem"
-                +    "      WHERE"
-                +    "          idx NOT IN (SELECT "
-                +    "                problem_idx"
-                +    "          FROM"
-                +    "                AuthLog a"
-                +    "          );"
-        );
+            "    SELECT"
+            +"            *,"
+            +"        IFNULL(solve_tmp, 0) AS solverCount"
+            +"    FROM"
+            +"    Problem"
+            +"    LEFT OUTER JOIN ("
+            +"            SELECT"
+            +"            problem_idx,"
+            +"            COUNT(DISTINCT account_idx) AS solve_tmp"
+            +"            FROM"
+            +"            AuthLog"
+            +"            WHERE"
+            +"            is_success = TRUE"
+            +"            GROUP BY"
+            +"            problem_idx"
+            +"    ) Auth ON Problem.idx = problem_idx"
+            +"    LEFT OUTER JOIN("
+            +"            SELECT"
+            +"            idx as accIdx,"
+            +"            nickname"
+            +"            FROM"
+            +"            Account"
+            +"    ) Acc On Problem.author_id = Acc.accIdx");
 
         List<Object[]> resultList = nativeQuery.getResultList();
 
@@ -63,16 +58,23 @@ public class RankRepository{
             for (Object[] row : resultList) {
                 RankDto.ProbWithDynamicScore outputItem = RankDto.ProbWithDynamicScore.builder()
                         .id((Integer) row[0])
+                        .authorId((Integer) row[1])
                         .title((String) row[2])
                         .description((String) row[3])
+                        .flag((String) row[4])
                         .type((String) row[5])
-                        .isPublic(((Byte) row[6]) != 0 )
+                        .isPublic((Boolean) row[6])
                         .maxScore((Integer) row[7])
                         .minScore((Integer) row[8])
                         .solveThreshold((Integer) row[9])
-                        .solve(((BigInteger) row[14]).longValue()).build();
+                        .modifyTime((Timestamp) row[11])
+                        .author((String) row[15])
+                        .solve(((BigInteger) row[16]).longValue())
+                        .build();
                 outputList.add(outputItem);
+
             }
+
         //문제마다 solveThreshold과 같은 칼럼을 가져오고 solverCount을 계산해줌. -> 아직 calculatedScore는 계산 안됨
         return outputList;
     }
