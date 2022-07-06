@@ -15,10 +15,13 @@ public class RankDto {
     @NoArgsConstructor
     public static class ProbWithDynamicScore {
         private Integer id;
+        private String author;
+        private Integer authorId;
         private String title;
         private String description;
         private String type;
-        private boolean isPublic;
+        private String flag;
+        private Boolean isPublic;
 
         private Integer maxScore;
         private Integer minScore;
@@ -27,6 +30,7 @@ public class RankDto {
         private List<String> solveList;
 
         private Integer calculatedScore;
+        private Timestamp modifyTime;
 
         public void setCalculatedScore() {
                 double value = (((minScore - maxScore) / Math.pow(solveThreshold, 2)) * Math.pow(solve, 2)) + maxScore;
