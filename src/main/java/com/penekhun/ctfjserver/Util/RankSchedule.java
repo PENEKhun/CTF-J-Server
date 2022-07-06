@@ -54,8 +54,11 @@ public class RankSchedule {
             List<Integer> solveList = accountSolveProbList.getSolved();
 
             for (Integer probId : solveList) {
-                Integer score = prbSolveList.get(probId-1).getCalculatedScore();
-                accountSolveProbList.addScore(score);
+                if (Boolean.TRUE.equals(prbSolveList.get(probId-1).getIsPublic())) {
+                    // 공개된 문제일때만 사용자의 점수로 합산
+                    Integer score = prbSolveList.get(probId - 1).getCalculatedScore();
+                    accountSolveProbList.addScore(score);
+                }
             }
         }
         accSolveList.sort(Comparator.comparing(RankDto.AccountSolveProbList::getScore, Comparator.reverseOrder())
