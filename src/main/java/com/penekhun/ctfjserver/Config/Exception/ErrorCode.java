@@ -21,6 +21,7 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(403, "M004", "존재하지 않은 회원정보"),
     ALREADY_CORRECT(403, "M005", "이미 맞춘 문제입니다."),
     INCORRECT_FLAG(404, "M006", "잘못된 플래그 값입니다."),
+    DUPLICATE_INFORMATION(409, "M007", "중복되는 정보가 있습니다."),
 
 
     // unchcked
