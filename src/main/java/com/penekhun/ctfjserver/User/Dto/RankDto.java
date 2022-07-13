@@ -38,6 +38,11 @@ public class RankDto {
                 double value = (((minScore - maxScore) / Math.pow(solveThreshold, 2)) * Math.pow(solve, 2)) + maxScore;
                 calculatedScore = (int) Math.ceil(value);
         }
+
+        public void addSolver(String nickname){
+            solved.add(nickname);
+        }
+
         public void flagMasking(){
             this.flag = "FLAG{***}";
         }
@@ -48,11 +53,11 @@ public class RankDto {
     @AllArgsConstructor
     public static class AccountSolveProbList {
         @Schema(description = "계정 인덱스")
-        private Integer accountId;
+        private Long accountId;
         @Schema(description = "유저 닉네임")
         private String nickname;
         @Schema(description = "푼 문제 리스트", example = "{int, int, int, }")
-        private List<Integer> solved;
+        private List<ProblemDto.Res.CorrectProblem> solved;
         @Schema(description = "마지막으로 문제를 맞춘 시간", example = "timestamp")
         private Timestamp lastAuthTime;
         @Schema(description = "점수", example = "timestamp")
@@ -66,6 +71,13 @@ public class RankDto {
             return rank.stream().anyMatch(account -> (account.getAccountId().equals(this.accountId)));
         }
 
+        public void fillSolvedProblemData(Long id, String title, String type){
+            solved.stream().filter(prob -> prob.getId().equals(id))
+                    .findAny().ifPresent(prob -> {
+                        prob.setTitle(title);
+                        prob.setType(type);
+                    });
+        }
 
     }
 

@@ -44,24 +44,30 @@ public class RankSchedule {
         long bef = System.currentTimeMillis();
         prbSolveList = rankRepository.findPrbSolve();
 
-        for (RankDto.ProbWithDynamicScore problem : prbSolveList) {
-            //점수 계산
-            problem.setCalculatedScore();
-        }
-
-        prbSolveList.sort(Comparator.comparingInt(RankDto.ProbWithDynamicScore::getId));
+        //점수 계산
+        prbSolveList.forEach(RankDto.ProbWithDynamicScore::setCalculatedScore);
+        prbSolveList.sort(Comparator.comparingLong(RankDto.ProbWithDynamicScore::getId));
         accSolveList = rankRepository.findWhoSolveProb();
 
         for (RankDto.AccountSolveProbList accountSolveProbList : accSolveList) {
-            List<Integer> solveList = accountSolveProbList.getSolved();
+            List<ProblemDto.Res.CorrectProblem> solveList = accountSolveProbList.getSolved();
 
-            for (Integer probId : solveList) {
-                if (Boolean.TRUE.equals(prbSolveList.get(probId-1).getIsPublic())) {
-                    // 공개된 문제일때만 사용자의 점수로 합산
-                    Integer score = prbSolveList.get(probId - 1).getCalculatedScore();
-                    accountSolveProbList.addScore(score);
-                }
-            }
+            solveList.stream()
+                    .map(ProblemDto.Res.CorrectProblem::getId)
+                    .forEach(solvedProbId ->
+                            prbSolveList.stream()
+                            .filter(RankDto.ProbWithDynamicScore::getIsPublic)
+                            .filter(prob -> prob.getId().equals(solvedProbId))
+                            .findFirst()
+                            .ifPresent(
+                                prob -> {
+                                    // 문제정보 변수에 푼 유저 정보 기입
+                                    prob.addSolver(accountSolveProbList.getNickname());
+                                    // 회원정보 변수에 푼 문제 리스트 계산
+                                    accountSolveProbList.addScore(prob.getCalculatedScore());
+                                    accountSolveProbList.fillSolvedProblemData(prob.getId(), prob.getTitle(), prob.getType());
+                                })
+                        );
         }
         accSolveList.sort(Comparator.comparing(RankDto.AccountSolveProbList::getScore, Comparator.reverseOrder())
                 .thenComparing(RankDto.AccountSolveProbList::getLastAuthTime, Comparator.naturalOrder()));

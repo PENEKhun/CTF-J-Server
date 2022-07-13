@@ -1,5 +1,6 @@
 package com.penekhun.ctfjserver.User.Repository;
 
+import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Dto.RankDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,12 +90,18 @@ public class RankRepository{
 
         for (Object[] row : resultList) {
             List<String> tempProbIdList = List.of(row[2].toString().split(","));
-            List<Integer> probIdList = convertStringListToIntList(tempProbIdList, Integer::parseInt);
+            List<ProblemDto.Res.CorrectProblem> correctProblemList = new ArrayList<>();
+            tempProbIdList.forEach(probId ->
+                    correctProblemList.add(
+                            ProblemDto.Res.CorrectProblem.builder().id(Long.valueOf(probId)).build()
+                            ));
+//            List<Integer> probIdList = convertStringListToIntList(tempProbIdList, Integer::parseInt);
 
-            RankDto.AccountSolveProbList item = RankDto.AccountSolveProbList.builder().accountId( (Integer) row[0])
+            RankDto.AccountSolveProbList item = RankDto.AccountSolveProbList.builder().accountId( (Long) row[0])
                     .nickname((String) row[1])
                     .lastAuthTime((Timestamp) row[3])
-                    .solved(probIdList).build();
+                    .solved(correctProblemList)
+                    .build();
             accountSolveProbLists.add(item);
         }
         return accountSolveProbLists;
