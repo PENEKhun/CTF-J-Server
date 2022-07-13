@@ -19,7 +19,7 @@ public class NotificationDetail {
     private Notification notification;
 
     @Column(name = "receiver_idx", nullable = false)
-    private Integer receiverIdx;
+    private Long receiverIdx;
 
     @Column(name = "is_read", nullable = false)
     private boolean isRead;
@@ -27,7 +27,7 @@ public class NotificationDetail {
     @Column(name = "read_time")
     private Timestamp readTime;
 
-    public NotificationDetail(Integer receiverIdx) {
+    public NotificationDetail(Long receiverIdx) {
         this.receiverIdx = receiverIdx;
     }
 

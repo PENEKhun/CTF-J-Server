@@ -16,10 +16,10 @@ public class Problem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "idx", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "author_id", nullable = false)
-    private Integer authorId;
+    private Long authorId;
 
     @Column(name = "title", nullable = false, length = 45)
     private String title;
@@ -71,7 +71,7 @@ public class Problem {
         this.title = title;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

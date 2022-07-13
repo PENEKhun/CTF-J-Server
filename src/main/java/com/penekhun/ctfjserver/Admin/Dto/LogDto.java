@@ -49,7 +49,7 @@ public class LogDto {
         @Schema(description = "로그 index", required = false)
         private Long id;
         @Schema(description = "로그의 행위자의 index (서버측 오류는 0)", required = false)
-        private Integer accountIdx;
+        private Long accountIdx;
         @Schema(description = "짧은 로그", required = false)
         private String action;
         @Schema(description = "구체적인 로그", required = false)

@@ -49,7 +49,7 @@ public class LogService {
 
     @Transactional
     public void logging(String action, String detail){
-        Integer uid = currentUser.getUID();
+        Long uid = currentUser.getUID();
         if (uid == null)
             throw new CustomException(ErrorCode.UNCHECKED_ERROR);
 
@@ -59,7 +59,7 @@ public class LogService {
 
 
     @Transactional
-    public void authProblemLog(Integer problemId, String authFlag, boolean isSuccess){
+    public void authProblemLog(Long problemId, String authFlag, boolean isSuccess){
         Problem problem = problemRepository.findById(problemId);
         AuthLog authLog = AuthLog.builder().
                 problem(problem).

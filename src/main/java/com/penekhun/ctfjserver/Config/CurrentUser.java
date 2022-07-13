@@ -19,7 +19,7 @@ import java.util.Collection;
 public class CurrentUser {
     private final AccountRepository accountRepository;
 
-    public Integer getUID(){
+    public Long getUID(){
         String username = getUsername();
         Account account = accountRepository.findByUsername(username).orElseThrow(NullPointerException::new);
         return account.getId();

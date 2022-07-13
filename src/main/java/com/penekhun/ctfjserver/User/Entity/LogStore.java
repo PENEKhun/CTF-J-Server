@@ -24,7 +24,7 @@ public class LogStore {
     private Account user;
 
     @Column(name = "account_idx", nullable = false)
-    private Integer accountIdx;
+    private Long accountIdx;
 
     @Column(name = "action", nullable = false, length = 45)
     private String action;
@@ -49,7 +49,7 @@ public class LogStore {
     }
 
     @Builder
-    public LogStore(Integer memberIdx, String action, String detail) {
+    public LogStore(Long memberIdx, String action, String detail) {
         this.accountIdx = memberIdx;
         this.action = action;
         this.detail = detail;

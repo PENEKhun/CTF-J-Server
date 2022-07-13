@@ -26,7 +26,7 @@ public class AuthLog {
     private Account solver;
 
     @Column(name = "account_idx", nullable = false)
-    private Integer accountIdx;
+    private Long accountIdx;
 
     @Column(name = "auth_flag", nullable = false, length = 150)
     private String authFlag;
@@ -53,7 +53,7 @@ public class AuthLog {
             return solver.getNickname();
         else return "";
     }
-    public Integer getAccountIdx() {
+    public Long getAccountIdx() {
         return accountIdx;
     }
 
@@ -78,7 +78,7 @@ public class AuthLog {
     }
 
     @Builder
-    public AuthLog(Problem problem, Integer accountIdx, String authFlag, boolean isSuccess) {
+    public AuthLog(Problem problem, Long accountIdx, String authFlag, boolean isSuccess) {
         this.problem = problem;
         this.accountIdx = accountIdx;
         this.authFlag = authFlag;

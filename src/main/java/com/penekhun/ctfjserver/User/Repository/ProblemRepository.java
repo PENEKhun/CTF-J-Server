@@ -28,7 +28,10 @@ public class ProblemRepository {
         return authLog != null && !authLog.isEmpty();
     }
 
-    public Problem findById(Integer id){
+    public Problem findById(Long id){
+        /*
+            todo: change optional
+         */
         if (id != null)
             return em.find(Problem.class, id);
         else return null;

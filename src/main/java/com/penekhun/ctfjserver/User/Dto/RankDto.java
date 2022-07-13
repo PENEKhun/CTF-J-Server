@@ -14,9 +14,9 @@ public class RankDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ProbWithDynamicScore {
-        private Integer id;
+        private Long id;
         private String author;
-        private Integer authorId;
+        private Long authorId;
         private String title;
         private String description;
         private String type;

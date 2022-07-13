@@ -57,8 +57,8 @@ public class RankRepository{
         if (resultList != null)
             for (Object[] row : resultList) {
                 RankDto.ProbWithDynamicScore outputItem = RankDto.ProbWithDynamicScore.builder()
-                        .id((Integer) row[0])
-                        .authorId((Integer) row[1])
+                        .id(((BigInteger) row[0]).longValue())
+                        .authorId(((BigInteger) row[1]).longValue())
                         .title((String) row[2])
                         .description((String) row[3])
                         .flag((String) row[4])

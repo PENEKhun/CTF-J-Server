@@ -73,7 +73,7 @@ public class ProblemDto {
         @Data
         @Builder
         public static class CorrectProblem {
-            private Integer id;
+            private Long id;
             private String title;
             private String type;
         }

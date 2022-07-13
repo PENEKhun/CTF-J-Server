@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 public class ProblemFile {
 
     @Builder
-    public ProblemFile(Integer uploaderIdx, String fileName, String originalFileName) {
+    public ProblemFile(Long uploaderIdx, String fileName, String originalFileName) {
         this.uploaderIdx = uploaderIdx;
         this.fileName = fileName;
         this.originalFileName = originalFileName;
@@ -27,7 +27,7 @@ public class ProblemFile {
     private Integer id;
 
     @Column(name = "uploader_idx", nullable = false)
-    private Integer uploaderIdx;
+    private Long uploaderIdx;
 
     @Column(name = "file_name", nullable = false, length = 45)
     private String fileName;

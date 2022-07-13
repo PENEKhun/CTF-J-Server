@@ -56,7 +56,7 @@ public class ProblemService {
     }
 
     @Transactional
-    public boolean authProblem(Account account, Integer problemId, ProblemDto.Req.Auth auth){
+    public boolean authProblem(Account account, Long problemId, ProblemDto.Req.Auth auth){
 
         if (account.isAdmin())
             throw new CustomException(ErrorCode.ONLY_ACCESS_USER);

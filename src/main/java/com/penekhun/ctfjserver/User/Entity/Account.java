@@ -15,7 +15,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "idx", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "username", nullable = false, length = 20)
     private String username;
@@ -87,11 +87,7 @@ public class Account {
         return realName; //for modelMapper at signup
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 }
