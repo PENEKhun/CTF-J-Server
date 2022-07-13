@@ -6,26 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
-import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LogDto {
-
-    @Data
-    @Valid
-    public static class Req{
-        @Schema(description = "페이지 넘버", required = false, defaultValue = "1")
-        private int pageNum = 1;
-        @Schema(description = "페이지 당 불러올 로그 개수", required = false, defaultValue = "10")
-        private int amount = 10;
-
-        @Schema(description = "불러올 로그의 타입", required = false, defaultValue = "log", example = "{flag, log}")
-        private String logType = "log";
-        @Schema(description = "검색시 타입", required = false)
-        private String keyword;
-    }
 
     @Getter
     public static class Res {
@@ -33,12 +18,20 @@ public class LogDto {
         @JsonProperty(value="log")
         private final List<Item> logList;
 
+        @JsonProperty(value="totalPage")
+        private final int totalPage;
+        @JsonProperty(value="totalElements")
+        private final long totalElements;
+
         public void addLog(Item log) {
             this.logList.add(log);
         }
 
-        public Res() {
+        public Res(int totalPage, long totalElements) {
             this.logList = new ArrayList<>();
+            this.totalPage = totalPage;
+            this.totalElements = totalElements;
+
         }
     }
 

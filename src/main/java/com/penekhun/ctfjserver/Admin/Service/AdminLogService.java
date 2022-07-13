@@ -8,7 +8,6 @@ import com.penekhun.ctfjserver.User.Repository.LogStoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -24,16 +23,12 @@ public class AdminLogService {
     private final LogStoreRepository logStoreRepository;
     private final AuthLogRepository authLogRepository;
 
-    public LogDto.Res getAuthLog(LogDto.Req req){
-        Sort sort = Sort.by(Sort.Order.desc("idx"));
-        Pageable pageable = PageRequest.ofSize(req.getAmount())
-                .withPage(req.getPageNum())
-                .withSort(sort);
+    public LogDto.Res getAuthLog(Pageable pageable){
 
         Page<AuthLog> authLogPage = authLogRepository.findAll(pageable);
         List<AuthLog> authLogList = authLogPage.getContent();
 
-        LogDto.Res response = new LogDto.Res();
+        LogDto.Res response = new LogDto.Res(authLogPage.getTotalPages(), authLogPage.getTotalElements());
         for (AuthLog authLog : authLogList) {
             LogDto.Item res = LogDto.Item.builder()
                     .id(authLog.getIdx())
@@ -48,16 +43,12 @@ public class AdminLogService {
     }
 
 
-    public LogDto.Res getLog(LogDto.Req req){
-        Sort sort = Sort.by(Sort.Order.desc("idx"));
-        Pageable pageable = PageRequest.ofSize(req.getAmount())
-                .withPage(req.getPageNum())
-                .withSort(sort);
+    public LogDto.Res getLog(Pageable pageable){
 
         Page<LogStore> logPage = logStoreRepository.findAll(pageable);
         List<LogStore> logList = logPage.getContent();
 
-        LogDto.Res response = new LogDto.Res();
+        LogDto.Res response = new LogDto.Res(logPage.getTotalPages(), logPage.getTotalElements());
         for (LogStore log : logList) {
             LogDto.Item res = LogDto.Item.builder()
                     .id(log.getId())

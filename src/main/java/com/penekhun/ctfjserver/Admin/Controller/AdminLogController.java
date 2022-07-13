@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +34,7 @@ public class AdminLogController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = LogDto.Res.class))),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값", ref = "#/components/responses/ErrorCode.INVALID_INPUT_VALUE")})
-    public LogDto.Res getLogMapping(LogDto.Req req){
+    public LogDto.Res getLogMapping(final String logType, @PageableDefault(size = 30, sort = "id",  direction = Sort.Direction.DESC) Pageable pageable){
 
         if (req.getLogType().equalsIgnoreCase("FLAG")) {
             return adminLogService.getAuthLog(req);
