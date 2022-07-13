@@ -34,7 +34,7 @@ public class AdminNoticeService {
     public void postNotice(NoticeDto.Req req){
         Notice notice = req.toEntity();
         noticeRepository.save(notice);
-        if (req.isNotificationMode()){
+        if (Boolean.TRUE.equals(req.isNotificationMode())){
             NotificationDto.Req notificationDto = NotificationDto.Req.builder()
                             .title(req.getNotificationTitle())
                             .content(req.getNotificationContent())
@@ -48,7 +48,7 @@ public class AdminNoticeService {
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE));
         notice.editWithDto(req);
         noticeRepository.save(notice);
-        if (req.isNotificationMode()){
+        if (Boolean.TRUE.equals(req.isNotificationMode())){
             NotificationDto.Req notificationDto = NotificationDto.Req.builder()
                     .title(req.getNotificationTitle())
                     .content(req.getNotificationContent())
