@@ -1,18 +1,18 @@
 package com.penekhun.ctfjserver.Admin.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.penekhun.ctfjserver.User.Entity.Notice;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
 import javax.validation.Valid;
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NoticeDto {
 
@@ -46,12 +46,12 @@ public class NoticeDto {
 
     @Getter
     public static class Res {
-        @Schema(description = "로그리스트")
+        @Schema(description = "공지 목록")
         @JsonProperty(value="")
         private final List<Item> noticeList;
 
-        public void addNotice(Item log) {
-            this.noticeList.add(log);
+        public void addNotice(Item notice) {
+            this.noticeList.add(notice);
         }
 
         public Res() {
@@ -64,18 +64,13 @@ public class NoticeDto {
     @Builder
     public static class Item {
         private Integer id;
-
         private String title;
-
         private String content;
 
-        @CreatedDate
         @Column(name = "create_time", nullable = false)
-        private Instant createTime;
-
-        @LastModifiedDate
+        private Timestamp createTime;
         @Column(name = "update_time")
-        private Instant updateTime;
+        private Timestamp updateTime;
     }
 
 }
