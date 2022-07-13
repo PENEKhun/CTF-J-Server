@@ -1,5 +1,6 @@
 package com.penekhun.ctfjserver.User.Dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -43,7 +44,8 @@ public class ProblemDto {
         @Schema(description = "문제 타입(enum)", required = true, example = "Pwnable, Web, Reversing, Forensic, Crypto, Misc")
         private String type;
 
-        @Schema(description = "문제 공개 여부(Boolean)", required = true, example = "0, 1 or False, True")
+        @JsonProperty(value = "isPublic")
+        @Schema(description = "문제 공개 여부(Boolean)", required = false, example = "0, 1 or False, True")
         private Boolean isPublic;
 
         @NotNull(groups = ValidationGroups.checkFullValid.class)
