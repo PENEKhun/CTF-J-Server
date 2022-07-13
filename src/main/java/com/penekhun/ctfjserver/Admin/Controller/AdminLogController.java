@@ -36,10 +36,10 @@ public class AdminLogController {
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값", ref = "#/components/responses/ErrorCode.INVALID_INPUT_VALUE")})
     public LogDto.Res getLogMapping(final String logType, @PageableDefault(size = 30, sort = "id",  direction = Sort.Direction.DESC) Pageable pageable){
 
-        if (req.getLogType().equalsIgnoreCase("FLAG")) {
-            return adminLogService.getAuthLog(req);
-        } else if (req.getLogType().equalsIgnoreCase("LOG")) {
-            return adminLogService.getLog(req);
+        if (logType.equalsIgnoreCase("FLAG")) {
+            return adminLogService.getAuthLog(pageable);
+        } else if (logType.equalsIgnoreCase("LOG")) {
+            return adminLogService.getLog(pageable);
         } else
             throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
     }
