@@ -22,7 +22,7 @@ public enum ErrorCode {
     ALREADY_CORRECT(403, "M005", "이미 맞춘 문제입니다."),
     INCORRECT_FLAG(404, "M006", "잘못된 플래그 값입니다."),
     DUPLICATE_INFORMATION(409, "M007", "중복되는 정보가 있습니다."),
-
+    MEMBER_DOESNT_EXIST(404, "M008", "멤버를 찾을 수 없습니다."),
 
     // unchcked
     UNCHECKED_ERROR(500, "U001", "확인 할 수 없는 에러"),
