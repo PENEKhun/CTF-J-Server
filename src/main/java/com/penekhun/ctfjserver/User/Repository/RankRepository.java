@@ -13,8 +13,6 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Repository
 public class RankRepository{
@@ -84,9 +82,6 @@ public class RankRepository{
 
         List<RankDto.AccountSolveProbList> accountSolveProbLists = new ArrayList<>();
         List<Object[]> resultList = em.createQuery("SELECT a.accountIdx, a.solver.nickname, group_concat(a.problem.id ), a.solver.lastAuthTime FROM AuthLog a LEFT JOIN a.solver where a.isSuccess=true  GROUP By a.accountIdx").getResultList();
-//        SELECT account_idx, GROUP_CONCAT(problem_idx) AS problem, Account.last_auth_time FROM AuthLog
-//        LEFT JOIN Account ON Account.idx = account_idx
-//        WHERE is_success = true GROUP By account_idx
 
         for (Object[] row : resultList) {
             List<String> tempProbIdList = List.of(row[2].toString().split(","));
@@ -95,7 +90,6 @@ public class RankRepository{
                     correctProblemList.add(
                             ProblemDto.Res.CorrectProblem.builder().id(Long.valueOf(probId)).build()
                             ));
-//            List<Integer> probIdList = convertStringListToIntList(tempProbIdList, Integer::parseInt);
 
             RankDto.AccountSolveProbList item = RankDto.AccountSolveProbList.builder().accountId( (Long) row[0])
                     .nickname((String) row[1])
@@ -105,14 +99,6 @@ public class RankRepository{
             accountSolveProbLists.add(item);
         }
         return accountSolveProbLists;
-    }
-
-    public static <T, U> List<U>
-        convertStringListToIntList(List<T> listOfString,
-                               Function<T, U> function) {
-        return listOfString.stream()
-                .map(function)
-                .collect(Collectors.toList());
     }
 
 }
