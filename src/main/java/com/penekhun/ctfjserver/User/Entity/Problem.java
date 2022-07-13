@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -55,7 +55,7 @@ public class Problem {
     @Column(name = "create_time", nullable = false, updatable = false)
     private Timestamp createTime;
 
-    @LastModifiedBy
+    @LastModifiedDate
     @Column(name = "modify_time", nullable = false, updatable = false)
     private Timestamp modifyTime;
 
