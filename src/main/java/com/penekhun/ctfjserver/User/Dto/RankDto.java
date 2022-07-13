@@ -27,7 +27,9 @@ public class RankDto {
         private Integer minScore;
         private Integer solveThreshold;
         private Long solve;
-        private List<String> solveList;
+
+        @Builder.Default
+        private List<String> solved = new ArrayList<>();
 
         private Integer calculatedScore;
         private Timestamp modifyTime;
