@@ -19,7 +19,6 @@ public class AuthLog {
     private Long id;
 
     @ManyToOne @JoinColumn(name = "PROBLEM_IDX")
-    //@Column(name = "problem_idx", nullable = false)
     private Problem problem;
 
     @ManyToOne @JoinColumn(name = "ACCOUNT_IDX", insertable = false, updatable = false)
