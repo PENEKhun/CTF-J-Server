@@ -22,7 +22,7 @@ public class AdminNotificationService {
     private final NotificationRepository notificationRepository;
 
     public void makeNotification(NotificationDto.Req req){
-        List<Integer> accountList =
+        List<Long> accountList =
                 accountRepository.findAllIdByUserRole(SecurityRole.USER)
                         .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_DOESNT_EXIST));
 
