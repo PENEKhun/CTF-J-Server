@@ -52,7 +52,7 @@ public class CtfJServerApplication {
 
 
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.of(timeZone)));
-        log.info("Set Default Timezon as {}", ZoneId.of(timeZone));
+        log.info("Set Default Timezone as {}", ZoneId.of(timeZone));
 
         log.info("loading rank history.... in local file");
         Gson gson = new Gson();
