@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
+    Optional<Account> findByUsername(String username);
+    Optional<Account> findOneByEmail(String email);
+    Optional<Account> findOneByNickname(String nickname);
 
     @Query("select a.id from Account a where a.userRole = (:role)")
     Optional<List<Long>> findAllIdByUserRole(SecurityRole role);

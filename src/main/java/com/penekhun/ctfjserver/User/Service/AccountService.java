@@ -4,9 +4,8 @@ import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.Config.Jwt.JwtFilter;
 import com.penekhun.ctfjserver.Config.Jwt.TokenProvider;
+import com.penekhun.ctfjserver.Config.SecurityRole;
 import com.penekhun.ctfjserver.User.Dto.AccountDto;
-import com.penekhun.ctfjserver.User.Dto.ProblemDto;
-import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Dto.TokenDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Entity.TokenStorage;
@@ -18,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +31,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +45,6 @@ public class AccountService {
     private final RedisUtil redisUtil;
 
     private final TokenStorageRepository tokenStorageRepository;
-    private final RankSchedule rankSchedule;
 
     @Autowired
     private final ModelMapper modelMapper;
@@ -59,9 +58,9 @@ public class AccountService {
 
         //회원 검증
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        Optional<Account> findMember = accountRepository.findByUsername(username);
-        findMember.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-        if (!encoder.matches(password, findMember.get().getPassword()))
+        Account findMember = accountRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        if (!encoder.matches(password, findMember.getPassword()))
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
 
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -134,73 +133,66 @@ public class AccountService {
 
     @Transactional
     public AccountDto.Res.Signup signup(AccountDto.Req.Signup signup){
-        Optional<Account> findMember = accountRepository.findByUsername(signup.getUsername());
-        findMember.ifPresent(then -> {
-            throw new CustomException(ErrorCode.USERNAME_DUPLICATION);
-        });
-
-        findMember = accountRepository.findOneByEmail(signup.getEmail());
-        findMember.ifPresent(then -> {
-            throw new CustomException(ErrorCode.EMAIL_DUPLICATION);
-        });
-
-        findMember = accountRepository.findOneByNickname(signup.getNickname());
-        findMember.ifPresent(then -> {
-            throw new CustomException(ErrorCode.NICKNAME_DUPLICATION);
-        });
-
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        Account account = Account.builder()
-                .username(signup.getUsername())
-                .password(bCryptPasswordEncoder.encode(signup.getPassword()))
-                .email(signup.getEmail())
-                .nickname(signup.getNickname())
-                .realName(signup.getRealName()).build();
-        Account resultAccount = accountRepository.save(account);
-
+        Account resultAccount = accountRepository.save(signup.toEntity());
         return modelMapper.map(resultAccount, AccountDto.Res.Signup.class);
     }
 
-
     @Transactional
-    public AccountDto.Res.Signup editMyAccountPartly(AccountDto.Req.Signup signup){
-        return null;
+    public Account editAccountPartly(Long id, AccountDto.Req.SignupWithoutValid editPartly) throws DataIntegrityViolationException {
+        //변경 된 부분만 수정이 이뤄지도록
+        Account account = accountRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        if (account.getRole() == SecurityRole.ADMIN &&
+                editPartly.getUserRole().equals(SecurityRole.USER)){
+            // ADMIN -> USER 권한 변경시
+//            authLogRepository.deleteAllByIdInBatch(id);
+
+        }
+        account.editPartly(editPartly);
+
+        return accountRepository.save(account);
     }
 
     @Transactional
     public AccountDto.Res.MyPage getMyAccount(Account account){
-        AccountDto.Res.MyPage myInfo = modelMapper.map(account, AccountDto.Res.MyPage.class);
-        Optional<RankDto.AccountSolveProbList> accountSolveProbList = rankSchedule.getAccSolveList().stream()
-                .filter(a -> a.getAccountId().equals(myInfo.getId()))
-                .findFirst();
+        AccountDto.Res.MyPage myInfo = account.toInfo();
+        //todo ToDto
 
-        if (accountSolveProbList.isEmpty()){
-            //푼 문제가 없다면 0점에 푼 문제 리스트 null 셋팅
-            myInfo.setScore(0);
-            myInfo.setSolved(null);
-        } else {
-
-            // 푼 문제가 있다면
-            // 가져온 푼 문제 Id값으로 List<제목, 타입>를 생성
-            List<ProblemDto.Res.CorrectProblem> solvedList = new ArrayList<>();
-            List<RankDto.ProbWithDynamicScore> probList = rankSchedule.getPrbSolveList();
-
-            for (Integer probId : accountSolveProbList.get()
-                    .getSolved()) {
-                RankDto.ProbWithDynamicScore problem = probList.stream()
-                        .filter(prob -> prob.getId().equals(probId)).findFirst()
-                        .orElseThrow(() -> new CustomException((ErrorCode.UNCHECKED_ERROR)));
-
-                solvedList.add(ProblemDto.Res.CorrectProblem.builder()
-                        .id(problem.getId())
-                        .title(problem.getTitle())
-                        .type(problem.getType())
-                        .build());
-            }
-            myInfo.setSolved(solvedList);
-            myInfo.setScore(accountSolveProbList.get().getScore());
-        }
+        RankSchedule.accSolveList.stream()
+                .filter(db -> db.getAccountId().equals(account.getId()))
+                    .findFirst()
+                        .ifPresentOrElse(
+                            foundAcc -> {
+                                myInfo.setSolved(foundAcc.getSolved());
+                                myInfo.setScore(foundAcc.getScore());
+                            },
+                            () -> {
+                                myInfo.setScore(0);
+                                myInfo.setSolved(null);
+                            });
         return myInfo;
+    }
+
+    public AccountDto.Res.AccountList getAllAccount(Pageable pageable){
+
+        Page<Account> accPage = accountRepository.findAll(pageable);
+        List<Account> accList = accPage.getContent();
+
+        AccountDto.Res.AccountList response = new AccountDto.Res.AccountList(accPage.getTotalPages(), accPage.getTotalElements());
+
+        accList.forEach(acc -> {
+            // 점수랑 푼 문제 채워넣기
+            AccountDto.Res.MyPage myPage = AccountDto.Res.MyPage.valueOf(acc);
+            RankSchedule.accSolveList.stream().filter(db -> db.getAccountId().equals(acc.getId()))
+                    .findFirst().ifPresentOrElse(
+                            foundAcc -> {
+                                myPage.setSolved(foundAcc.getSolved());
+                                myPage.setScore(foundAcc.getScore());
+                            },
+                            () -> myPage.setScore(0));
+            response.addAccount(myPage);
+        });
+
+        return response;
     }
 
     @Transactional

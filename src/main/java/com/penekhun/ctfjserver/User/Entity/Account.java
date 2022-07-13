@@ -3,8 +3,10 @@ package com.penekhun.ctfjserver.User.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.penekhun.ctfjserver.Config.SecurityRole;
 import com.penekhun.ctfjserver.Config.SecurityRoleConverter;
+import com.penekhun.ctfjserver.User.Dto.AccountDto;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -75,6 +77,33 @@ public class Account {
         this.realName = realName;
         this.lastAuthTime = lastAuthTime;
         this.userRole = role;
+    }
+
+    public AccountDto.Res.MyPage toInfo(){
+        return AccountDto.Res.MyPage.builder()
+                .id(this.id)
+                .nickname(this.nickname)
+                .realName(this.realName)
+                .email(this.email)
+                .role(this.userRole)
+                .username(this.username)
+                .build();
+    }
+
+    public void editPartly(AccountDto.Req.SignupWithoutValid editInfo){
+        if (editInfo.getEmail() != null)
+            this.email = editInfo.getEmail();
+        if (editInfo.getNickname() != null)
+            this.nickname = editInfo.getNickname();
+        if (editInfo.getPassword() != null) {
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            this.password = bCryptPasswordEncoder.encode(editInfo.getPassword());
+        }
+        if (editInfo.getRealName() != null)
+            this.realName = editInfo.getRealName();
+        if (editInfo.getUserRole() != null) {
+            this.userRole = editInfo.getUserRole();
+        }
     }
 
     public boolean isAdmin(){
