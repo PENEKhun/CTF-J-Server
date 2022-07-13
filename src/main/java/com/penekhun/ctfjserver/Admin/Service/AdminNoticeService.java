@@ -10,10 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 @Secured("ROLE_ADMIN")
 public class AdminNoticeService {
     private final NoticeRepository noticeRepository;

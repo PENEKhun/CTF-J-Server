@@ -9,8 +9,8 @@ import com.penekhun.ctfjserver.User.Repository.NotificationDetailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -28,6 +28,7 @@ public class NotificationService {
         notificationDetailRepository.save(notificationDetail);
     }
 
+    @Transactional(readOnly=true)
     public List<Notification> fetchNotification(Account account){
         return notificationDetailRepository.findNotReadNotification(account.getId());
     }

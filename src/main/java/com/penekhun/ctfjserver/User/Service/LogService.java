@@ -13,9 +13,8 @@ import com.penekhun.ctfjserver.User.Repository.ProblemFileRepository;
 import com.penekhun.ctfjserver.User.Repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.transaction.Transactional;
 
 @Service
 @Transactional
@@ -47,7 +46,6 @@ public class LogService {
         problemFileRepository.save(problemFile);
     }
 
-    @Transactional
     public void logging(String action, String detail){
         Long uid = currentUser.getUID();
         if (uid == null)
@@ -57,8 +55,6 @@ public class LogService {
         logStoreRepository.save(log);
     }
 
-
-    @Transactional
     public void authProblemLog(Long problemId, String authFlag, boolean isSuccess){
         Problem problem = problemRepository.findById(problemId);
         AuthLog authLog = AuthLog.builder().

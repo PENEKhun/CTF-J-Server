@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-
-import static com.penekhun.ctfjserver.Config.Exception.ErrorCode.UNCHECKED_ERROR;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service

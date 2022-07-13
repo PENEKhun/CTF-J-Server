@@ -10,8 +10,8 @@ import com.penekhun.ctfjserver.User.Repository.AccountRepository;
 import com.penekhun.ctfjserver.User.Repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -41,8 +41,5 @@ public class AdminNotificationService {
                         .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE));
 
         notificationRepository.delete(notification);
-
-
-
     }
 }

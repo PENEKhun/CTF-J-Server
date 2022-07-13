@@ -7,8 +7,7 @@ import com.penekhun.ctfjserver.User.Repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Secured("ROLE_ADMIN")

@@ -5,8 +5,8 @@ import com.penekhun.ctfjserver.User.Repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -15,6 +15,7 @@ import java.util.List;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
 
+    @Transactional(readOnly=true)
     public List<Notice> getNoticeAll(){
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return noticeRepository.findAll(sort);

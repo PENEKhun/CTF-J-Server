@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly=true)
 public class RankSchedule {
     private final RankRepository rankRepository;
     public static List<RankDto.AccountSolveProbList> accSolveList = new ArrayList<>();

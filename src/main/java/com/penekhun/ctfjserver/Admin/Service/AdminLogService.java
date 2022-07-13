@@ -11,8 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -24,8 +24,8 @@ public class AdminLogService {
     private final LogStoreRepository logStoreRepository;
     private final AuthLogRepository authLogRepository;
 
+    @Transactional(readOnly=true)
     public LogDto.Res getAuthLog(Pageable pageable){
-
         Page<AuthLog> authLogPage = authLogRepository.findAll(pageable);
         List<AuthLog> authLogList = authLogPage.getContent();
 
@@ -43,9 +43,8 @@ public class AdminLogService {
         return response;
     }
 
-
+    @Transactional(readOnly=true)
     public LogDto.Res getLog(Pageable pageable){
-
         Page<LogStore> logPage = logStoreRepository.findAll(pageable);
         List<LogStore> logList = logPage.getContent();
 
@@ -60,8 +59,6 @@ public class AdminLogService {
                     .build();
             response.addLog(res);
         }
-
-
         return response;
     }
 

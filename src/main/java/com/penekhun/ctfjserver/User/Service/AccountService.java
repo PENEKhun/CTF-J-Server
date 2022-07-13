@@ -29,13 +29,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class AccountService {
 
@@ -49,6 +50,7 @@ public class AccountService {
     @Autowired
     private final ModelMapper modelMapper;
 
+    @Transactional(readOnly=true)
     public TokenDto login(AccountDto.Req.Login loginReq){
         String username = loginReq.getUsername();
         String password = loginReq.getPassword();
@@ -94,6 +96,7 @@ public class AccountService {
         return ResponseEntity.noContent().build();
     }
 
+    @Transactional(readOnly=true)
     public ResponseEntity reissue(String oldAccessToken, String oldRefreshToken){
         log.info("reissue oldAccessToken: {}", oldAccessToken);
         log.info("reissue oldRefreshToken: {}", oldRefreshToken);
@@ -131,13 +134,11 @@ public class AccountService {
         return new ResponseEntity<>(new TokenDto(newAccessToken, tokenExpired, newRefreshToken), httpHeaders, HttpStatus.OK);
     }
 
-    @Transactional
     public AccountDto.Res.Signup signup(AccountDto.Req.Signup signup){
         Account resultAccount = accountRepository.save(signup.toEntity());
         return modelMapper.map(resultAccount, AccountDto.Res.Signup.class);
     }
 
-    @Transactional
     public Account editAccountPartly(Long id, AccountDto.Req.SignupWithoutValid editPartly) throws DataIntegrityViolationException {
         //변경 된 부분만 수정이 이뤄지도록
         Account account = accountRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -152,7 +153,7 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    @Transactional
+    @Transactional(readOnly=true)
     public AccountDto.Res.MyPage getMyAccount(Account account){
         AccountDto.Res.MyPage myInfo = account.toInfo();
         //todo ToDto
@@ -172,6 +173,7 @@ public class AccountService {
         return myInfo;
     }
 
+    @Transactional(readOnly=true)
     public AccountDto.Res.AccountList getAllAccount(Pageable pageable){
 
         Page<Account> accPage = accountRepository.findAll(pageable);
@@ -193,10 +195,5 @@ public class AccountService {
         });
 
         return response;
-    }
-
-    @Transactional
-    public AccountDto.Res.Signup getAccount(AccountDto.Req.Signup signup){
-        return null;
     }
 }

@@ -7,29 +7,31 @@ import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Entity.Problem;
 import com.penekhun.ctfjserver.User.Repository.AccountRepository;
+import com.penekhun.ctfjserver.User.Repository.AuthLogRepository;
 import com.penekhun.ctfjserver.User.Repository.ProblemRepository;
 import com.penekhun.ctfjserver.Util.RankSchedule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class ProblemService {
 
     private final ProblemRepository problemRepository;
+    private final AuthLogRepository authLogRepository;
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
     private final LogService logService;
     private final RankSchedule rankSchedule;
 
-    @Transactional
     public ProblemDto.Default addProblem(Account account, ProblemDto.Default problemDto){
         Problem problem =  modelMapper.map(problemDto, Problem.class);
         problem.setAuthorId(account);
@@ -38,6 +40,7 @@ public class ProblemService {
         return problemDto;
     }
 
+    @Transactional(readOnly=true)
     public List<RankDto.ProbWithDynamicScore> getProblemList(boolean includePrivate){
         List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getPrbSolveList();
         if (!includePrivate)
@@ -48,6 +51,7 @@ public class ProblemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly=true)
     public List<RankDto.ProbWithDynamicScore> getProblemListFromCategory(String category, boolean includePrivate){
         List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getPrbSolveList();
         if (!includePrivate)
@@ -60,9 +64,7 @@ public class ProblemService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public boolean authProblem(Account account, Long problemId, ProblemDto.Req.Auth auth){
-
         if (account.isAdmin())
             throw new CustomException(ErrorCode.ONLY_ACCESS_USER);
 
