@@ -59,10 +59,6 @@ public class Problem {
         return (this.flag.equals(flag));
     }
 
-    public Boolean isPublic() {
-        return isPublic;
-    }
-
     public void setType(String type) {
         this.type = type;
     }

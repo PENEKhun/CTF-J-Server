@@ -46,16 +46,7 @@ public class ProblemController {
     public ResponseEntity<List<RankDto.ProbWithDynamicScore>> getProblemListMapping(){
         return new ResponseEntity<>(problemService.getProblemList(false), HttpStatus.OK);
     }
-
-    @Secured("ROLE_ADMIN")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("{problem}")
-    //todo : 문제 삭제 구현
-    public ResponseEntity<?> deleteProblemMapping(){
-        return null;
-    }
-
-
+    
     @PostMapping("{problemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
