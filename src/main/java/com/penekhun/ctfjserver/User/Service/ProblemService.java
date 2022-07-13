@@ -66,7 +66,7 @@ public class ProblemService {
         if (account.isAdmin())
             throw new CustomException(ErrorCode.ONLY_ACCESS_USER);
 
-        if (problemRepository.amICorrectBefore(account.getId(), problemId))
+        if (authLogRepository.amICorrectBefore(account.getId(), problemId))
             throw new CustomException(ErrorCode.ALREADY_CORRECT);
 
         Problem problem = problemRepository.findById(problemId);
