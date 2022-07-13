@@ -55,6 +55,27 @@ public class Problem {
     @Column(name = "modify_time", nullable = false, updatable = false)
     private Timestamp modifyTime;
 
+
+
+    public void partlyEdit(ProblemDto.DefaultNoValid editInfo){
+        if (editInfo.getIsPublic() != null)
+            this.isPublic = editInfo.getIsPublic();
+        if (!editInfo.getTitle().isBlank())
+            this.title = editInfo.getTitle();
+        if (!editInfo.getDescription().isBlank())
+            this.description = editInfo.getDescription();
+        if (!editInfo.getFlag().isBlank())
+            this.flag = editInfo.getFlag();
+        if (!editInfo.getType().isBlank())
+            this.type = editInfo.getType();
+        if (editInfo.getMaxScore() != null)
+            this.maxScore = editInfo.getMaxScore();
+        if (editInfo.getMinScore() != null)
+            this.minScore = editInfo.getMinScore();
+        if (editInfo.getSolveThreshold() != null)
+            this.solveThreshold = editInfo.getSolveThreshold();
+    }
+
     public boolean isCorrect(String flag){
         return (this.flag.equals(flag));
     }
