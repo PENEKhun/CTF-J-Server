@@ -23,7 +23,26 @@ public class NoticeDto {
         private String title;
         @Schema(description = "내용", required = true)
         private String content;
+
+        @Schema(description = "회원들에게 공지 생성 알림을 추가할지 여부", required = false, defaultValue = "false")
+        private Boolean enableNotification = false;
+
+        @Schema(description = "알림 제목", required = false)
+        private String notificationTitle;
+
+        @Schema(description = "알림 내용", required = false)
+        private String notificationContent;
+
+        public Notice toEntity(){
+            return new Notice(title, content);
+        }
+
+
+        public Boolean isNotificationMode() {
+            return Objects.requireNonNullElse(enableNotification, false);
+        }
     }
+
 
     @Getter
     public static class Res {

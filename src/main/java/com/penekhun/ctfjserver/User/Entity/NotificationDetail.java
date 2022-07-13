@@ -1,12 +1,15 @@
 package com.penekhun.ctfjserver.User.Entity;
 
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "NotificationDetail", schema = "ctf")
 public class NotificationDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +27,8 @@ public class NotificationDetail {
     @Column(name = "is_read", nullable = false)
     private boolean isRead;
 
-    @Column(name = "read_time")
+    @LastModifiedDate
+    @Column(name = "read_time", insertable = false)
     private Timestamp readTime;
 
     public NotificationDetail(Long receiverIdx) {
@@ -34,6 +38,10 @@ public class NotificationDetail {
     public void setNotification(Notification notification) {
         this.notification = notification;
         notification.addDetail(this);
+    }
+
+    public void setRead(){
+        this.isRead = true;
     }
 
 

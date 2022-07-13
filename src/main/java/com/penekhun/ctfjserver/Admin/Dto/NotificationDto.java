@@ -3,6 +3,7 @@ package com.penekhun.ctfjserver.Admin.Dto;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.core.convert.converter.Converter;
 
@@ -18,7 +19,13 @@ public class NotificationDto {
         @Schema(description = "내용", required = true)
         private String content;
 
-        @Schema(description = "알림 모드", required = true)
+        @Builder
+        public Req(String title, String content) {
+            this.title = title;
+            this.content = content;
+        }
+
+        @Schema(description = "알림 모드", required = false, deprecated = true)
         private String mode;
 
         public NotificationMode getNotificationMode() {

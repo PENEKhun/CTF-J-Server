@@ -1,5 +1,7 @@
 package com.penekhun.ctfjserver.User.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Table(name = "Notification", schema = "ctf")
+@Getter
 public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -27,8 +30,9 @@ public class Notification {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "notification",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NotificationDetail> to = new ArrayList<>();
+    private List<NotificationDetail> details = new ArrayList<>();
 
     public Notification(String title, String content) {
         this.createTime = LocalDateTime.now();
@@ -37,6 +41,6 @@ public class Notification {
     }
 
     public void addDetail(NotificationDetail notificationDetail) {
-        to.add(notificationDetail);
+        details.add(notificationDetail);
     }
 }
