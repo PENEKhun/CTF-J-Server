@@ -36,6 +36,9 @@ public class RankDto {
                 double value = (((minScore - maxScore) / Math.pow(solveThreshold, 2)) * Math.pow(solve, 2)) + maxScore;
                 calculatedScore = (int) Math.ceil(value);
         }
+        public void flagMasking(){
+            this.flag = "FLAG{***}";
+        }
     }
 
     @Builder

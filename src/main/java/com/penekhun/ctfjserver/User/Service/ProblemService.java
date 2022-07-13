@@ -40,6 +40,9 @@ public class ProblemService {
 
     public List<RankDto.ProbWithDynamicScore> getProblemList(boolean includePrivate){
         List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getPrbSolveList();
+        if (!includePrivate)
+            probSolveCntList.forEach(RankDto.ProbWithDynamicScore::flagMasking);
+
         return includePrivate ? probSolveCntList : probSolveCntList.stream()
                 .filter(RankDto.ProbWithDynamicScore::getIsPublic)
                 .collect(Collectors.toList());
@@ -47,6 +50,8 @@ public class ProblemService {
 
     public List<RankDto.ProbWithDynamicScore> getProblemListFromCategory(String category, boolean includePrivate){
         List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getPrbSolveList();
+        if (!includePrivate)
+            probSolveCntList.forEach(RankDto.ProbWithDynamicScore::flagMasking);
 
         return includePrivate ? probSolveCntList.stream()
                 .filter(prob -> prob.getType().equalsIgnoreCase(category))
