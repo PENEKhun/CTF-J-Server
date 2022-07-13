@@ -1,5 +1,6 @@
 package com.penekhun.ctfjserver.User.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.penekhun.ctfjserver.Config.SecurityRole;
 import com.penekhun.ctfjserver.Config.SecurityRoleConverter;
 import lombok.Builder;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -39,6 +42,29 @@ public class Account {
     @Column(name = "user_role", nullable = false)
     @Convert(converter = SecurityRoleConverter.class)
     private SecurityRole userRole = SecurityRole.USER;
+
+
+    // for easy account remove START //
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_idx")
+    private List<NotificationDetail> receivedNotifications = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_idx")
+    private List<LogStore> logStores  = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_idx")
+    private List<AuthLog> authLogs  = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private List<Problem> problems  = new ArrayList<>();
+    // for easy account remove END //
 
     @Builder
     public Account(String username, String password, String nickname, String email, String realName, Timestamp lastAuthTime, SecurityRole role) {
