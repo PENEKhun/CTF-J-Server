@@ -2,6 +2,7 @@ package com.penekhun.ctfjserver.Util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import com.penekhun.ctfjserver.User.Dto.RankDto;
 import com.penekhun.ctfjserver.User.Repository.RankRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +35,8 @@ public class RankSchedule {
 
     public static final String RANK_HISTORY_FILENAME = "rankHistory.json";
 
-
     @Scheduled(fixedDelay = 5000, initialDelay = 2000)
-    public void dynamicScorePollingTask() {
+    public synchronized void dynamicScorePollingTask() {
         /*
             설정한 인터벌 마다,
             동적으로 문제들의 점수를 계산해 주는 스케쥴러
@@ -94,7 +94,6 @@ public class RankSchedule {
                     .rank(accSolveList).build();
             everyHourScoreRank.addRankList(accountSolveProbListWithTimestamp);
         }
-
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Path path = Paths.get(RANK_HISTORY_FILENAME);
