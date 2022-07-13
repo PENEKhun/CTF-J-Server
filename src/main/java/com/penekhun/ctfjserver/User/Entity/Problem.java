@@ -1,5 +1,7 @@
 package com.penekhun.ctfjserver.User.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.penekhun.ctfjserver.User.Dto.ProblemDto;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -7,6 +9,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter //for model mapper
@@ -56,6 +60,13 @@ public class Problem {
     private Timestamp modifyTime;
 
 
+
+    // for easy remove START//
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "problem_idx")
+    private List<AuthLog> authLogs  = new ArrayList<>();
+    // for easy remove END//
 
     public void partlyEdit(ProblemDto.DefaultNoValid editInfo){
         if (editInfo.getIsPublic() != null)
