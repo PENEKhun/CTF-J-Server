@@ -41,7 +41,7 @@ public class ProblemService {
     public List<RankDto.ProbWithDynamicScore> getProblemList(boolean includePrivate){
         List<RankDto.ProbWithDynamicScore> probSolveCntList = rankSchedule.getPrbSolveList();
         return includePrivate ? probSolveCntList : probSolveCntList.stream()
-                .filter(RankDto.ProbWithDynamicScore::isPublic)
+                .filter(RankDto.ProbWithDynamicScore::getIsPublic)
                 .collect(Collectors.toList());
     }
 
@@ -51,7 +51,7 @@ public class ProblemService {
         return includePrivate ? probSolveCntList.stream()
                 .filter(prob -> prob.getType().equalsIgnoreCase(category))
                 .collect(Collectors.toList()) : probSolveCntList.stream()
-                .filter(prob -> prob.getType().equalsIgnoreCase(category) && prob.isPublic())
+                .filter(prob -> prob.getType().equalsIgnoreCase(category) && prob.getIsPublic())
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +67,7 @@ public class ProblemService {
         Problem problem = problemRepository.findById(problemId);
         if (problem == null)
             return false;
-        if (Boolean.FALSE.equals(problem.isPublic()))
+        if (Boolean.FALSE.equals(problem.getIsPublic()))
             return false;
         if (!problem.isCorrect(auth.getFlag()))
             return false;

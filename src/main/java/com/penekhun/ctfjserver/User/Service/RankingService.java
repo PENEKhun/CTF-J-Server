@@ -19,7 +19,7 @@ public class RankingService {
         List<RankDto.RankWithTimestamp> rankHistory = RankSchedule.everyHourScoreRank.getRankListWithTimestamp();
         List<RankDto.RankWithTimestamp> resultList = new ArrayList<>();
 
-        List<RankDto.AccountSolveProbList> nowRank = rankSchedule.getAccSolveList().stream().limit(top).collect(Collectors.toList());
+        List<RankDto.AccountSolveProbList> nowRank = RankSchedule.accSolveList.stream().limit(top).collect(Collectors.toList());
         for (RankDto.RankWithTimestamp rankWithTimestamp : rankHistory) {
             RankDto.RankWithTimestamp resultItem = RankDto.RankWithTimestamp.builder()
                     .timestamp(rankWithTimestamp.getTimestamp())

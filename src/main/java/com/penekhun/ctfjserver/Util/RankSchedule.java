@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RankSchedule {
     private final RankRepository rankRepository;
-    private List<RankDto.AccountSolveProbList> accSolveList = new ArrayList<>();
+    public static List<RankDto.AccountSolveProbList> accSolveList = new ArrayList<>();
     private List<RankDto.ProbWithDynamicScore> prbSolveList = new ArrayList<>();
     public static RankDto.EveryHourScore everyHourScoreRank = new RankDto.EveryHourScore();
 
@@ -106,11 +106,6 @@ public class RankSchedule {
         return accSolveList.stream().limit(top).collect(Collectors.toList());
     }
 
-
-
-    public List<RankDto.AccountSolveProbList> getAccSolveList() {
-        return accSolveList;
-    }
 
     public List<RankDto.ProbWithDynamicScore> getPrbSolveList() {
         return prbSolveList;
