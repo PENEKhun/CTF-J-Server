@@ -54,10 +54,14 @@ public class AdminProblemController {
             tags= {"admin.problem"}, summary = "문제 등록하는 API", description = "make Problem API")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "성공", content = @Content(schema = @Schema(implementation = ProblemDto.Default.class))),
-            @ApiResponse(responseCode = "403", description = "잘못된 접근", ref = "#/components/responses/ErrorCode.HANDLE_ACCESS_DENIED")})
+            @ApiResponse(responseCode = "403", description = "잘못된 접근", ref = "#/components/responses/ErrorCode.HANDLE_ACCESS_DENIED"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 값(점수)", ref = "#/components/responses/ErrorCode.INVALID_INPUT_VALUE")})
     public ResponseEntity<ProblemDto.Default> addProblemMapping(@CurrentUserParameter Account account, ProblemDto.Default problemDto){
         if (account == null)
             throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
+
+        if (!problemDto.isValidScore())
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
 
         return new ResponseEntity<>(problemService.addProblem(account, problemDto), HttpStatus.CREATED);
     }
@@ -82,6 +86,9 @@ public class AdminProblemController {
             @ApiResponse(responseCode = "403", description = "존재하지 않는 게시물", ref = "#/components/responses/ErrorCode.HANDLE_ACCESS_DENIED" )})
     public Problem editProblemMapping(@PathVariable final Long id, ProblemDto.DefaultNoValid editInfo) {
         try {
+            if (!editInfo.isValidScore())
+                throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+
             return adminProblemService.editProblemPartly(id, editInfo);
         } catch (DataIntegrityViolationException e){
             // mysql Unique 값 설정에 의해 생기는 오류
