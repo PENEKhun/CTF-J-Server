@@ -56,7 +56,8 @@ public class LogService {
     }
 
     public void authProblemLog(Long problemId, String authFlag, boolean isSuccess){
-        Problem problem = problemRepository.findById(problemId);
+        Problem problem = problemRepository.findById(problemId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE));
         AuthLog authLog = AuthLog.builder().
                 problem(problem).
                 authFlag(authFlag).

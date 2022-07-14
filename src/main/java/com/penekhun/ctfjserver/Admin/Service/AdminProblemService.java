@@ -21,9 +21,8 @@ public class AdminProblemService {
     private final ProblemRepository problemRepository;
 
     public Problem editProblemPartly(final Long id, final ProblemDto.DefaultNoValid editInfo) throws DataIntegrityViolationException {
-        Problem problem = problemRepository.findById(id);
-        if (problem == null)
-            throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.HANDLE_ACCESS_DENIED));
 
         problem.partlyEdit(editInfo);
         return problemRepository.save(problem);

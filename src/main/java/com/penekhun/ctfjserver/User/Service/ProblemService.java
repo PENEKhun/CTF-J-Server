@@ -71,9 +71,8 @@ public class ProblemService {
         if (authLogRepository.amICorrectBefore(account.getId(), problemId))
             throw new CustomException(ErrorCode.ALREADY_CORRECT);
 
-        Problem problem = problemRepository.findById(problemId);
-        if (problem == null)
-            return false;
+        Problem problem = problemRepository.findById(problemId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE));
         if (Boolean.FALSE.equals(problem.getIsPublic()))
             return false;
         if (!problem.isCorrect(auth.getFlag()))
