@@ -135,6 +135,25 @@ public class AccountService {
     }
 
     public AccountDto.Res.Signup signup(AccountDto.Req.Signup signup){
+        String username = signup.getUsername();
+        accountRepository.findByUsername(username)
+                .ifPresent(s -> {
+                    throw new CustomException(ErrorCode.USERNAME_DUPLICATION
+                    );
+                });
+        String nickname = signup.getNickname();
+        accountRepository.findOneByNickname(nickname)
+                .ifPresent(s -> {
+                    throw new CustomException(ErrorCode.NICKNAME_DUPLICATION
+                    );
+                });
+        String email = signup.getEmail();
+        accountRepository.findOneByEmail(email)
+                .ifPresent(s -> {
+                    throw new CustomException(ErrorCode.EMAIL_DUPLICATION
+                    );
+                });
+
         Account resultAccount = accountRepository.save(signup.toEntity());
         return modelMapper.map(resultAccount, AccountDto.Res.Signup.class);
     }
