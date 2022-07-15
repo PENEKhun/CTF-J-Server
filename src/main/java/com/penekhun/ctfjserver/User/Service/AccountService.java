@@ -21,7 +21,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -97,7 +96,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly=true)
-    public ResponseEntity reissue(String oldAccessToken, String oldRefreshToken){
+    public TokenDto reissue(String oldAccessToken, String oldRefreshToken){
         log.info("reissue oldAccessToken: {}", oldAccessToken);
         log.info("reissue oldRefreshToken: {}", oldRefreshToken);
 
@@ -131,7 +130,7 @@ public class AccountService {
                 .build();
 
         redisUtil.insertTokenToStorage(username, tokenStorageEntity);
-        return new ResponseEntity<>(new TokenDto(newAccessToken, tokenExpired, newRefreshToken), httpHeaders, HttpStatus.OK);
+        return new TokenDto(newAccessToken, tokenExpired, newRefreshToken);
     }
 
     public AccountDto.Res.Signup signup(AccountDto.Req.Signup signup){
@@ -163,7 +162,7 @@ public class AccountService {
         Account account = accountRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         if (account.getRole() == SecurityRole.ADMIN &&
                 editPartly.getUserRole().equals(SecurityRole.USER)){
-            // ADMIN -> USER 권한 변경시
+            // todo: ADMIN <-> USER 권한 변경시, authLog등 삭제
 //            authLogRepository.deleteAllByIdInBatch(id);
 
         }

@@ -48,7 +48,8 @@ public class LoginOutController {
         @ApiResponse(responseCode = "500", description = "알수없는 오류", ref= "#/components/responses/ErrorCode.UNCHECKED_ERROR")})
     public ResponseEntity reissueMap(@RequestHeader(AUTHORIZATION_HEADER) String accessToken,
                                      @RequestHeader(REFRESH_TOKEN_HEADER) String refreshToken){
-        return accountService.reissue(accessToken, refreshToken);
+        TokenDto tokenDto = accountService.reissue(accessToken, refreshToken);
+        return new ResponseEntity<>(tokenDto, HttpStatus.OK);
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
