@@ -171,6 +171,14 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+
+    public Account editMyPassword(Long id, String newPassword){
+        Account account = accountRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        account.changePassword(newPassword);
+        return accountRepository.save(account);
+    }
+
+
     @Transactional(readOnly=true)
     public AccountDto.Res.MyPage getMyAccount(Account account){
         AccountDto.Res.MyPage myInfo = account.toInfo();

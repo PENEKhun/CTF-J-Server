@@ -106,6 +106,13 @@ public class Account {
         }
     }
 
+    public void changePassword(String newPassword) {
+        if (newPassword != null) {
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            this.password = bCryptPasswordEncoder.encode(newPassword);
+        }
+    }
+
     public boolean isAdmin(){
         return (this.userRole.equals(SecurityRole.ADMIN));
     }
