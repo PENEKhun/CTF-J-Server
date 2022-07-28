@@ -14,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -270,6 +272,22 @@ class AccountServiceTest {
 
         //then
         assertNotEquals(before.getUsername(), after.getUsername());
+    }
+
+    @Test
+    void 사용자_패스워드_변경_성공() throws Exception {
+        //given
+        Account before = accountRepository.save(this.암호화된_유저엔티티());
+        String newPassword = "NEW_PASSWORD_213123";
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+        //when
+        accountService.editMyPassword(before.getId(), newPassword);
+        Optional<Account> after = accountRepository.findById(before.getId());
+
+        //then
+        assertTrue(after.isPresent());
+        assertTrue(bCryptPasswordEncoder.matches(newPassword, after.get().getPassword()));
     }
 
 
