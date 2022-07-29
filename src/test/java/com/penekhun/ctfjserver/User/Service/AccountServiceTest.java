@@ -277,12 +277,13 @@ class AccountServiceTest {
     @Test
     void 사용자_패스워드_변경_성공() throws Exception {
         //given
-        Account before = accountRepository.save(this.암호화된_유저엔티티());
+        String 맞는_패스워드 = this.암호화_되지않은_유저엔티티().getPassword();
         String newPassword = "NEW_PASSWORD_213123";
+        Account before = accountRepository.save(this.암호화된_유저엔티티());
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
         //when
-        accountService.editMyPassword(before.getId(), newPassword);
+        accountService.editMyPassword(before.getId(), newPassword, 맞는_패스워드);
         Optional<Account> after = accountRepository.findById(before.getId());
 
         //then
@@ -290,5 +291,22 @@ class AccountServiceTest {
         assertTrue(bCryptPasswordEncoder.matches(newPassword, after.get().getPassword()));
     }
 
+    @Test
+    void 사용자_패스워드_변경_실패_맞지않는패스워드() throws Exception {
+        //given
+        String 틀린_패스워드 = this.암호화된_유저엔티티().getPassword() + "salt";
+        String newPassword = "NEW_PASSWORD_213123";
+        Account before = accountRepository.save(this.암호화된_유저엔티티());
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+        //when
+        CustomException exception = assertThrows(CustomException.class, () -> {
+            accountService.editMyPassword(before.getId(), newPassword, 틀린_패스워드);
+        });
+
+        //then
+        ErrorCode errorCode = exception.getErrorCode();
+        assertEquals(ErrorCode.PASSWORD_NOT_MATCH, errorCode);
+    }
 
 }

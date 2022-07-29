@@ -28,9 +28,19 @@ public class AccountDto {
         public static class ValidationGroups{
             public interface noValid {};
             public interface checkFullValid {};
-            public interface checkOnlyPassword {};
         }
 
+        @Data
+        @Valid
+        public static class ChangePassword{
+            @Schema(description = "기존 패스워드", required = true)
+            @Length(min = 8, max = 20)
+            private String oldPassword;
+
+            @Schema(description = "8~20사이의 새로운 패스워드", required = true)
+            @Length(min = 8, max = 20)
+            private String newPassword;
+        }
         @Data
         @Valid
         public static class Signup{
@@ -39,7 +49,7 @@ public class AccountDto {
             private String username;
 
             @Schema(description = "8~20사이 패스워드", required = true)
-            @Length(min = 8, max = 20, groups = {ValidationGroups.checkFullValid.class, ValidationGroups.checkOnlyPassword.class})
+            @Length(min = 8, max = 20, groups = {ValidationGroups.checkFullValid.class})
             private String password;
 
             @Schema(description = "3~20자 사이 닉네임", required = true)

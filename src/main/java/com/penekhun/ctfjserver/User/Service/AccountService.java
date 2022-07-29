@@ -172,10 +172,14 @@ public class AccountService {
     }
 
 
-    public Account editMyPassword(Long id, String newPassword){
+    public void editMyPassword(Long id, String newPassword, String oldPassword){
         Account account = accountRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        if (!bCryptPasswordEncoder.matches(oldPassword, account.getPassword()))
+            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH);
+
         account.changePassword(newPassword);
-        return accountRepository.save(account);
+        accountRepository.save(account);
     }
 
 

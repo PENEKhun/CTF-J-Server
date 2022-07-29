@@ -15,8 +15,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/account")
@@ -41,18 +43,19 @@ public class AccountController {
     }
 
     @PutMapping("/pw")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
             tags= {"accounts"}, summary = "나의 비밀번호를 변경하는 API", description = "edit my Account's password")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = AccountDto.Res.MyPage.class))),
+            @ApiResponse(responseCode = "203", description = "성공", content = @Content(schema = @Schema(implementation = AccountDto.Res.MyPage.class))),
             @ApiResponse(responseCode = "403", description = "잘못된 접근", ref = "#/components/responses/ErrorCode.HANDLE_ACCESS_DENIED"),
-            @ApiResponse(responseCode = "500", description = "알수없는 오류", ref= "#/components/responses/ErrorCode.UNCHECKED_ERROR")})
-    public AccountDto.Res.MyPage editMyPasswordMapping(@CurrentUserParameter Account account, @Validated(AccountDto.Req.ValidationGroups.checkOnlyPassword.class) AccountDto.Req.Signup signup){
+            @ApiResponse(responseCode = "500", description = "알수없는 오류", ref= "#/components/responses/ErrorCode.MEMBER_NOT_FOUND"),
+            @ApiResponse(responseCode = "409", description = "기존 비밀번호가 맞지 않음", ref= "#/components/responses/ErrorCode.PASSWORD_NOT_MATCH")})
+    public ResponseEntity<String> editMyPasswordMapping(@CurrentUserParameter Account account, @Valid AccountDto.Req.ChangePassword changePassword){
         if (account == null)
             throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
-        Account account1 = accountService.editMyPassword(account.getId(), signup.getPassword());
-        return account1.toInfo();
+        accountService.editMyPassword(account.getId(), changePassword.getNewPassword(), changePassword.getOldPassword());
+        return ResponseEntity.noContent().build();
     }
 
 //    @PatchMapping("")
