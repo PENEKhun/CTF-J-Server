@@ -41,7 +41,7 @@ public class AdminAccountController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
             tags= {"admin.accounts"}, summary = "회원가입 API", description = "signup API")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = AccountDto.Res.MyPage.class))),
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = AccountDto.Res.Signup.class))),
             @ApiResponse(responseCode = "409", description = "입력한 정보와 중복되는 계정이 존재함", ref = "#/components/responses/ErrorCode.USERNAME_DUPLICATION")})
     public AccountDto.Res.Signup signupMapping(@Validated(AccountDto.Req.ValidationGroups.checkFullValid.class) AccountDto.Req.Signup signup) {
         return accountService.signup(signup);
@@ -52,7 +52,7 @@ public class AdminAccountController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
             tags= {"admin.accounts"}, summary = "회원정보를 불러오는 API", description = "get account API")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = AccountDto.Res.MyPage.class)))})
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = AccountDto.Res.AccountList.class)))})
     public AccountDto.Res.AccountList accountViewMapping(@PageableDefault(size = 30, sort = "id",  direction = Sort.Direction.DESC) Pageable pageable) {
         return accountService.getAllAccount(pageable);
     }
