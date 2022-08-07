@@ -4,10 +4,13 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.penekhun.ctfjserver.Config.Exception.CustomException;
 import com.penekhun.ctfjserver.Config.Exception.ErrorCode;
 import com.penekhun.ctfjserver.FileUpload.FileManagement;
+import com.penekhun.ctfjserver.User.Dto.ProblemDto;
+import com.penekhun.ctfjserver.User.Entity.Account;
+import com.penekhun.ctfjserver.User.Entity.ProblemFile;
+import com.penekhun.ctfjserver.User.Repository.ProblemFileRepository;
 import com.penekhun.ctfjserver.User.Service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -26,8 +29,9 @@ public class AdminFileService {
 
     private final FileManagement s3Service;
     private final LogService logService;
+    private final ProblemFileRepository problemFileRepository;
 
-    public String uploadFile(@NotNull MultipartFile file) {
+    public ProblemDto.Res.File uploadFile(MultipartFile file, Account uploader) {
         String fileName = createFileName(file.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
@@ -38,8 +42,17 @@ public class AdminFileService {
         } catch (IOException e) {
             throw new CustomException(ErrorCode.FILE_UPLOAD_FAIL);
         }
-        logService.uploadFileLog(file, fileName);
-        return s3Service.getFileUrl(fileName);
+
+        // 업로드 성공시 파일 정보 저장
+        logService.logging("uploadProblemFile", String.format("fileName %s", fileName));
+        ProblemFile problemFile = ProblemFile.builder()
+                .fileName(fileName)
+                .originalFileName(file.getOriginalFilename())
+                .uploaderIdx(uploader.getId())
+                .build();
+
+        problemFileRepository.save(problemFile);
+        return new ProblemDto.Res.File(problemFile.getId(), fileName);
     }
 
     public ResponseEntity<byte[]> downloadFile(@NotEmpty String fileName){

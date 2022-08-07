@@ -19,12 +19,16 @@ public class ProblemFile {
         this.uploaderIdx = uploaderIdx;
         this.fileName = fileName;
         this.originalFileName = originalFileName;
+        this.problemIdx = null;
     }
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "idx", nullable = false)
     private Integer id;
+
+    @Column(name = "problem_idx")
+    private Long problemIdx;
 
     @Column(name = "uploader_idx", nullable = false)
     private Long uploaderIdx;
@@ -38,4 +42,13 @@ public class ProblemFile {
     @CreatedDate
     @Column(name = "upload_time", nullable = false, updatable = false)
     private Timestamp uploadTime;
+
+    public Integer getId() {
+        return id;
+    }
+    public void setProblemIdx(Long problemIdx) {
+        this.problemIdx = problemIdx;
+    }
+
+
 }

@@ -63,6 +63,8 @@ public class ProblemDto {
         @Schema(accessMode = Schema.AccessMode.READ_ONLY)
         private Timestamp modifyTime;
 
+        private Integer fileIdx;
+
         public boolean isValidScore(){
             return this.minScore >= 0 && this.maxScore >= 0 && this.solveThreshold >= 0 && this.minScore <= this.maxScore;
         }
@@ -70,9 +72,8 @@ public class ProblemDto {
 
     @Validated(ValidationGroups.noValid.class)
     public static class DefaultNoValid extends Default{
-
-        DefaultNoValid(@Size(max = 45) @NotBlank(groups = ValidationGroups.checkFullValid.class) String title, @NotBlank(groups = ValidationGroups.checkFullValid.class) String description, @Size(max = 100) @NotBlank(groups = ValidationGroups.checkFullValid.class) String flag, @NotBlank(groups = ValidationGroups.checkFullValid.class) String type, Boolean isPublic, @NotNull(groups = ValidationGroups.checkFullValid.class) Integer maxScore, @NotNull(groups = ValidationGroups.checkFullValid.class) Integer minScore, @NotNull(groups = ValidationGroups.checkFullValid.class) Integer solveThreshold, Timestamp modifyTime) {
-            super(title, description, flag, type, isPublic, maxScore, minScore, solveThreshold, modifyTime);
+        DefaultNoValid(@Size(max = 45) @NotBlank(groups = ValidationGroups.checkFullValid.class) String title, @NotBlank(groups = ValidationGroups.checkFullValid.class) String description, @Size(max = 100) @NotBlank(groups = ValidationGroups.checkFullValid.class) String flag, @NotBlank(groups = ValidationGroups.checkFullValid.class) String type, Boolean isPublic, @NotNull(groups = ValidationGroups.checkFullValid.class) Integer maxScore, @NotNull(groups = ValidationGroups.checkFullValid.class) Integer minScore, @NotNull(groups = ValidationGroups.checkFullValid.class) Integer solveThreshold, Timestamp modifyTime, Integer fileIdx) {
+            super(title, description, flag, type, isPublic, maxScore, minScore, solveThreshold, modifyTime, fileIdx);
         }
     }
     public static class Req{

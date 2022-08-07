@@ -8,6 +8,7 @@ import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Entity.Problem;
 import com.penekhun.ctfjserver.User.Repository.AccountRepository;
 import com.penekhun.ctfjserver.User.Repository.AuthLogRepository;
+import com.penekhun.ctfjserver.User.Repository.ProblemFileRepository;
 import com.penekhun.ctfjserver.User.Repository.ProblemRepository;
 import com.penekhun.ctfjserver.Util.RankSchedule;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class ProblemService {
 
     private final ProblemRepository problemRepository;
+    private final ProblemFileRepository problemFileRepository;
     private final AuthLogRepository authLogRepository;
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
@@ -36,6 +38,16 @@ public class ProblemService {
         Problem problem =  modelMapper.map(problemDto, Problem.class);
         problem.setAuthorId(account);
         problemRepository.save(problem);
+
+        if (problemDto.getFileIdx() != null) {
+            // 문제 파일 DB에 문제 Id 추가
+            problemFileRepository.findById(problemDto.getFileIdx())
+                    .ifPresent(problemFile -> {
+                        problemFile.setProblemIdx(problem.getId());
+                        problemFileRepository.save(problemFile);
+                    });
+        }
+
         logService.uploadProblemLog(problem);
         return problemDto;
     }

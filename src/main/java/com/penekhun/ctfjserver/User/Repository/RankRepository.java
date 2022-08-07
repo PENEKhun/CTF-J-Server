@@ -31,6 +31,7 @@ public class RankRepository{
             +"        IFNULL(solve_tmp, 0) AS solverCount"
             +"    FROM"
             +"    Problem"
+                    // 정답자 수 계산 및 조인
             +"    LEFT OUTER JOIN ("
             +"            SELECT"
             +"            problem_idx,"
@@ -42,13 +43,23 @@ public class RankRepository{
             +"            GROUP BY"
             +"            problem_idx"
             +"    ) Auth ON Problem.idx = problem_idx"
+                    // 문제 작성자 정보 조인
             +"    LEFT OUTER JOIN("
             +"            SELECT"
             +"            idx as accIdx,"
             +"            nickname"
             +"            FROM"
             +"            Account"
-            +"    ) Acc On Problem.author_id = Acc.accIdx");
+            +"    ) Acc On Problem.author_id = Acc.accIdx"
+                    // 문제 파일 조인
+            +"    LEFT OUTER JOIN("
+            +"            SELECT"
+            +"            idx as fileIdx,"
+            +"            problem_idx as problemIdx,"
+            +"            file_name"
+            +"            FROM"
+            +"            ProblemFile"
+            +"    ) PrblmFile On Problem.idx = problemIdx");
 
         List<Object[]> resultList = nativeQuery.getResultList();
 
@@ -68,10 +79,11 @@ public class RankRepository{
                         .solveThreshold((Integer) row[9])
                         .modifyTime((Timestamp) row[11])
                         .author((String) row[15])
-                        .solve(((BigInteger) row[16]).longValue())
+                        .fileIdx((Integer) row[16])
+                        .fileName((String) row[18])
+                        .solve(((BigInteger) row[19]).longValue())
                         .build();
                 outputList.add(outputItem);
-
             }
 
         //문제마다 solveThreshold과 같은 칼럼을 가져오고 solverCount을 계산해줌. -> 아직 calculatedScore는 계산 안됨
