@@ -10,6 +10,7 @@ import com.penekhun.ctfjserver.User.Dto.TokenDto;
 import com.penekhun.ctfjserver.User.Entity.Account;
 import com.penekhun.ctfjserver.User.Entity.TokenStorage;
 import com.penekhun.ctfjserver.User.Repository.AccountRepository;
+import com.penekhun.ctfjserver.User.Repository.AuthLogRepository;
 import com.penekhun.ctfjserver.User.Repository.TokenStorageRepository;
 import com.penekhun.ctfjserver.Util.RankSchedule;
 import com.penekhun.ctfjserver.Util.RedisUtil;
@@ -42,6 +43,7 @@ public class AccountService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final AccountRepository accountRepository;
+    private final AuthLogRepository authLogRepository;
     private final RedisUtil redisUtil;
 
     private final TokenStorageRepository tokenStorageRepository;
@@ -160,14 +162,12 @@ public class AccountService {
     public Account editAccountPartly(Long id, AccountDto.Req.SignupWithoutValid editPartly) throws DataIntegrityViolationException {
         //변경 된 부분만 수정이 이뤄지도록
         Account account = accountRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-        if (account.getRole() == SecurityRole.ADMIN &&
-                editPartly.getUserRole().equals(SecurityRole.USER)){
-            // todo: ADMIN <-> USER 권한 변경시, authLog등 삭제
-//            authLogRepository.deleteAllByIdInBatch(id);
-
+        if ((account.getRole() == SecurityRole.ADMIN && editPartly.getUserRole().equals(SecurityRole.USER))
+                || (account.getRole() == SecurityRole.USER && editPartly.getUserRole().equals(SecurityRole.ADMIN))) {
+                    // ADMIN <-> USER 권한 변경시, authLog 삭제
+                    authLogRepository.deleteAllBySolver(account);
         }
         account.editPartly(editPartly);
-
         return accountRepository.save(account);
     }
 
