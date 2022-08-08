@@ -43,8 +43,12 @@ public class ProblemService {
             // 문제 파일 DB에 문제 Id 추가
             problemFileRepository.findById(problemDto.getFileIdx())
                     .ifPresent(problemFile -> {
-                        problemFile.setProblemIdx(problem.getId());
-                        problemFileRepository.save(problemFile);
+                        if (problemFile.getProblemIdx() == null) {
+                            problemFile.setProblemIdx(problem.getId());
+                            problemFileRepository.save(problemFile);
+                        } else {
+                            throw new CustomException(ErrorCode.HANDLE_ACCESS_DENIED);
+                        }
                     });
         }
 

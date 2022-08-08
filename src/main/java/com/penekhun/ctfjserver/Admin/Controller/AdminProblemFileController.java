@@ -38,8 +38,10 @@ public class AdminProblemFileController {
             @ApiResponse(responseCode = "500", description = "업로드 실패", ref = "#/components/responses/ErrorCode.FILE_UPLOAD_FAIL")})
     @Operation(security = { @SecurityRequirement(name = "bearer-key")},
             tags= {"admin.problem"}, summary = "파일 업로드 API", description = "upload file and response file url. only for admin")
-    public ProblemDto.Res.File upload(@CurrentUserParameter Account account, @Valid @NotNull MultipartFile file){
-        ProblemDto.Res.File responseFile = fileService.uploadFile(file, account);
+    public ProblemDto.Res.File upload(@CurrentUserParameter Account account, @Valid @NotNull MultipartFile file, String displayName) {
+        if (displayName == null || displayName.isEmpty())
+            displayName = file.getOriginalFilename();
+        ProblemDto.Res.File responseFile = fileService.uploadFile(file, account, displayName);
         if (responseFile.getId() != null) {
             return responseFile;
         } else {

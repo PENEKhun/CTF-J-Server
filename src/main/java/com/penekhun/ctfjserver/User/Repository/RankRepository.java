@@ -56,7 +56,7 @@ public class RankRepository{
             +"            SELECT"
             +"            idx as fileIdx,"
             +"            problem_idx as problemIdx,"
-            +"            file_name"
+            +"            file_name_for_display"
             +"            FROM"
             +"            ProblemFile"
             +"    ) PrblmFile On Problem.idx = problemIdx");
@@ -79,13 +79,12 @@ public class RankRepository{
                         .solveThreshold((Integer) row[9])
                         .modifyTime((Timestamp) row[11])
                         .author((String) row[15])
-                        .fileIdx((Integer) row[16])
+                        .fileIdx((((BigInteger) row[16]) == null) ? null: ((BigInteger) row[16]).longValue())
                         .fileName((String) row[18])
                         .solve(((BigInteger) row[19]).longValue())
                         .build();
                 outputList.add(outputItem);
             }
-
         //문제마다 solveThreshold과 같은 칼럼을 가져오고 solverCount을 계산해줌. -> 아직 calculatedScore는 계산 안됨
         return outputList;
     }

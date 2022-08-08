@@ -44,9 +44,11 @@ public class AdminFileService {
         }
 
         // 업로드 성공시 파일 정보 저장
-        logService.logging("uploadProblemFile", String.format("fileName %s", fileName));
+        logService.logging("uploadProblemFile", String.format("%s", file.getOriginalFilename()));
+
         ProblemFile problemFile = ProblemFile.builder()
                 .fileName(fileName)
+                .fileNameForDisplay(displayName)
                 .originalFileName(file.getOriginalFilename())
                 .uploaderIdx(uploader.getId())
                 .build();
