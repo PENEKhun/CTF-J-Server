@@ -2,12 +2,17 @@
 
 ## 설치 방법
 ### 소스코드를 클론합니다.
-```
+#### 서버
+```bash
 git clone https://github.com/PENEKhun/CTF-J-Server.git
+```
+#### 클라이언트
+```bash
+git clone https://github.com/hnsoo/yisf-client
 ```
 
 ### 설정파일을 생성합니다.
-```
+```bash
 cd CTF-J-Server
 vi application.yml
 ```
@@ -118,12 +123,13 @@ spring:
 - aws bucket 연결 정보
 - jwt secret key
 
+### 클라이언트를 구동합니다.
+https://github.com/hnsoo/yisf-client/blob/master/README.md
 
-## 사용법
-```
+### 서버를 구동합니다.
+```bash
 ./gradlew bootRun
 ```
-
 
 
 ## 이럴때 사용합니다.
