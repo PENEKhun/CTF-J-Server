@@ -90,8 +90,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: "jdbc:mysql://실제환경-mysql-데이터베이스-주소/스키마?zeroDateTimeBehavior=convertToNull"
-    username: "root"
-    password: "Anstjdgns1!"
+    username: ""
+    password: ""
   redis:
     host: "실제환경-redis-host"
     port: "6379"
